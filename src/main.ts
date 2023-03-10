@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
-  const environment = 'development';
+  const environment = config.get('app.env');
 
   app.enableShutdownHooks();
 
@@ -36,7 +36,7 @@ async function bootstrap() {
     }),
   );
 
-  if (environment !== 'development') {
+  if (environment !== 'production') {
     const options = new DocumentBuilder()
       .setTitle(process.env.npm_package_name)
       .setVersion(process.env.npm_package_version)
