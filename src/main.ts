@@ -51,4 +51,5 @@ async function bootstrap() {
   await app.startAllMicroservices();
   await app.listen(config.get('app.port'), config.get('app.host'));
 }
+
 process.nextTick(bootstrap);

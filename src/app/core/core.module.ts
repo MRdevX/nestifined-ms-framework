@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import appConfig from '../config/app.config';
-import dbConfig from '../config/db.config';
-import s2sConfig from '../config/s2s.config';
-import sentryConfig from '../config/sentry.config';
+import appConfig, { appConfigSchema } from '../config/app.config';
+import dbConfig, { dbConfigSchema } from '../config/db.config';
+import s2sConfig, { s2sConfigSchema } from '../config/s2s.config';
+import sentryConfig, { sentryConfigSchema } from '../config/sentry.config';
+import Joi from 'joi';
 
 @Module({
   imports: [
@@ -11,6 +12,12 @@ import sentryConfig from '../config/sentry.config';
       isGlobal: true,
       load: [appConfig, dbConfig, s2sConfig, sentryConfig],
       envFilePath: ['.env'],
+      validationSchema: Joi.object({
+        ...appConfigSchema.describe().keys,
+        ...dbConfigSchema.describe().keys,
+        ...s2sConfigSchema.describe().keys,
+        ...sentryConfigSchema.describe().keys,
+      }),
     }),
   ],
 })
