@@ -1,0 +1,10 @@
+bases:
+  - ../base
+
+patchesStrategicMerge:
+  - deployment.yaml
+
+configMapGenerator:
+  - name: nestifined-ms-framework-config
+    literals:
+      - NODE_ENV=development

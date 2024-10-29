@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nestifined-ms-framework
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: nestifined-ms-framework
+          resources:
+            limits:
+              memory: '1Gi'
+              cpu: '1'
+            requests:
+              memory: '512Mi'
+              cpu: '500m'

@@ -77,6 +77,38 @@ docker build -t nestifined-ms-framework .
 docker run -p 3000:3000 --env-file .env nestifined-ms-framework
 ```
 
+## Kubernetes Deployment
+
+### Build and Push Docker Image
+
+```bash
+# Build the Docker image
+docker build -t your-docker-username/nestifined-ms-framework:latest .
+
+# Push the Docker image to a container registry
+docker push your-docker-username/nestifined-ms-framework:latest
+```
+
+### Apply Kubernetes Configurations
+
+#### Development Environment
+
+```bash
+kubectl apply -k k8s/development/
+```
+
+#### Staging Environment
+
+```bash
+kubectl apply -k k8s/staging/
+```
+
+#### Production Environment
+
+```bash
+kubectl apply -k k8s/production/
+```
+
 ## Husky
 
 Husky is used to manage Git hooks. The following hooks are configured:

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nestifined-ms-framework
+  labels:
+    app: nestifined-ms-framework
+spec:
+  selector:
+    matchLabels:
+      app: nestifined-ms-framework
+  template:
+    metadata:
+      labels:
+        app: nestifined-ms-framework
+    spec:
+      containers:
+        - name: nestifined-ms-framework
+          image: your-docker-username/nestifined-ms-framework:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: nestifined-ms-framework-config
+            - secretRef:
+                name: nestifined-ms-framework-secrets
+          resources:
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+            requests:
+              memory: '256Mi'
+              cpu: '250m'

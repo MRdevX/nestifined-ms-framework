@@ -48,4 +48,4 @@ lerna-debug.log*
 .env
 .env.*
 !.env-template
-secret*
+# secret*

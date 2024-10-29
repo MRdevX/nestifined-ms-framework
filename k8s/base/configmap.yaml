@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nestifined-ms-framework-config
+data:
+  NODE_ENV: 'development'
+  APP_NAME: 'MyApp'
+  HOST: '0.0.0.0'
+  PORT: '3000'
+  CORS: 'true'
+  API_PREFIX: 'api'
+  RELEASE: '1.0.0'
+  S2S_TRANSPORT: 'REDIS'
+  S2S_REDIS_URL: 'redis://localhost:6379'
