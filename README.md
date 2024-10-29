@@ -5,8 +5,8 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
+<p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+<p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
@@ -15,12 +15,10 @@
 <a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
 <a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
 <a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+<a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+<a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
@@ -56,6 +54,48 @@ $ yarn run test:e2e
 
 # test coverage
 $ yarn run test:cov
+```
+
+## Linting
+
+```bash
+# lint the code
+$ yarn run lint
+
+# lint and fix the code
+$ yarn run lint:fix
+```
+
+## Husky
+
+Husky is used to manage Git hooks. The following hooks are configured:
+
+- `pre-commit`: Runs lint-staged to lint and format code before committing.
+- `commit-msg`: Ensures commit messages follow the conventional commit format.
+- `post-commit`: Runs after a commit is made.
+- `pre-push`: Runs before pushing code to the repository.
+- `post-merge`: Runs after merging branches.
+- `post-checkout`: Runs after checking out a branch.
+- `prepare-commit-msg`: Runs before the commit message editor is opened.
+- `post-rewrite`: Runs after a commit is rewritten.
+- `pre-rebase`: Runs before rebasing branches.
+
+## Environment Variables
+
+The application uses environment variables for configuration. Create a `.env` file in the root of the project and add the following variables:
+
+```env
+NODE_ENV=development
+APP_NAME=MyApp
+HOST=127.0.0.1
+PORT=3000
+CORS={"origin": ["http://example1.com", "/\\.example2\\.com$/"], "methods": ["GET", "POST"], "credentials": true}
+API_PREFIX=api
+RELEASE=1.0.0
+S2S_TRANSPORT=RABBITMQ
+S2S_REDIS_URL=redis://localhost:6379
+S2S_RABBITMQ_URL=amqp://localhost:5672
+S2S_RABBITMQ_QUEUE=my_queue
 ```
 
 ## Support
