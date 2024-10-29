@@ -1,15 +1,13 @@
-bases:
-  - ../base
-
 namespace: nestifined-staging
-
 resources:
   - namespace.yaml
-
-patchesStrategicMerge:
-  - deployment.yaml
-
+  - ../base
 configMapGenerator:
   - name: nestifined-ms-framework-config
+    behavior: merge
     literals:
       - NODE_ENV=staging
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+patches:
+  - path: deployment.yaml

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nestifined-ms-framework
-          image: your-docker-username/nestifined-ms-framework:latest
+          image: mrdevx/nestifined-ms-framework:latest
           ports:
             - containerPort: 3000
           envFrom:
