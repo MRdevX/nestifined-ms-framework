@@ -1,5 +1,5 @@
-import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
+import { registerAs } from '@nestjs/config';
 
 export const dbConfigSchema = Joi.object({
   DB_URL: Joi.string().optional(),

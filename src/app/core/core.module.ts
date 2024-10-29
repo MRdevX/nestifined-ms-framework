@@ -1,10 +1,10 @@
+import Joi from 'joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import appConfig, { appConfigSchema } from '../config/app.config';
 import dbConfig, { dbConfigSchema } from '../config/db.config';
 import s2sConfig, { s2sConfigSchema } from '../config/s2s.config';
 import sentryConfig, { sentryConfigSchema } from '../config/sentry.config';
-import Joi from 'joi';
 
 @Module({
   imports: [

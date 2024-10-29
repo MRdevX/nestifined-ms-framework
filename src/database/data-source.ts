@@ -25,11 +25,11 @@ export const AppDataSource = new DataSource({
     ssl:
       process.env.DB_SSL_ENABLED === 'true'
         ? {
-            rejectUnauthorized: process.env.DB_REJECT_UNAUTHORIZED === 'true',
-            ca: process.env.DB_CA ?? undefined,
-            key: process.env.DB_KEY ?? undefined,
-            cert: process.env.DB_CERT ?? undefined,
-          }
+          rejectUnauthorized: process.env.DB_REJECT_UNAUTHORIZED === 'true',
+          ca: process.env.DB_CA ?? undefined,
+          key: process.env.DB_KEY ?? undefined,
+          cert: process.env.DB_CERT ?? undefined,
+        }
         : undefined,
   },
 } as DataSourceOptions);

@@ -30,11 +30,11 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         max: this.configService.get('db.maxConnections'),
         ssl: this.configService.get('db.sslEnabled')
           ? {
-              rejectUnauthorized: this.configService.get('db.rejectUnauthorized'),
-              ca: this.configService.get('db.ca') ?? undefined,
-              key: this.configService.get('db.key') ?? undefined,
-              cert: this.configService.get('db.cert') ?? undefined,
-            }
+            rejectUnauthorized: this.configService.get('db.rejectUnauthorized'),
+            ca: this.configService.get('db.ca') ?? undefined,
+            key: this.configService.get('db.key') ?? undefined,
+            cert: this.configService.get('db.cert') ?? undefined,
+          }
           : undefined,
       },
     } as TypeOrmModuleOptions;
