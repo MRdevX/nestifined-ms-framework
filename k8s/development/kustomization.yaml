@@ -1,6 +1,11 @@
 bases:
   - ../base
 
+namespace: nestifined-development
+
+resources:
+  - namespace.yaml
+
 patchesStrategicMerge:
   - deployment.yaml
 
