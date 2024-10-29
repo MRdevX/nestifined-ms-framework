@@ -63,6 +63,20 @@ $ yarn run lint
 $ yarn run lint:fix
 ```
 
+## Docker
+
+### Building the Docker Image
+
+```bash
+docker build -t nestifined-ms-framework .
+```
+
+### Running the Docker Container
+
+```bash
+docker run -p 3000:3000 --env-file .env nestifined-ms-framework
+```
+
 ## Husky
 
 Husky is used to manage Git hooks. The following hooks are configured:
