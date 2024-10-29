@@ -4,6 +4,7 @@ import { ClassSerializerInterceptor, ValidationPipe, VersioningType } from '@nes
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app/app.module';
+import logger from './logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -50,6 +51,10 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   await app.listen(config.get('app.port'), config.get('app.host'));
+
+  logger.info(`Application is running on: ${await app.getUrl()}`);
+  logger.info(`Environment: ${environment}`);
+  logger.info(`API Documentation available at: ${await app.getUrl()}/docs`);
 }
 
 process.nextTick(bootstrap);
