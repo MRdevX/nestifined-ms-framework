@@ -2,6 +2,7 @@ namespace: nestifined-development
 resources:
   - namespace.yaml
   - ../base
+  - secrets.yaml
 configMapGenerator:
   - name: nestifined-ms-framework-config
     behavior: merge
