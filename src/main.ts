@@ -10,6 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
   const environment = config.get('app.env');
+  const apiPrefix = config.get('app.apiPrefix');
 
   app.enableShutdownHooks();
 
@@ -18,7 +19,7 @@ async function bootstrap() {
   app.use(helmet());
   app.enableCors({ origin: true, credentials: true });
 
-  app.setGlobalPrefix(config.get('app.apiPrefix'), {
+  app.setGlobalPrefix(apiPrefix, {
     exclude: ['/'],
   });
   app.enableVersioning({
@@ -46,15 +47,18 @@ async function bootstrap() {
       .build();
 
     const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('docs', app, document);
+    SwaggerModule.setup(`${apiPrefix}/docs`, app, document);
   }
 
   await app.startAllMicroservices();
   await app.listen(config.get('app.port'), config.get('app.host'));
 
-  logger.info(`Application is running on: ${await app.getUrl()}`);
+  const appUrl = await app.getUrl();
+  const docsUrl = `${appUrl}/${apiPrefix}/docs`;
+
+  logger.info(`Application is running on: ${appUrl}`);
   logger.info(`Environment: ${environment}`);
-  logger.info(`API Documentation available at: ${await app.getUrl()}/docs`);
+  logger.info(`API Documentation available at: ${docsUrl}`);
 }
 
 process.nextTick(bootstrap);
