@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import * as Joi from 'joi';
 import { registerAs } from '@nestjs/config';
 
 export const dbConfigSchema = Joi.object({
