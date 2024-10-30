@@ -14,7 +14,7 @@ function createError(code: string, message: string) {
   };
 }
 
-const Errors = {
+const ERRORS = {
   USER: {
     NOT_FOUND: createError('USER_NOT_FOUND', 'User not found'),
     ALREADY_EXISTS: createError('USER_ALREADY_EXISTS', 'User already exists'),
@@ -38,4 +38,4 @@ const Errors = {
   }),
 };
 
-export { Errors };
+export { ERRORS };
