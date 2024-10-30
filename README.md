@@ -16,31 +16,31 @@
 <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
 
-## Description
+## Description 📜
 
 [nestifined-ms-framework](https://github.com/MRdevX/nestifined-ms-framework) is a refined and optimized codebase for setting up NestJS microservices.
 
-## Features
+## Features ✨
 
-- **Docker**: Containerize the application using Docker.
-- **Kubernetes**: Deployment configurations for development, staging, and production environments.
-- **TypeORM**: Integration with TypeORM for database interactions.
-- **Redis**: Caching support using Redis.
-- **RabbitMQ**: Messaging support using RabbitMQ.
-- **Swagger**: API documentation using Swagger.
-- **Husky**: Git hooks management using Husky.
-- **Linting and Formatting**: ESLint and Prettier for code linting and formatting.
-- **Testing**: Unit and e2e testing using Jest.
-- **Logging**: Logging using Winston with daily rotate file support.
-- **Environment Configuration**: Environment variable management using dotenv.
+- **🐳 Docker**: Containerize the application using Docker.
+- **☸️ Kubernetes**: Deployment configurations for development, staging, and production environments.
+- **🗃️ TypeORM**: Integration with TypeORM for database interactions.
+- **⚡ Redis**: Caching support using Redis.
+- **📨 RabbitMQ**: Messaging support using RabbitMQ.
+- **📄 Swagger**: API documentation using Swagger.
+- **🐶 Husky**: Git hooks management using Husky.
+- **🧹 Linting and Formatting**: ESLint and Prettier for code linting and formatting.
+- **🧪 Testing**: Unit and e2e testing using Jest.
+- **📜 Logging**: Logging using Winston with daily rotate file support.
+- **🔧 Environment Configuration**: Environment variable management using dotenv.
 
-## Installation
+## Installation 🛠️
 
 ```bash
 $ yarn install
 ```
 
-## Running the app
+## Running the app 🚀
 
 ```bash
 # development
@@ -51,35 +51,30 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
-## Test
+## Test 🧪
 
 ```bash
 # unit tests
-
 $ yarn run test
 
 # e2e tests
-
 $ yarn run test:e2e
 
 # test coverage
-
 $ yarn run test:cov
 ```
 
-## Linting
+## Linting 🧹
 
 ```bash
 # lint the code
-
 $ yarn run lint
 
 # lint and fix the code
-
 $ yarn run lint:fix
 ```
 
-## Docker
+## Docker 🐳
 
 ```bash
 # Building the Docker Image
@@ -89,7 +84,7 @@ docker build -t nestifined-ms-framework .
 docker run -p 3000:3000 --env-file .env nestifined-ms-framework
 ```
 
-## Build and Push Docker Image to Docker Hub
+## Build and Push Docker Image to Docker Hub 🐋
 
 ```bash
 # Build the Docker image
@@ -99,7 +94,7 @@ docker build -t your-docker-username/nestifined-ms-framework:latest .
 docker push your-docker-username/nestifined-ms-framework:latest
 ```
 
-## Apply Kubernetes Configurations
+## Apply Kubernetes Configurations ☸️
 
 ```bash
 # Development Environment
@@ -112,7 +107,7 @@ kubectl apply -k k8s/staging/
 kubectl apply -k k8s/production/
 ```
 
-## Husky
+## Husky 🐶
 
 Husky is used to manage Git hooks. The following hooks are configured:
 
@@ -126,7 +121,7 @@ Husky is used to manage Git hooks. The following hooks are configured:
 - **post-rewrite**: Runs after a commit is rewritten.
 - **pre-rebase**: Runs before rebasing branches.
 
-## Environment Variables
+## Environment Variables 🌍
 
 The application uses environment variables for configuration. Create a `.env` file in the root of the project and add the following variables:
 
@@ -144,15 +139,15 @@ S2S_RABBITMQ_URL=amqp://localhost:5672
 S2S_RABBITMQ_QUEUE=my_queue
 ```
 
-## Support
+## Support ❤️
 
 This project is an MIT-licensed open source initiative. It thrives thanks to the contributions from the amazing community. I welcome and encourage you to contribute by creating pull requests and helping improve the project. Your support and involvement are greatly appreciated!
 
-## Stay in Touch
+## Stay in Touch 📬
 
 - **Author**: Mahdi Rashidi
 - **LinkedIn**: [Visit My Profile](https://www.linkedin.com/in/mrdevx/)
 
-## License
+## License 📄
 
 This project is [MIT licensed](./LICENSE).
