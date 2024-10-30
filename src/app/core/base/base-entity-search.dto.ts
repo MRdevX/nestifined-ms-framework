@@ -1,17 +1,6 @@
 import { IsOptional, IsString, IsInt, IsArray, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
-
-export interface IBaseEntitySearchDto<T> {
-  limit?: number;
-  offset?: number;
-  relations?: string[];
-  filterFields?: Array<{ name: keyof T; value: any }>;
-  searchInput?: string;
-  searchFields?: Array<keyof T>;
-  selectFields?: Array<keyof T>;
-  sortFields?: Array<keyof T>;
-  sortDirections?: Array<'ASC' | 'DESC'>;
-}
+import { IBaseEntitySearchDto, IFilterField } from './base-search.model';
 
 export class BaseEntitySearchDto<T> implements IBaseEntitySearchDto<T> {
   @IsOptional()
@@ -53,4 +42,12 @@ export class BaseEntitySearchDto<T> implements IBaseEntitySearchDto<T> {
   @IsArray()
   @IsEnum(['ASC', 'DESC'], { each: true })
   sortDirections?: Array<'ASC' | 'DESC'>;
+
+  getFilterFields(): IFilterField<T>[] {
+    return [];
+  }
+
+  getRelations(): string[] {
+    return [];
+  }
 }

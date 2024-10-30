@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryNarrowingOperators } from '@root/app/core/base/base-search.service';
+import { QueryNarrowingOperators } from '@root/app/core/base/base-search.model';
 import { CacheService } from '@root/app/core/cache/cache.service';
 import { BaseSearchService } from '@root/app/core/base/base-search.service';
 import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';

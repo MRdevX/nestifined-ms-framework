@@ -1,45 +1,6 @@
 import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 import { merge, isNil } from 'lodash';
-
-export enum QueryNarrowingOperators {
-  EQ = 'EQ',
-  GT = 'GT',
-  GTE = 'GTE',
-  LT = 'LT',
-  LTE = 'LTE',
-  NE = 'NE',
-  IN = 'IN',
-  NIN = 'NIN',
-  LIKE = 'LIKE',
-  ILIKE = 'ILIKE',
-  CONTAINS = 'CONTAINS',
-  ISNULL = 'ISNULL',
-}
-
-interface ISearchConfig {
-  caseInsensitiveSearch?: boolean;
-  fullTextSearch?: boolean;
-  withDeleted?: boolean;
-  andWhere?: { condition: string; parameters?: any };
-}
-
-interface IFilterField<T> {
-  name: keyof T;
-  value: any;
-  operation?: QueryNarrowingOperators;
-}
-
-interface IBaseEntitySearchDto<T> {
-  limit?: number;
-  offset?: number;
-  relations?: string[];
-  filterFields?: Array<IFilterField<T>>;
-  searchInput?: string;
-  searchFields?: Array<keyof T>;
-  selectFields?: Array<keyof T>;
-  sortFields?: Array<keyof T>;
-  sortDirections?: Array<'ASC' | 'DESC'>;
-}
+import { ISearchConfig, IFilterField, IBaseEntitySearchDto, QueryNarrowingOperators } from './base-search.model';
 
 export abstract class BaseSearchService<T> {
   protected constructor(protected readonly repository: Repository<T>) {}
