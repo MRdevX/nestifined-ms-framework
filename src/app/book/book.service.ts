@@ -7,6 +7,7 @@ import { BaseSearchService } from '@root/app/core/base/base-search.service';
 import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
 import { Book } from './entities/book.entity';
 import { Author } from '../author/entities/author.entity';
+import { ERRORS } from '../core/errors/errors';
 
 @Injectable()
 export class BookService extends BaseSearchService<Book> {
@@ -23,7 +24,7 @@ export class BookService extends BaseSearchService<Book> {
   async create(createBookDto: CreateBookDto): Promise<Book> {
     const author = await this.authorRepository.findOne({ where: { id: createBookDto.authorId, deletedAt: null } });
     if (!author) {
-      throw new NotFoundException(`Author with ID ${createBookDto.authorId} not found`);
+      throw new NotFoundException(ERRORS.AUTHOR.NOT_FOUND);
     }
 
     const book = this.bookRepository.create({
@@ -42,7 +43,7 @@ export class BookService extends BaseSearchService<Book> {
   async findOne(id: string): Promise<Book> {
     const book = await this.bookRepository.findOne({ where: { id, deletedAt: null }, relations: ['author'] });
     if (!book) {
-      throw new NotFoundException(`Book with ID ${id} not found`);
+      throw new NotFoundException(ERRORS.BOOK.NOT_FOUND);
     }
     return book;
   }
@@ -50,7 +51,7 @@ export class BookService extends BaseSearchService<Book> {
   async update(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
     const author = await this.authorRepository.findOne({ where: { id: updateBookDto.authorId, deletedAt: null } });
     if (!author) {
-      throw new NotFoundException(`Author with ID ${updateBookDto.authorId} not found`);
+      throw new NotFoundException(ERRORS.AUTHOR.NOT_FOUND);
     }
 
     const book = await this.bookRepository.preload({
@@ -59,7 +60,7 @@ export class BookService extends BaseSearchService<Book> {
       author,
     });
     if (!book) {
-      throw new NotFoundException(`Book with ID ${id} not found`);
+      throw new NotFoundException(ERRORS.BOOK.NOT_FOUND);
     }
     await this.bookRepository.save(book);
     return book;
