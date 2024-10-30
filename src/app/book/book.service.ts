@@ -21,7 +21,7 @@ export class BookService {
     return this.bookRepository.find();
   }
 
-  async findOne(id: number): Promise<Book> {
+  async findOne(id: string): Promise<Book> {
     const book = await this.bookRepository.findOne({ where: { id } });
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found`);
@@ -29,7 +29,7 @@ export class BookService {
     return book;
   }
 
-  async update(id: number, updateBookDto: UpdateBookDto): Promise<Book> {
+  async update(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
     const book = await this.bookRepository.preload({
       id,
       ...updateBookDto,
@@ -40,7 +40,7 @@ export class BookService {
     return this.bookRepository.save(book);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     const book = await this.findOne(id);
     await this.bookRepository.remove(book);
   }

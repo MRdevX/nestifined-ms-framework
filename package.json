@@ -29,7 +29,11 @@
     "release": "npx standard-version",
     "postinstall": "husky install",
     "prepack": "pinst --disable",
-    "postpack": "pinst --enable"
+    "postpack": "pinst --enable",
+    "typeorm": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js --dataSource ./src/app/core/database/typeorm-config.service.ts",
+    "migration:generate": "npm run typeorm migration:generate ./src/migrations/$npm_config_name --timestamp",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.6",
@@ -42,6 +46,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "convict": "^6.2.4",
+    "convict-format-with-validator": "^6.2.0",
     "dotenv": "^16.4.5",
     "helmet": "^8.0.0",
     "ioredis": "^5.4.1",
@@ -58,7 +63,6 @@
     "@nestjs/schematics": "^10.2.3",
     "@nestjs/testing": "^10.4.6",
     "@stylistic/eslint-plugin-js": "^2.9.0",
-    "@types/convict": "^6.1.6",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.8.2",
