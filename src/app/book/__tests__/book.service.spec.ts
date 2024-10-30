@@ -11,15 +11,27 @@ import { ERRORS } from '@root/app/core/errors/errors';
 import { createMockAuthor } from '@test/mocks/author.mock';
 import { BookService } from '../book.service';
 
+const createBookDtoFactory = () => ({
+  title: 'Book Title',
+  authorId: uuidv4(),
+  isbn: '1234567890',
+  summary: 'Book Summary',
+  publishedDate: new Date(),
+});
+
 describe('BookService', () => {
   let service: BookService;
   let bookRepository: MockProxy<Repository<Book>>;
   let authorRepository: MockProxy<Repository<Author>>;
   let cacheService: MockProxy<CacheService>;
+  let redisClient: MockProxy<typeof Redis.prototype>;
 
   beforeEach(async () => {
+    redisClient = new Redis() as unknown as MockProxy<typeof Redis.prototype>;
+    redisClient.del = jest.fn();
+
     cacheService = mock<CacheService>();
-    cacheService.getClient.mockReturnValue(new Redis());
+    cacheService.getClient.mockReturnValue(redisClient);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -41,13 +53,7 @@ describe('BookService', () => {
 
   describe('create', () => {
     it('should create a new book', async () => {
-      const createBookDto = {
-        title: 'Book Title',
-        authorId: uuidv4(),
-        isbn: '1234567890',
-        summary: 'Book Summary',
-        publishedDate: new Date(),
-      };
+      const createBookDto = createBookDtoFactory();
       const author = createMockAuthor();
       author.id = createBookDto.authorId;
       const book: Partial<Book> = { id: uuidv4(), ...createBookDto, author };
@@ -61,6 +67,14 @@ describe('BookService', () => {
       expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: createBookDto.authorId, deletedAt: null } });
       expect(bookRepository.create).toHaveBeenCalledWith({ ...createBookDto, author });
       expect(bookRepository.save).toHaveBeenCalledWith(book);
+    });
+
+    it('should throw an error if author not found', async () => {
+      const createBookDto = createBookDtoFactory();
+      authorRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.create(createBookDto)).rejects.toThrow(ERRORS.AUTHOR.NOT_FOUND.message);
+      expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: createBookDto.authorId, deletedAt: null } });
     });
   });
 
@@ -95,18 +109,16 @@ describe('BookService', () => {
       bookRepository.findOne.mockResolvedValue(null);
 
       await expect(service.findOne(bookId)).rejects.toThrow(ERRORS.BOOK.NOT_FOUND.message);
+      expect(bookRepository.findOne).toHaveBeenCalledWith({
+        where: { id: bookId, deletedAt: null },
+        relations: ['author'],
+      });
     });
   });
 
   describe('update', () => {
     it('should update a book', async () => {
-      const updateBookDto = {
-        title: 'Updated Book Title',
-        authorId: uuidv4(),
-        isbn: '1234567890',
-        summary: 'Updated Book Summary',
-        publishedDate: new Date(),
-      };
+      const updateBookDto = createBookDtoFactory();
       const author = createMockAuthor();
       author.id = updateBookDto.authorId;
       const book: Partial<Book> = { id: uuidv4(), ...updateBookDto, author };
@@ -123,28 +135,16 @@ describe('BookService', () => {
     });
 
     it('should throw an error if author not found', async () => {
-      const updateBookDto = {
-        title: 'Updated Book Title',
-        authorId: uuidv4(),
-        isbn: '1234567890',
-        summary: 'Updated Book Summary',
-        publishedDate: new Date(),
-      };
-      // const authorId = updateBookDto.authorId;
+      const updateBookDto = createBookDtoFactory();
       authorRepository.findOne.mockResolvedValue(null);
 
       await expect(service.update(uuidv4(), updateBookDto)).rejects.toThrow(ERRORS.NOT_FOUND('Author').message);
+      expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: updateBookDto.authorId, deletedAt: null } });
     });
 
     it('should throw an error if book not found', async () => {
       const bookId = uuidv4();
-      const updateBookDto = {
-        title: 'Updated Book Title',
-        authorId: uuidv4(),
-        isbn: '1234567890',
-        summary: 'Updated Book Summary',
-        publishedDate: new Date(),
-      };
+      const updateBookDto = createBookDtoFactory();
       const author = createMockAuthor();
       author.id = updateBookDto.authorId;
 
@@ -152,6 +152,7 @@ describe('BookService', () => {
       bookRepository.preload.mockResolvedValue(null);
 
       await expect(service.update(bookId, updateBookDto)).rejects.toThrow(ERRORS.BOOK.NOT_FOUND.message);
+      expect(bookRepository.preload).toHaveBeenCalledWith({ id: bookId, ...updateBookDto, author });
     });
   });
 
@@ -168,6 +169,7 @@ describe('BookService', () => {
         relations: ['author'],
       });
       expect(bookRepository.save).toHaveBeenCalledWith(expect.objectContaining({ deletedAt: expect.any(Date) }));
+      expect(redisClient.del).toHaveBeenCalledWith(`book:${book.id}`);
     });
   });
 });
