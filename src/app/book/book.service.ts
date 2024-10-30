@@ -51,7 +51,7 @@ export class BookService extends BaseSearchService<Book> {
   async update(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
     const author = await this.authorRepository.findOne({ where: { id: updateBookDto.authorId, deletedAt: null } });
     if (!author) {
-      throw new NotFoundException(ERRORS.AUTHOR.NOT_FOUND);
+      throw new NotFoundException(ERRORS.NOT_FOUND('Author'));
     }
 
     const book = await this.bookRepository.preload({

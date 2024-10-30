@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Author } from '@root/app/author/entities/author.entity';
 import { AuthorService } from '../author.service';
+import { ERRORS } from '../../core/errors/errors';
 
 const mockAuthorRepository = () => ({
   create: jest.fn(),
@@ -32,7 +33,6 @@ describe('AuthorService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
   describe('create', () => {
     it('should create a new author', async () => {
       const createAuthorDto = { name: 'Author Name' };
@@ -71,12 +71,11 @@ describe('AuthorService', () => {
         relations: ['books'],
       });
     });
-
     it('should throw an error if author not found', async () => {
       const authorId = uuidv4();
       repository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne(authorId)).rejects.toThrow(`Author with ID ${authorId} not found`);
+      await expect(service.findOne(authorId)).rejects.toThrow(ERRORS.AUTHOR.NOT_FOUND.message);
     });
   });
 
@@ -99,7 +98,7 @@ describe('AuthorService', () => {
       repository.preload.mockResolvedValue(null);
 
       await expect(service.update(authorId, { name: 'Updated Author Name' })).rejects.toThrow(
-        `Author with ID ${authorId} not found`,
+        ERRORS.AUTHOR.NOT_FOUND.message,
       );
     });
   });

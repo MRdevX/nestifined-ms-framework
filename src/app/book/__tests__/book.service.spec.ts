@@ -6,6 +6,7 @@ import { CacheService } from '@root/app/core/cache/cache.service';
 import { Author } from '@root/app/author/entities/author.entity';
 import { Book } from '@root/app/book/entities/book.entity';
 import { BookService } from '../book.service';
+import { ERRORS } from '../../core/errors/errors';
 
 const mockBookRepository = () => ({
   create: jest.fn(),
@@ -72,7 +73,9 @@ describe('BookService', () => {
 
       const result = await service.create(createBookDto);
       expect(result).toEqual(book);
-      expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: createBookDto.authorId, deletedAt: null } });
+      expect(authorRepository.findOne).toHaveBeenCalledWith({
+        where: { id: createBookDto.authorId, deletedAt: null },
+      });
       expect(bookRepository.create).toHaveBeenCalledWith({ ...createBookDto, author });
       expect(bookRepository.save).toHaveBeenCalledWith(book);
     });
@@ -101,12 +104,11 @@ describe('BookService', () => {
         relations: ['author'],
       });
     });
-
     it('should throw an error if book not found', async () => {
       const bookId = uuidv4();
       bookRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne(bookId)).rejects.toThrow(`Book with ID ${bookId} not found`);
+      await expect(service.findOne(bookId)).rejects.toThrow(ERRORS.BOOK.NOT_FOUND.message);
     });
   });
 
@@ -144,7 +146,9 @@ describe('BookService', () => {
       const authorId = updateBookDto.authorId;
       authorRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.update(uuidv4(), updateBookDto)).rejects.toThrow(`Author with ID ${authorId} not found`);
+      await expect(service.update(uuidv4(), updateBookDto)).rejects.toThrow(
+        ERRORS.NOT_FOUND('Author', authorId).message,
+      );
     });
 
     it('should throw an error if book not found', async () => {
@@ -161,7 +165,7 @@ describe('BookService', () => {
       authorRepository.findOne.mockResolvedValue(author);
       bookRepository.preload.mockResolvedValue(null);
 
-      await expect(service.update(bookId, updateBookDto)).rejects.toThrow(`Book with ID ${bookId} not found`);
+      await expect(service.update(bookId, updateBookDto)).rejects.toThrow(ERRORS.BOOK.NOT_FOUND.message);
     });
   });
 
