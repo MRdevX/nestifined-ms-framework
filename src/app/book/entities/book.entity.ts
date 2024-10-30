@@ -1,7 +1,7 @@
 import { Entity, Column } from 'typeorm';
 import { BaseModel } from '@root/app/core/entities/base.entity';
 
-@Entity()
+@Entity('books')
 export class Book extends BaseModel {
   @Column()
   title: string;
