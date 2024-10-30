@@ -1,6 +1,6 @@
 {
   "name": "nestifined-ms-framework",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "This is a NestJS project that offers a streamlined, sophisticated, and well-structured codebase for beginning a fresh microservice initiative.",
   "author": "Mahdi Rashidi <m8rashidi@gmail.com>",
   "license": "MIT",

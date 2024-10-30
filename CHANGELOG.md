@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/MRdevX/nestifined-ms-framework/compare/v0.0.4...v0.0.5) (2024-10-30)
+
+
+### Features
+
+* add bade entity ([6ba321f](https://github.com/MRdevX/nestifined-ms-framework/commit/6ba321fee5a9a152e3d8ef2608927f4e612ce8ac))
+* add rabbitmq support ([fc0df82](https://github.com/MRdevX/nestifined-ms-framework/commit/fc0df828ba026d13f42cae0d1e167c2c77421629))
+* add search to books ([2db5231](https://github.com/MRdevX/nestifined-ms-framework/commit/2db5231618e56690b54302ab3e889f6757288c12))
+* connect to database and add book entity and module ([cc582d2](https://github.com/MRdevX/nestifined-ms-framework/commit/cc582d2fbb4e114a5ee6428d4283bf6a4b7e232c))
+* refine book entity ([eac0720](https://github.com/MRdevX/nestifined-ms-framework/commit/eac0720fa0f6996ef431d2710fa68533c8546bab))
+* use uuid for book id ([fb07fc0](https://github.com/MRdevX/nestifined-ms-framework/commit/fb07fc09498d432b5d4c0a210c00c9550a731d24))
+
+
+### Bug Fixes
+
+* books table name ([3dd8b9d](https://github.com/MRdevX/nestifined-ms-framework/commit/3dd8b9de9696e3071528db41493d786e6c8dcdad))
+
 ### [0.0.4](https://github.com/MRdevX/nestifined-ms-framework/compare/v0.0.3...v0.0.4) (2024-10-29)
 
 ### [0.0.3](https://github.com/MRdevX/nestifined-ms-framework/compare/v0.0.2...v0.0.3) (2024-10-29)
