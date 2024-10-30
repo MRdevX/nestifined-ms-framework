@@ -4,24 +4,35 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
 import { Book } from './entities/book.entity';
 import { CacheService } from '../core/cache/cache.service';
+import { Author } from '../author/entities/author.entity';
 
 @Injectable()
 export class BookService {
   constructor(
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
+    @InjectRepository(Author)
+    private readonly authorRepository: Repository<Author>,
     private readonly cacheService: CacheService,
   ) {}
 
   async create(createBookDto: CreateBookDto): Promise<Book> {
-    const book = this.bookRepository.create(createBookDto);
+    const author = await this.authorRepository.findOne({ where: { id: createBookDto.authorId } });
+    if (!author) {
+      throw new NotFoundException(`Author with ID ${createBookDto.authorId} not found`);
+    }
+
+    const book = this.bookRepository.create({
+      ...createBookDto,
+      author,
+    });
     await this.bookRepository.save(book);
     await this.cacheBook(book);
     return book;
   }
 
   async findAll(): Promise<Book[]> {
-    return this.bookRepository.find();
+    return this.bookRepository.find({ relations: ['author'] });
   }
 
   async findOne(id: string): Promise<Book> {
@@ -30,7 +41,7 @@ export class BookService {
       return cachedBook;
     }
 
-    const book = await this.bookRepository.findOne({ where: { id } });
+    const book = await this.bookRepository.findOne({ where: { id }, relations: ['author'] });
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }
@@ -39,9 +50,15 @@ export class BookService {
   }
 
   async update(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
+    const author = await this.authorRepository.findOne({ where: { id: updateBookDto.authorId } });
+    if (!author) {
+      throw new NotFoundException(`Author with ID ${updateBookDto.authorId} not found`);
+    }
+
     const book = await this.bookRepository.preload({
       id,
       ...updateBookDto,
+      author,
     });
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found`);
@@ -65,7 +82,7 @@ export class BookService {
     if (query.author) {
       where['author'] = Like(`%${query.author}%`);
     }
-    return this.bookRepository.find({ where });
+    return this.bookRepository.find({ where, relations: ['author'] });
   }
 
   public async cacheBook(book: Book): Promise<void> {
