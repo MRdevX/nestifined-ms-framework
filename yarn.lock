@@ -3490,25 +3490,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"convict-format-with-validator@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "convict-format-with-validator@npm:6.2.0"
-  dependencies:
-    validator: "npm:^13.6.0"
-  checksum: 10/a416185c8ad250ce8f107ee3476c466cd96a51c7642815db7c1eb11d524732a8ef47371f42a63d77e27cc516ec70e8c83608f0f7305cb10ed5b9220ffead530c
-  languageName: node
-  linkType: hard
-
-"convict@npm:^6.2.4":
-  version: 6.2.4
-  resolution: "convict@npm:6.2.4"
-  dependencies:
-    lodash.clonedeep: "npm:^4.5.0"
-    yargs-parser: "npm:^20.2.7"
-  checksum: 10/d4b9c50dcddf4b5da7a80c1d99d1cfae8a47d78d291f0cc11637ab25b6b4515f5f0e9029abd45bcc30cc3e33032aa8814ead22142b4563c4e4959d2e56bdf1ae
-  languageName: node
-  linkType: hard
-
 "cookie-signature@npm:1.0.6":
   version: 1.0.6
   resolution: "cookie-signature@npm:1.0.6"
@@ -6622,13 +6603,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.clonedeep@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.clonedeep@npm:4.5.0"
-  checksum: 10/957ed243f84ba6791d4992d5c222ffffca339a3b79dbe81d2eaf0c90504160b500641c5a0f56e27630030b18b8e971ea10b44f928a977d5ced3c8948841b555f
-  languageName: node
-  linkType: hard
-
 "lodash.defaults@npm:^4.2.0":
   version: 4.2.0
   resolution: "lodash.defaults@npm:4.2.0"
@@ -7170,8 +7144,6 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.12.2"
     class-transformer: "npm:^0.5.1"
     class-validator: "npm:^0.14.1"
-    convict: "npm:^6.2.4"
-    convict-format-with-validator: "npm:^6.2.0"
     dotenv: "npm:^16.4.5"
     eslint: "npm:^9.13.0"
     eslint-config-prettier: "npm:^9.1.0"
@@ -9739,7 +9711,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"validator@npm:^13.6.0, validator@npm:^13.9.0":
+"validator@npm:^13.9.0":
   version: 13.12.0
   resolution: "validator@npm:13.12.0"
   checksum: 10/db6eb0725e2b67d60d30073ae8573982713b5903195d031dc3c7db7e82df8b74e8c13baef8e2106d146d979599fd61a06cde1fec5c148e4abd53d52817ff0fd9
@@ -10050,7 +10022,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs-parser@npm:^20.2.2, yargs-parser@npm:^20.2.7":
+"yargs-parser@npm:^20.2.2":
   version: 20.2.9
   resolution: "yargs-parser@npm:20.2.9"
   checksum: 10/0188f430a0f496551d09df6719a9132a3469e47fe2747208b1dd0ab2bb0c512a95d0b081628bbca5400fb20dbf2fabe63d22badb346cecadffdd948b049f3fcc
