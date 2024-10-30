@@ -72,7 +72,7 @@ describe('BookService', () => {
 
       const result = await service.create(createBookDto);
       expect(result).toEqual(book);
-      expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: createBookDto.authorId } });
+      expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: createBookDto.authorId, deletedAt: null } });
       expect(bookRepository.create).toHaveBeenCalledWith({ ...createBookDto, author });
       expect(bookRepository.save).toHaveBeenCalledWith(book);
     });
@@ -85,7 +85,7 @@ describe('BookService', () => {
 
       const result = await service.findAll();
       expect(result).toEqual(books);
-      expect(bookRepository.find).toHaveBeenCalledWith({ relations: ['author'] });
+      expect(bookRepository.find).toHaveBeenCalledWith({ where: { deletedAt: null }, relations: ['author'] });
     });
   });
 
@@ -96,7 +96,10 @@ describe('BookService', () => {
 
       const result = await service.findOne(book.id);
       expect(result).toEqual(book);
-      expect(bookRepository.findOne).toHaveBeenCalledWith({ where: { id: book.id }, relations: ['author'] });
+      expect(bookRepository.findOne).toHaveBeenCalledWith({
+        where: { id: book.id, deletedAt: null },
+        relations: ['author'],
+      });
     });
 
     it('should throw an error if book not found', async () => {
@@ -125,7 +128,7 @@ describe('BookService', () => {
 
       const result = await service.update(book.id, updateBookDto);
       expect(result).toEqual(book);
-      expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: updateBookDto.authorId } });
+      expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: updateBookDto.authorId, deletedAt: null } });
       expect(bookRepository.preload).toHaveBeenCalledWith({ id: book.id, ...updateBookDto, author });
       expect(bookRepository.save).toHaveBeenCalledWith(book);
     });
@@ -163,14 +166,17 @@ describe('BookService', () => {
   });
 
   describe('remove', () => {
-    it('should remove a book', async () => {
+    it('should mark a book as deleted', async () => {
       const book = { id: uuidv4(), title: 'Book Title', author: { id: uuidv4(), name: 'Author Name' } };
       bookRepository.findOne.mockResolvedValue(book);
-      bookRepository.remove.mockResolvedValue(book);
+      bookRepository.save.mockResolvedValue({ ...book, deletedAt: new Date() });
 
       await service.remove(book.id);
-      expect(bookRepository.findOne).toHaveBeenCalledWith({ where: { id: book.id }, relations: ['author'] });
-      expect(bookRepository.remove).toHaveBeenCalledWith(book);
+      expect(bookRepository.findOne).toHaveBeenCalledWith({
+        where: { id: book.id, deletedAt: null },
+        relations: ['author'],
+      });
+      expect(bookRepository.save).toHaveBeenCalledWith(expect.objectContaining({ deletedAt: expect.any(Date) }));
     });
   });
 });

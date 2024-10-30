@@ -17,7 +17,7 @@ export class BookService {
   ) {}
 
   async create(createBookDto: CreateBookDto): Promise<Book> {
-    const author = await this.authorRepository.findOne({ where: { id: createBookDto.authorId } });
+    const author = await this.authorRepository.findOne({ where: { id: createBookDto.authorId, deletedAt: null } });
     if (!author) {
       throw new NotFoundException(`Author with ID ${createBookDto.authorId} not found`);
     }
@@ -32,25 +32,19 @@ export class BookService {
   }
 
   async findAll(): Promise<Book[]> {
-    return this.bookRepository.find({ relations: ['author'] });
+    return this.bookRepository.find({ where: { deletedAt: null }, relations: ['author'] });
   }
 
   async findOne(id: string): Promise<Book> {
-    const cachedBook = await this.getCachedBook(id);
-    if (cachedBook) {
-      return cachedBook;
-    }
-
-    const book = await this.bookRepository.findOne({ where: { id }, relations: ['author'] });
+    const book = await this.bookRepository.findOne({ where: { id, deletedAt: null }, relations: ['author'] });
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }
-    await this.cacheBook(book);
     return book;
   }
 
   async update(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
-    const author = await this.authorRepository.findOne({ where: { id: updateBookDto.authorId } });
+    const author = await this.authorRepository.findOne({ where: { id: updateBookDto.authorId, deletedAt: null } });
     if (!author) {
       throw new NotFoundException(`Author with ID ${updateBookDto.authorId} not found`);
     }
@@ -64,18 +58,18 @@ export class BookService {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }
     await this.bookRepository.save(book);
-    await this.cacheBook(book);
     return book;
   }
 
   async remove(id: string): Promise<void> {
     const book = await this.findOne(id);
-    await this.bookRepository.remove(book);
+    book.deletedAt = new Date();
+    await this.bookRepository.save(book);
     await this.cacheService.getClient().del(`book:${id}`);
   }
 
   async findByQuery(query: SearchBookDto): Promise<Book[]> {
-    const where = {};
+    const where = { deletedAt: null };
     if (query.title) {
       where['title'] = Like(`%${query.title}%`);
     }
@@ -84,7 +78,6 @@ export class BookService {
     }
     return this.bookRepository.find({ where, relations: ['author'] });
   }
-
   public async cacheBook(book: Book): Promise<void> {
     const client = this.cacheService.getClient();
     await client.set(`book:${book.id}`, JSON.stringify(book));

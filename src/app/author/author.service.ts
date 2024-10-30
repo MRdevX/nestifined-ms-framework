@@ -17,11 +17,11 @@ export class AuthorService {
   }
 
   async findAll(): Promise<Author[]> {
-    return this.authorRepository.find({ relations: ['books'] });
+    return this.authorRepository.find({ where: { deletedAt: null }, relations: ['books'] });
   }
 
   async findOne(id: string): Promise<Author> {
-    const author = await this.authorRepository.findOne({ where: { id }, relations: ['books'] });
+    const author = await this.authorRepository.findOne({ where: { id, deletedAt: null }, relations: ['books'] });
     if (!author) {
       throw new NotFoundException(`Author with ID ${id} not found`);
     }
@@ -41,6 +41,7 @@ export class AuthorService {
 
   async remove(id: string): Promise<void> {
     const author = await this.findOne(id);
-    await this.authorRepository.remove(author);
+    author.deletedAt = new Date();
+    await this.authorRepository.save(author);
   }
 }

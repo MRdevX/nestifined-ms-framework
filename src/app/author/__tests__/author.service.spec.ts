@@ -55,7 +55,7 @@ describe('AuthorService', () => {
 
       const result = await service.findAll();
       expect(result).toEqual(authors);
-      expect(repository.find).toHaveBeenCalledWith({ relations: ['books'] });
+      expect(repository.find).toHaveBeenCalledWith({ where: { deletedAt: null }, relations: ['books'] });
     });
   });
 
@@ -66,7 +66,10 @@ describe('AuthorService', () => {
 
       const result = await service.findOne(author.id);
       expect(result).toEqual(author);
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { id: author.id }, relations: ['books'] });
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: { id: author.id, deletedAt: null },
+        relations: ['books'],
+      });
     });
 
     it('should throw an error if author not found', async () => {
@@ -102,14 +105,17 @@ describe('AuthorService', () => {
   });
 
   describe('remove', () => {
-    it('should remove an author', async () => {
+    it('should mark an author as deleted', async () => {
       const author = { id: uuidv4(), name: 'Author Name' };
       repository.findOne.mockResolvedValue(author);
-      repository.remove.mockResolvedValue(author);
+      repository.save.mockResolvedValue({ ...author, deletedAt: new Date() });
 
       await service.remove(author.id);
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { id: author.id }, relations: ['books'] });
-      expect(repository.remove).toHaveBeenCalledWith(author);
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: { id: author.id, deletedAt: null },
+        relations: ['books'],
+      });
+      expect(repository.save).toHaveBeenCalledWith(expect.objectContaining({ deletedAt: expect.any(Date) }));
     });
   });
 });
