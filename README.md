@@ -114,25 +114,23 @@ kubectl apply -k k8s/production/
 
 ## Husky
 
-```bash
-# Husky is used to manage Git hooks. The following hooks are configured:
+Husky is used to manage Git hooks. The following hooks are configured:
 
-pre-commit: Runs lint-staged to lint and format code before committing.
-commit-msg: Ensures commit messages follow the conventional commit format.
-post-commit: Runs after a commit is made.
-pre-push: Runs before pushing code to the repository.
-post-merge: Runs after merging branches.
-post-checkout: Runs after checking out a branch.
-prepare-commit-msg: Runs before the commit message editor is opened.
-post-rewrite: Runs after a commit is rewritten.
-pre-rebase: Runs before rebasing branches.
-```
+- **pre-commit**: Runs lint-staged to lint and format code before committing.
+- **commit-msg**: Ensures commit messages follow the conventional commit format.
+- **post-commit**: Runs after a commit is made.
+- **pre-push**: Runs before pushing code to the repository.
+- **post-merge**: Runs after merging branches.
+- **post-checkout**: Runs after checking out a branch.
+- **prepare-commit-msg**: Runs before the commit message editor is opened.
+- **post-rewrite**: Runs after a commit is rewritten.
+- **pre-rebase**: Runs before rebasing branches.
 
 ## Environment Variables
 
-```bash
-# The application uses environment variables for configuration. Create a .env file in the root of the project and add the following variables:
+The application uses environment variables for configuration. Create a `.env` file in the root of the project and add the following variables:
 
+```bash
 NODE_ENV=development
 APP_NAME=MyApp
 HOST=127.0.0.1
@@ -146,12 +144,15 @@ S2S_RABBITMQ_URL=amqp://localhost:5672
 S2S_RABBITMQ_QUEUE=my_queue
 ```
 
-Support
-This project is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please read more here.
+## Support
 
-Stay in touch
-Author - Mahdi Rashidi
-LinkedIn - https://www.linkedin.com/in/mrdevx/
+This project is an MIT-licensed open source initiative. It thrives thanks to the contributions from the amazing community. I welcome and encourage you to contribute by creating pull requests and helping improve the project. Your support and involvement are greatly appreciated!
 
-License
-This project is MIT licensed.
+## Stay in Touch
+
+- **Author**: Mahdi Rashidi
+- **LinkedIn**: [Visit My Profile](https://www.linkedin.com/in/mrdevx/)
+
+## License
+
+This project is [MIT licensed](./LICENSE).
