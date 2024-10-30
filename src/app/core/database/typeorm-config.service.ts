@@ -22,7 +22,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       migrationsRun: false,
       migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
       entities,
-      logging: this.configService.get<string>('NODE_ENV') !== 'production',
+      // logging: this.configService.get<string>('NODE_ENV') !== 'production',
       extra: {
         max: this.configService.get<number>('DB_MAX_CONNECTIONS') || 100,
       },

@@ -1,4 +1,4 @@
-import { IsString, IsDateString } from 'class-validator';
+import { IsString, IsDateString, IsOptional } from 'class-validator';
 
 export class CreateBookDto {
   @IsString()
@@ -8,7 +8,8 @@ export class CreateBookDto {
   author: string;
 
   @IsDateString()
-  publishedDate: Date;
+  @IsOptional()
+  publishedDate?: Date;
 
   @IsString()
   isbn: string;

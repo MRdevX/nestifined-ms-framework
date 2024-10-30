@@ -10,11 +10,11 @@ export class Book extends BaseModel {
   author: string;
 
   @Column()
-  publishedDate: Date;
-
-  @Column()
   isbn: string;
 
   @Column()
   summary: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  publishedDate?: Date;
 }
