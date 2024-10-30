@@ -68,12 +68,12 @@ export class BookService {
     return this.bookRepository.find({ where });
   }
 
-  private async cacheBook(book: Book): Promise<void> {
+  public async cacheBook(book: Book): Promise<void> {
     const client = this.cacheService.getClient();
     await client.set(`book:${book.id}`, JSON.stringify(book));
   }
 
-  private async getCachedBook(id: string): Promise<Book | null> {
+  public async getCachedBook(id: string): Promise<Book | null> {
     const client = this.cacheService.getClient();
     const data = await client.get(`book:${id}`);
     return data ? JSON.parse(data) : null;

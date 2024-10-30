@@ -42,7 +42,9 @@ export class BookController {
   }
 
   @Post('cache')
-  cacheBook(@Body() createBookDto: CreateBookDto) {
-    return this.bookService.cacheBook(createBookDto);
+  async cacheBook(@Body() createBookDto: CreateBookDto) {
+    const book = this.bookService.create(createBookDto);
+    await this.bookService.cacheBook(await book);
+    return book;
   }
 }
