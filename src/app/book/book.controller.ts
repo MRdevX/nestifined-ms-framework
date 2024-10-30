@@ -7,8 +7,8 @@ export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Get('search')
-  findByQuery(@Query() query: SearchBookDto) {
-    return this.bookService.findByQuery(query);
+  async search(@Query() query: SearchBookDto) {
+    return this.bookService.search(query);
   }
 
   @Get()

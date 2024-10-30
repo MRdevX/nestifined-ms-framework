@@ -1,10 +1,10 @@
-import { Repository, Like } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
 import { Book } from './entities/book.entity';
-import { CacheService } from '../core/cache/cache.service';
 import { Author } from '../author/entities/author.entity';
+import { CacheService } from '../core/cache/cache.service';
 
 @Injectable()
 export class BookService {
@@ -68,16 +68,32 @@ export class BookService {
     await this.cacheService.getClient().del(`book:${id}`);
   }
 
-  async findByQuery(query: SearchBookDto): Promise<Book[]> {
-    const where = { deletedAt: null };
+  async search(query: SearchBookDto): Promise<{ items: Book[]; total: number }> {
+    const qb = this.bookRepository
+      .createQueryBuilder('book')
+      .leftJoinAndSelect('book.author', 'author')
+      .where('book.deletedAt IS NULL');
+
     if (query.title) {
-      where['title'] = Like(`%${query.title}%`);
+      qb.andWhere('book.title LIKE :title', { title: `%${query.title}%` });
     }
     if (query.author) {
-      where['author'] = Like(`%${query.author}%`);
+      qb.andWhere('author.name LIKE :author', { author: `%${query.author}%` });
     }
-    return this.bookRepository.find({ where, relations: ['author'] });
+    if (query.isbn) {
+      qb.andWhere('book.isbn = :isbn', { isbn: query.isbn });
+    }
+    if (query.publishedDate) {
+      qb.andWhere('book.publishedDate >= :publishedDate', { publishedDate: query.publishedDate });
+    }
+    if (query.summary) {
+      qb.andWhere('book.summary LIKE :summary', { summary: `%${query.summary}%` });
+    }
+
+    const [items, total] = await qb.getManyAndCount();
+    return { items, total };
   }
+
   public async cacheBook(book: Book): Promise<void> {
     const client = this.cacheService.getClient();
     await client.set(`book:${book.id}`, JSON.stringify(book));

@@ -1,11 +1,25 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsDate, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class SearchBookDto {
-  @IsString()
   @IsOptional()
+  @IsString()
   title?: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   author?: string;
+
+  @IsOptional()
+  @IsString()
+  isbn?: string;
+
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  publishedDate?: Date;
+
+  @IsOptional()
+  @IsString()
+  summary?: string;
 }
