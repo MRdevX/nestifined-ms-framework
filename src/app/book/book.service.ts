@@ -1,20 +1,24 @@
 import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { QueryNarrowingOperators } from '@root/app/core/base/base-search.service';
+import { CacheService } from '@root/app/core/cache/cache.service';
+import { BaseSearchService } from '@root/app/core/base/base-search.service';
 import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
 import { Book } from './entities/book.entity';
 import { Author } from '../author/entities/author.entity';
-import { CacheService } from '../core/cache/cache.service';
 
 @Injectable()
-export class BookService {
+export class BookService extends BaseSearchService<Book> {
   constructor(
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
     @InjectRepository(Author)
     private readonly authorRepository: Repository<Author>,
     private readonly cacheService: CacheService,
-  ) {}
+  ) {
+    super(bookRepository);
+  }
 
   async create(createBookDto: CreateBookDto): Promise<Book> {
     const author = await this.authorRepository.findOne({ where: { id: createBookDto.authorId, deletedAt: null } });
@@ -69,29 +73,17 @@ export class BookService {
   }
 
   async search(query: SearchBookDto): Promise<{ items: Book[]; total: number }> {
-    const qb = this.bookRepository
-      .createQueryBuilder('book')
-      .leftJoinAndSelect('book.author', 'author')
-      .where('book.deletedAt IS NULL');
-
-    if (query.title) {
-      qb.andWhere('book.title LIKE :title', { title: `%${query.title}%` });
-    }
-    if (query.author) {
-      qb.andWhere('author.name LIKE :author', { author: `%${query.author}%` });
-    }
-    if (query.isbn) {
-      qb.andWhere('book.isbn = :isbn', { isbn: query.isbn });
-    }
-    if (query.publishedDate) {
-      qb.andWhere('book.publishedDate >= :publishedDate', { publishedDate: query.publishedDate });
-    }
-    if (query.summary) {
-      qb.andWhere('book.summary LIKE :summary', { summary: `%${query.summary}%` });
-    }
-
-    const [items, total] = await qb.getManyAndCount();
-    return { items, total };
+    return super.search({
+      ...query,
+      relations: ['author'],
+      filterFields: [
+        { name: 'title', value: query.title, operation: QueryNarrowingOperators.LIKE },
+        { name: 'author', value: query.author, operation: QueryNarrowingOperators.EQ }, // Changed to EQ
+        { name: 'isbn', value: query.isbn, operation: QueryNarrowingOperators.EQ },
+        { name: 'publishedDate', value: query.publishedDate, operation: QueryNarrowingOperators.GTE },
+        { name: 'summary', value: query.summary, operation: QueryNarrowingOperators.LIKE },
+      ],
+    });
   }
 
   public async cacheBook(book: Book): Promise<void> {

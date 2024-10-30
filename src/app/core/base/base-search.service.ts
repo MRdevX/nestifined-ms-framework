@@ -1,6 +1,21 @@
 import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 import { merge, isNil } from 'lodash';
 
+export enum QueryNarrowingOperators {
+  EQ = 'EQ',
+  GT = 'GT',
+  GTE = 'GTE',
+  LT = 'LT',
+  LTE = 'LTE',
+  NE = 'NE',
+  IN = 'IN',
+  NIN = 'NIN',
+  LIKE = 'LIKE',
+  ILIKE = 'ILIKE',
+  CONTAINS = 'CONTAINS',
+  ISNULL = 'ISNULL',
+}
+
 interface ISearchConfig {
   caseInsensitiveSearch?: boolean;
   fullTextSearch?: boolean;
@@ -8,11 +23,17 @@ interface ISearchConfig {
   andWhere?: { condition: string; parameters?: any };
 }
 
+interface IFilterField<T> {
+  name: keyof T;
+  value: any;
+  operation?: QueryNarrowingOperators;
+}
+
 interface IBaseEntitySearchDto<T> {
   limit?: number;
   offset?: number;
   relations?: string[];
-  filterFields?: Array<{ name: keyof T; value: any }>;
+  filterFields?: Array<IFilterField<T>>;
   searchInput?: string;
   searchFields?: Array<keyof T>;
   selectFields?: Array<keyof T>;
@@ -20,7 +41,7 @@ interface IBaseEntitySearchDto<T> {
   sortDirections?: Array<'ASC' | 'DESC'>;
 }
 
-export abstract class SearchService<T> {
+export abstract class BaseSearchService<T> {
   protected constructor(protected readonly repository: Repository<T>) {}
 
   private static get defaultSearchConfig(): ISearchConfig {
@@ -39,14 +60,61 @@ export abstract class SearchService<T> {
     relations?.forEach((relation) => qb.leftJoinAndSelect(`${alias}.${relation}`, relation));
   }
 
-  private applyFilters(
-    qb: SelectQueryBuilder<T>,
-    alias: string,
-    filterFields?: Array<{ name: keyof T; value: any }>,
-  ): void {
+  private applyFilters(qb: SelectQueryBuilder<T>, alias: string, filterFields?: Array<IFilterField<T>>): void {
     filterFields?.forEach((filter) => {
       if (!isNil(filter.value)) {
-        qb.andWhere(`${alias}.${String(filter.name)} = :${String(filter.name)}`, { [filter.name]: filter.value });
+        const operation = filter.operation || QueryNarrowingOperators.EQ;
+        const field = `${alias}.${String(filter.name)}`;
+        const columnMetadata = this.repository.metadata.findColumnWithPropertyName(String(filter.name));
+        const fieldType = columnMetadata?.type;
+
+        if (
+          fieldType === 'uuid' &&
+          (operation === QueryNarrowingOperators.LIKE || operation === QueryNarrowingOperators.ILIKE)
+        ) {
+          throw new Error(`Cannot use ${operation} operator on uuid field ${field}`);
+        }
+
+        switch (operation) {
+          case QueryNarrowingOperators.EQ:
+            qb.andWhere(`${field} = :${String(filter.name)}`, { [filter.name]: filter.value });
+            break;
+          case QueryNarrowingOperators.GT:
+            qb.andWhere(`${field} > :${String(filter.name)}`, { [filter.name]: filter.value });
+            break;
+          case QueryNarrowingOperators.GTE:
+            qb.andWhere(`${field} >= :${String(filter.name)}`, { [filter.name]: filter.value });
+            break;
+          case QueryNarrowingOperators.LT:
+            qb.andWhere(`${field} < :${String(filter.name)}`, { [filter.name]: filter.value });
+            break;
+          case QueryNarrowingOperators.LTE:
+            qb.andWhere(`${field} <= :${String(filter.name)}`, { [filter.name]: filter.value });
+            break;
+          case QueryNarrowingOperators.NE:
+            qb.andWhere(`${field} != :${String(filter.name)}`, { [filter.name]: filter.value });
+            break;
+          case QueryNarrowingOperators.IN:
+            qb.andWhere(`${field} IN (:...${String(filter.name)})`, { [filter.name]: filter.value });
+            break;
+          case QueryNarrowingOperators.NIN:
+            qb.andWhere(`${field} NOT IN (:...${String(filter.name)})`, { [filter.name]: filter.value });
+            break;
+          case QueryNarrowingOperators.LIKE:
+            qb.andWhere(`${field} LIKE :${String(filter.name)}`, { [filter.name]: `%${filter.value}%` });
+            break;
+          case QueryNarrowingOperators.ILIKE:
+            qb.andWhere(`${field} ILIKE :${String(filter.name)}`, { [filter.name]: `%${filter.value}%` });
+            break;
+          case QueryNarrowingOperators.CONTAINS:
+            qb.andWhere(`${field} @> :${String(filter.name)}`, { [filter.name]: filter.value });
+            break;
+          case QueryNarrowingOperators.ISNULL:
+            qb.andWhere(`${field} IS ${filter.value ? 'NOT NULL' : 'NULL'}`);
+            break;
+          default:
+            qb.andWhere(`${field} = :${String(filter.name)}`, { [filter.name]: filter.value });
+        }
       }
     });
   }
@@ -76,7 +144,7 @@ export abstract class SearchService<T> {
     sortDirections?: Array<'ASC' | 'DESC'>,
   ): void {
     sortFields?.forEach((column, i) => {
-      const direction = (sortDirections && SearchService.getSortVerb(sortDirections[i])) || 'ASC';
+      const direction = (sortDirections && BaseSearchService.getSortVerb(sortDirections[i])) || 'ASC';
       qb.addOrderBy(`${alias}.${String(column)}`, direction);
     });
   }
@@ -85,7 +153,7 @@ export abstract class SearchService<T> {
     options: IBaseEntitySearchDto<T>,
     config: ISearchConfig = {},
   ): Promise<{ items: T[]; total: number }> {
-    const searchConfig: ISearchConfig = merge(SearchService.defaultSearchConfig, config);
+    const searchConfig: ISearchConfig = merge(BaseSearchService.defaultSearchConfig, config);
     const {
       limit,
       offset,
