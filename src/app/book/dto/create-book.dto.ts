@@ -1,11 +1,11 @@
-import { IsString, IsDateString, IsOptional } from 'class-validator';
+import { IsString, IsDateString, IsOptional, IsUUID } from 'class-validator';
 
 export class CreateBookDto {
   @IsString()
   title: string;
 
-  @IsString()
-  author: string;
+  @IsUUID()
+  authorId: string;
 
   @IsDateString()
   @IsOptional()
