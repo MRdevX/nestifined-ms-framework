@@ -1,8 +1,9 @@
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { SearchBookDto } from './dto/search-book.dto';
 import { Book } from './entities/book.entity';
 
 @Injectable()
@@ -43,5 +44,16 @@ export class BookService {
   async remove(id: string): Promise<void> {
     const book = await this.findOne(id);
     await this.bookRepository.remove(book);
+  }
+
+  async findByQuery(query: SearchBookDto): Promise<Book[]> {
+    const where = {};
+    if (query.title) {
+      where['title'] = Like(`%${query.title}%`);
+    }
+    if (query.author) {
+      where['author'] = Like(`%${query.author}%`);
+    }
+    return this.bookRepository.find({ where });
   }
 }
