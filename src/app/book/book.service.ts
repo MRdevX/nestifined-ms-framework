@@ -1,20 +1,24 @@
-import { Repository, Like } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { QueryNarrowingOperators } from '@root/app/core/base/base-search.model';
+import { CacheService } from '@root/app/core/cache/cache.service';
+import { BaseSearchService } from '@root/app/core/base/base-search.service';
 import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
 import { Book } from './entities/book.entity';
-import { CacheService } from '../core/cache/cache.service';
 import { Author } from '../author/entities/author.entity';
 
 @Injectable()
-export class BookService {
+export class BookService extends BaseSearchService<Book> {
   constructor(
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
     @InjectRepository(Author)
     private readonly authorRepository: Repository<Author>,
     private readonly cacheService: CacheService,
-  ) {}
+  ) {
+    super(bookRepository);
+  }
 
   async create(createBookDto: CreateBookDto): Promise<Book> {
     const author = await this.authorRepository.findOne({ where: { id: createBookDto.authorId, deletedAt: null } });
@@ -68,16 +72,20 @@ export class BookService {
     await this.cacheService.getClient().del(`book:${id}`);
   }
 
-  async findByQuery(query: SearchBookDto): Promise<Book[]> {
-    const where = { deletedAt: null };
-    if (query.title) {
-      where['title'] = Like(`%${query.title}%`);
-    }
-    if (query.author) {
-      where['author'] = Like(`%${query.author}%`);
-    }
-    return this.bookRepository.find({ where, relations: ['author'] });
+  async search(query: SearchBookDto): Promise<{ items: Book[]; total: number }> {
+    return super.search({
+      ...query,
+      relations: ['author'],
+      filterFields: [
+        { name: 'title', value: query.title, operation: QueryNarrowingOperators.LIKE },
+        { name: 'author', value: query.author, operation: QueryNarrowingOperators.EQ }, // Changed to EQ
+        { name: 'isbn', value: query.isbn, operation: QueryNarrowingOperators.EQ },
+        { name: 'publishedDate', value: query.publishedDate, operation: QueryNarrowingOperators.GTE },
+        { name: 'summary', value: query.summary, operation: QueryNarrowingOperators.LIKE },
+      ],
+    });
   }
+
   public async cacheBook(book: Book): Promise<void> {
     const client = this.cacheService.getClient();
     await client.set(`book:${book.id}`, JSON.stringify(book));
