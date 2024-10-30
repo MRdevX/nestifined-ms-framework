@@ -28,6 +28,9 @@ const ERRORS = {
     NOT_FOUND: createError('AUTHOR_NOT_FOUND', 'Author not found'),
     ALREADY_EXISTS: createError('AUTHOR_ALREADY_EXISTS', 'Author already exists'),
   },
+  GENERIC: {
+    INTERNAL_SERVER_ERROR: createError('INTERNAL_SERVER_ERROR', 'Internal server error'),
+  },
   NOT_FOUND: (entity: string, fieldName?: string, fieldValue?: string) => ({
     code: `${CONSTANTS.ERRORS_PREFIX}_${formatErrorCode(entity)}_NOT_FOUND`,
     message: `The ${entity}${fieldName && fieldValue ? ' with ' + fieldName + ' ' + fieldValue : ''} was not found.`,
