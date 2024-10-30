@@ -35,4 +35,14 @@ export class BookController {
   remove(@Param('id') id: string) {
     return this.bookService.remove(id);
   }
+
+  @Get('cache/:id')
+  getCachedBook(@Param('id') id: string) {
+    return this.bookService.getCachedBook(id);
+  }
+
+  @Post('cache')
+  cacheBook(@Body() createBookDto: CreateBookDto) {
+    return this.bookService.cacheBook(createBookDto);
+  }
 }
