@@ -2,10 +2,10 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { CacheService } from '@root/app/core/cache/cache.service';
+import { Author } from '@root/app/author/entities/author.entity';
+import { Book } from '@root/app/book/entities/book.entity';
 import { BookService } from '../book.service';
-import { Book } from '../entities/book.entity';
-import { Author } from '../../author/entities/author.entity';
-import { CacheService } from '../../core/cache/cache.service';
 
 const mockBookRepository = () => ({
   create: jest.fn(),
@@ -48,7 +48,6 @@ describe('BookService', () => {
     service = module.get<BookService>(BookService);
     bookRepository = module.get<MockRepository>(getRepositoryToken(Book));
     authorRepository = module.get<MockRepository>(getRepositoryToken(Author));
-    cacheService = module.get<CacheService>(CacheService);
   });
 
   it('should be defined', () => {

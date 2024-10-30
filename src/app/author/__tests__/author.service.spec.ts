@@ -2,8 +2,8 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Author } from '@root/app/author/entities/author.entity';
 import { AuthorService } from '../author.service';
-import { Author } from '../entities/author.entity';
 
 const mockAuthorRepository = () => ({
   create: jest.fn(),

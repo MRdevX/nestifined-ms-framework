@@ -22,7 +22,6 @@ describe('AuthorController', () => {
     }).compile();
 
     controller = module.get<AuthorController>(AuthorController);
-    service = module.get<AuthorService>(AuthorService);
   });
 
   it('should be defined', () => {

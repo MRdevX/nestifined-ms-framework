@@ -22,7 +22,6 @@ describe('BookController', () => {
     }).compile();
 
     controller = module.get<BookController>(BookController);
-    service = module.get<BookService>(BookService);
   });
 
   it('should be defined', () => {
