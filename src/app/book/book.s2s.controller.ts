@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload, Ctx, RmqContext } from '@nestjs/microservices';
 import { BookS2SService } from './book.s2s.service';
-import { CreateBookDto } from './dto/create-book.dto';
+import { CreateBookDto } from './dto';
 
 @Controller()
 export class BookS2SController {

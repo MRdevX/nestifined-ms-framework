@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { CreateBookDto } from './dto/create-book.dto';
+import { CreateBookDto } from './dto';
 import { Book } from './entities/book.entity';
 
 @Injectable()

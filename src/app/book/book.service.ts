@@ -1,9 +1,7 @@
 import { Repository, Like } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
-import { SearchBookDto } from './dto/search-book.dto';
+import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
 import { Book } from './entities/book.entity';
 
 @Injectable()
