@@ -1,28 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { ConfigService } from '@nestjs/config';
 import { CreateBookDto } from './dto';
 import { Book } from './entities/book.entity';
+import { CacheService } from '../core/cache/cache.service';
+import { MessagingService } from '../core/messaging/messaging.service';
 
 @Injectable()
 export class BookS2SService {
-  private client: ClientProxy;
-
-  constructor(private configService: ConfigService) {
-    this.client = ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: [this.configService.get<string>('S2S_RABBITMQ_URL')],
-        queue: this.configService.get<string>('S2S_RABBITMQ_QUEUE'),
-        queueOptions: {
-          durable: false,
-        },
-      },
-    });
-  }
+  constructor(
+    private cacheService: CacheService,
+    private messagingService: MessagingService,
+  ) {}
 
   async sendBook(createBookDto: CreateBookDto): Promise<void> {
-    this.client.emit('book_created', createBookDto);
+    const client = this.messagingService.getClient();
+    client.emit('book_created', createBookDto);
   }
 
   async receiveBook(data: any): Promise<Book> {
@@ -30,5 +21,16 @@ export class BookS2SService {
     const book: Book = data;
     // Save or process the book as needed
     return book;
+  }
+
+  async cacheBook(book: Book): Promise<void> {
+    const client = this.cacheService.getClient();
+    await client.set(`book:${book.id}`, JSON.stringify(book));
+  }
+
+  async getCachedBook(id: string): Promise<Book | null> {
+    const client = this.cacheService.getClient();
+    const data = await client.get(`book:${id}`);
+    return data ? JSON.parse(data) : null;
   }
 }
