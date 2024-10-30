@@ -1,54 +1,38 @@
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { mock, MockProxy } from 'jest-mock-extended';
+import Redis from 'ioredis-mock';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CacheService } from '@root/app/core/cache/cache.service';
 import { Author } from '@root/app/author/entities/author.entity';
 import { Book } from '@root/app/book/entities/book.entity';
+import { ERRORS } from '@root/app/core/errors/errors';
+import { createMockAuthor } from '@test/mocks/author.mock';
 import { BookService } from '../book.service';
-import { ERRORS } from '../../core/errors/errors';
-
-const mockBookRepository = () => ({
-  create: jest.fn(),
-  save: jest.fn(),
-  find: jest.fn(),
-  findOne: jest.fn(),
-  preload: jest.fn(),
-  remove: jest.fn(),
-});
-
-const mockAuthorRepository = () => ({
-  findOne: jest.fn(),
-});
-
-const mockCacheService = () => ({
-  getClient: jest.fn().mockReturnValue({
-    set: jest.fn(),
-    get: jest.fn(),
-    del: jest.fn(),
-  }),
-});
-
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('BookService', () => {
   let service: BookService;
-  let bookRepository: MockRepository;
-  let authorRepository: MockRepository;
+  let bookRepository: MockProxy<Repository<Book>>;
+  let authorRepository: MockProxy<Repository<Author>>;
+  let cacheService: MockProxy<CacheService>;
 
   beforeEach(async () => {
+    cacheService = mock<CacheService>();
+    cacheService.getClient.mockReturnValue(new Redis());
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BookService,
-        { provide: getRepositoryToken(Book), useValue: mockBookRepository() },
-        { provide: getRepositoryToken(Author), useValue: mockAuthorRepository() },
-        { provide: CacheService, useValue: mockCacheService() },
+        { provide: getRepositoryToken(Book), useValue: mock<Repository<Book>>() },
+        { provide: getRepositoryToken(Author), useValue: mock<Repository<Author>>() },
+        { provide: CacheService, useValue: cacheService },
       ],
     }).compile();
 
     service = module.get<BookService>(BookService);
-    bookRepository = module.get<MockRepository>(getRepositoryToken(Book));
-    authorRepository = module.get<MockRepository>(getRepositoryToken(Author));
+    bookRepository = module.get(getRepositoryToken(Book));
+    authorRepository = module.get(getRepositoryToken(Author));
   });
 
   it('should be defined', () => {
@@ -64,18 +48,17 @@ describe('BookService', () => {
         summary: 'Book Summary',
         publishedDate: new Date(),
       };
-      const author = { id: createBookDto.authorId, name: 'Author Name' };
-      const book = { id: uuidv4(), ...createBookDto, author };
+      const author = createMockAuthor();
+      author.id = createBookDto.authorId;
+      const book: Partial<Book> = { id: uuidv4(), ...createBookDto, author };
 
-      authorRepository.findOne.mockResolvedValue(author);
-      bookRepository.create.mockReturnValue(book);
-      bookRepository.save.mockResolvedValue(book);
+      authorRepository.findOne.mockResolvedValue(author as Author);
+      bookRepository.create.mockReturnValue(book as Book);
+      bookRepository.save.mockResolvedValue(book as Book);
 
       const result = await service.create(createBookDto);
       expect(result).toEqual(book);
-      expect(authorRepository.findOne).toHaveBeenCalledWith({
-        where: { id: createBookDto.authorId, deletedAt: null },
-      });
+      expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: createBookDto.authorId, deletedAt: null } });
       expect(bookRepository.create).toHaveBeenCalledWith({ ...createBookDto, author });
       expect(bookRepository.save).toHaveBeenCalledWith(book);
     });
@@ -83,8 +66,9 @@ describe('BookService', () => {
 
   describe('findAll', () => {
     it('should return an array of books', async () => {
-      const books = [{ id: uuidv4(), title: 'Book Title', author: { id: uuidv4(), name: 'Author Name' } }];
-      bookRepository.find.mockResolvedValue(books);
+      const author = createMockAuthor();
+      const books: Partial<Book>[] = [{ id: uuidv4(), title: 'Book Title', author }];
+      bookRepository.find.mockResolvedValue(books as Book[]);
 
       const result = await service.findAll();
       expect(result).toEqual(books);
@@ -94,16 +78,18 @@ describe('BookService', () => {
 
   describe('findOne', () => {
     it('should return a book', async () => {
-      const book = { id: uuidv4(), title: 'Book Title', author: { id: uuidv4(), name: 'Author Name' } };
-      bookRepository.findOne.mockResolvedValue(book);
+      const author = createMockAuthor();
+      const book: Partial<Book> = { id: uuidv4(), title: 'Book Title', author };
+      bookRepository.findOne.mockResolvedValue(book as Book);
 
-      const result = await service.findOne(book.id);
+      const result = await service.findOne(book.id as string);
       expect(result).toEqual(book);
       expect(bookRepository.findOne).toHaveBeenCalledWith({
         where: { id: book.id, deletedAt: null },
         relations: ['author'],
       });
     });
+
     it('should throw an error if book not found', async () => {
       const bookId = uuidv4();
       bookRepository.findOne.mockResolvedValue(null);
@@ -121,14 +107,15 @@ describe('BookService', () => {
         summary: 'Updated Book Summary',
         publishedDate: new Date(),
       };
-      const author = { id: updateBookDto.authorId, name: 'Author Name' };
-      const book = { id: uuidv4(), ...updateBookDto, author };
+      const author = createMockAuthor();
+      author.id = updateBookDto.authorId;
+      const book: Partial<Book> = { id: uuidv4(), ...updateBookDto, author };
 
-      authorRepository.findOne.mockResolvedValue(author);
-      bookRepository.preload.mockResolvedValue(book);
-      bookRepository.save.mockResolvedValue(book);
+      authorRepository.findOne.mockResolvedValue(author as Author);
+      bookRepository.preload.mockResolvedValue(book as Book);
+      bookRepository.save.mockResolvedValue(book as Book);
 
-      const result = await service.update(book.id, updateBookDto);
+      const result = await service.update(book.id as string, updateBookDto);
       expect(result).toEqual(book);
       expect(authorRepository.findOne).toHaveBeenCalledWith({ where: { id: updateBookDto.authorId, deletedAt: null } });
       expect(bookRepository.preload).toHaveBeenCalledWith({ id: book.id, ...updateBookDto, author });
@@ -143,12 +130,10 @@ describe('BookService', () => {
         summary: 'Updated Book Summary',
         publishedDate: new Date(),
       };
-      const authorId = updateBookDto.authorId;
+      // const authorId = updateBookDto.authorId;
       authorRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.update(uuidv4(), updateBookDto)).rejects.toThrow(
-        ERRORS.NOT_FOUND('Author', authorId).message,
-      );
+      await expect(service.update(uuidv4(), updateBookDto)).rejects.toThrow(ERRORS.NOT_FOUND('Author').message);
     });
 
     it('should throw an error if book not found', async () => {
@@ -160,9 +145,10 @@ describe('BookService', () => {
         summary: 'Updated Book Summary',
         publishedDate: new Date(),
       };
-      const author = { id: updateBookDto.authorId, name: 'Author Name' };
+      const author = createMockAuthor();
+      author.id = updateBookDto.authorId;
 
-      authorRepository.findOne.mockResolvedValue(author);
+      authorRepository.findOne.mockResolvedValue(author as Author);
       bookRepository.preload.mockResolvedValue(null);
 
       await expect(service.update(bookId, updateBookDto)).rejects.toThrow(ERRORS.BOOK.NOT_FOUND.message);
@@ -171,11 +157,12 @@ describe('BookService', () => {
 
   describe('remove', () => {
     it('should mark a book as deleted', async () => {
-      const book = { id: uuidv4(), title: 'Book Title', author: { id: uuidv4(), name: 'Author Name' } };
-      bookRepository.findOne.mockResolvedValue(book);
-      bookRepository.save.mockResolvedValue({ ...book, deletedAt: new Date() });
+      const author = createMockAuthor();
+      const book: Partial<Book> = { id: uuidv4(), title: 'Book Title', author };
+      bookRepository.findOne.mockResolvedValue(book as Book);
+      bookRepository.save.mockResolvedValue({ ...book, deletedAt: new Date() } as Book);
 
-      await service.remove(book.id);
+      await service.remove(book.id as string);
       expect(bookRepository.findOne).toHaveBeenCalledWith({
         where: { id: book.id, deletedAt: null },
         relations: ['author'],

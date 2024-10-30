@@ -1,24 +1,22 @@
 import { v4 as uuidv4 } from 'uuid';
+import { mock, MockProxy } from 'jest-mock-extended';
 import { Test, TestingModule } from '@nestjs/testing';
+import { createMockAuthor } from '@test/mocks/author.mock';
 import { BookController } from '../book.controller';
 import { BookService } from '../book.service';
 import { CreateBookDto, UpdateBookDto } from '../dto';
+import { Book } from '../entities/book.entity';
 
 describe('BookController', () => {
   let controller: BookController;
-
-  const mockBookService = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
-  };
+  let bookService: MockProxy<BookService>;
 
   beforeEach(async () => {
+    bookService = mock<BookService>();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [BookController],
-      providers: [{ provide: BookService, useValue: mockBookService }],
+      providers: [{ provide: BookService, useValue: bookService }],
     }).compile();
 
     controller = module.get<BookController>(BookController);
@@ -37,35 +35,38 @@ describe('BookController', () => {
         summary: 'Book Summary',
         publishedDate: new Date(),
       };
-      const book = { id: uuidv4(), ...createBookDto };
+      const author = createMockAuthor();
+      const book: Partial<Book> = { id: uuidv4(), ...createBookDto, author };
 
-      mockBookService.create.mockResolvedValue(book);
+      bookService.create.mockResolvedValue(book as Book);
 
       const result = await controller.create(createBookDto);
       expect(result).toEqual(book);
-      expect(mockBookService.create).toHaveBeenCalledWith(createBookDto);
+      expect(bookService.create).toHaveBeenCalledWith(createBookDto);
     });
   });
 
   describe('findAll', () => {
     it('should return an array of books', async () => {
-      const books = [{ id: uuidv4(), title: 'Book Title', author: { id: uuidv4(), name: 'Author Name' } }];
-      mockBookService.findAll.mockResolvedValue(books);
+      const author = createMockAuthor();
+      const books: Partial<Book>[] = [{ id: uuidv4(), title: 'Book Title', author }];
+      bookService.findAll.mockResolvedValue(books as Book[]);
 
       const result = await controller.findAll();
       expect(result).toEqual(books);
-      expect(mockBookService.findAll).toHaveBeenCalled();
+      expect(bookService.findAll).toHaveBeenCalled();
     });
   });
 
   describe('findOne', () => {
     it('should return a book', async () => {
-      const book = { id: uuidv4(), title: 'Book Title', author: { id: uuidv4(), name: 'Author Name' } };
-      mockBookService.findOne.mockResolvedValue(book);
+      const author = createMockAuthor();
+      const book: Partial<Book> = { id: uuidv4(), title: 'Book Title', author };
+      bookService.findOne.mockResolvedValue(book as Book);
 
-      const result = await controller.findOne(book.id);
+      const result = await controller.findOne(book.id as string);
       expect(result).toEqual(book);
-      expect(mockBookService.findOne).toHaveBeenCalledWith(book.id);
+      expect(bookService.findOne).toHaveBeenCalledWith(book.id);
     });
   });
 
@@ -78,24 +79,27 @@ describe('BookController', () => {
         summary: 'Updated Book Summary',
         publishedDate: new Date(),
       };
-      const book = { id: uuidv4(), ...updateBookDto };
+      const author = createMockAuthor();
+      author.id = updateBookDto.authorId;
+      const book: Partial<Book> = { id: uuidv4(), ...updateBookDto, author };
 
-      mockBookService.update.mockResolvedValue(book);
+      bookService.update.mockResolvedValue(book as Book);
 
-      const result = await controller.update(book.id, updateBookDto);
+      const result = await controller.update(book.id as string, updateBookDto);
       expect(result).toEqual(book);
-      expect(mockBookService.update).toHaveBeenCalledWith(book.id, updateBookDto);
+      expect(bookService.update).toHaveBeenCalledWith(book.id, updateBookDto);
     });
   });
 
   describe('remove', () => {
     it('should remove a book', async () => {
-      const book = { id: uuidv4(), title: 'Book Title', author: { id: uuidv4(), name: 'Author Name' } };
+      const author = createMockAuthor();
+      const book: Partial<Book> = { id: uuidv4(), title: 'Book Title', author };
 
-      mockBookService.remove.mockResolvedValue(undefined);
+      bookService.remove.mockResolvedValue(undefined);
 
-      await controller.remove(book.id);
-      expect(mockBookService.remove).toHaveBeenCalledWith(book.id);
+      await controller.remove(book.id as string);
+      expect(bookService.remove).toHaveBeenCalledWith(book.id);
     });
   });
 });
