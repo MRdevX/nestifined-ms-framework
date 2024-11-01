@@ -9,7 +9,13 @@ export class MessagingService {
   constructor(private configService: ConfigService) {
     this.client = ClientProxyFactory.create({
       transport: Transport.RMQ,
-      options: this.configService.get<any>('s2s.options'),
+      options: {
+        urls: [this.configService.get<string>('S2S_RABBITMQ_URL')],
+        queue: this.configService.get<string>('S2S_RABBITMQ_QUEUE'),
+        queueOptions: {
+          durable: false,
+        },
+      },
     });
   }
 

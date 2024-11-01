@@ -1,10 +1,14 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
 import { BookService } from './book.service';
+import { BookS2SService } from './book.s2s.service';
 import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
 
 @Controller('books')
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
+  constructor(
+    private readonly bookService: BookService,
+    private readonly bookS2SService: BookS2SService,
+  ) {}
 
   @Get('search')
   async search(@Query() query: SearchBookDto) {
@@ -46,5 +50,10 @@ export class BookController {
     const book = this.bookService.create(createBookDto);
     await this.bookService.cacheBook(await book);
     return book;
+  }
+
+  @Post('send')
+  async sendBook(@Body() createBookDto: CreateBookDto) {
+    await this.bookS2SService.sendBook(createBookDto);
   }
 }
