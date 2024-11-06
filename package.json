@@ -119,5 +119,19 @@
     ],
     "testEnvironment": "node"
   },
+  "keywords": [
+    "nestjs",
+    "microservices",
+    "framework"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "packageManager": "yarn@4.5.1"
 }
