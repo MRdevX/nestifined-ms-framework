@@ -13,7 +13,7 @@ export interface IBaseEntityData {
 }
 
 export interface IWhereClause {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface IOrderClause {

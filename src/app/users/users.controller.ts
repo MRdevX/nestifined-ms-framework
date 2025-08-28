@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { CurrentUser as CurrentUserDecorator } from '../auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import type { CurrentUser } from '../auth/interfaces/auth.interfaces';
 import type { CreateUserDto } from './dto/create-user.dto';
 import type { UpdateUserDto } from './dto/update-user.dto';
 import type { UsersService } from './users.service';
@@ -22,7 +23,7 @@ export class UsersController {
   }
 
   @Get('me')
-  async getCurrentUser(@CurrentUser() user: any) {
+  async getCurrentUser(@CurrentUserDecorator() user: CurrentUser) {
     return this.usersService.findById(user.userId);
   }
 

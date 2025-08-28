@@ -17,3 +17,8 @@ export interface AuthResponse {
   user: UserWithoutPassword;
   tokens: TokenPair;
 }
+
+export interface CurrentUser {
+  userId: string;
+  email: string;
+}

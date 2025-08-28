@@ -41,7 +41,7 @@ export abstract class TypeOrmBaseRepository<T extends BaseModel> extends BaseRep
       typeOrmOptions.relations = options.relations;
     }
     if (options?.select) {
-      typeOrmOptions.select = options.select as any;
+      typeOrmOptions.select = options.select as FindOptionsSelect<T>;
     }
     if (options?.order) {
       typeOrmOptions.order = options.order as FindOptionsOrder<T>;
@@ -89,7 +89,7 @@ export abstract class TypeOrmBaseRepository<T extends BaseModel> extends BaseRep
   }
 
   async update(id: string, data: Partial<T>): Promise<T | null> {
-    await this.repository.update(id, data as any);
+    await this.repository.update(id, data as DeepPartial<T>);
     return this.findById(id);
   }
 

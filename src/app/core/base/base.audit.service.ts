@@ -9,8 +9,8 @@ export interface AuditLog extends BaseModel {
   entityId: string;
   action: 'CREATE' | 'UPDATE' | 'DELETE' | 'RESTORE';
   userId?: string;
-  changes?: Record<string, any>;
-  metadata?: Record<string, any>;
+  changes?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
 }
 
 @Injectable()
@@ -26,8 +26,8 @@ export abstract class BaseAuditService<T extends BaseModel> extends BaseService<
     entityId: string,
     action: AuditLog['action'],
     userId?: string,
-    changes?: Record<string, any>,
-    metadata?: Record<string, any>,
+    changes?: Record<string, unknown>,
+    metadata?: Record<string, unknown>,
   ): Promise<void> {
     const auditLog: Partial<AuditLog> = {
       entityType: this.getEntityType(),
@@ -43,13 +43,13 @@ export abstract class BaseAuditService<T extends BaseModel> extends BaseService<
 
   protected abstract getEntityType(): string;
 
-  async createWithAudit(data: any, userId?: string): Promise<T> {
+  async createWithAudit(data: Partial<T>, userId?: string): Promise<T> {
     const entity = await super.create(data);
     await this.logAudit(entity.id, 'CREATE', userId, data);
     return entity;
   }
 
-  async updateWithAudit(id: string, data: any, userId?: string): Promise<T> {
+  async updateWithAudit(id: string, data: Partial<T>, userId?: string): Promise<T> {
     const oldEntity = await this.findById(id);
     const entity = await super.update(id, data);
     await this.logAudit(id, 'UPDATE', userId, data, { previousData: oldEntity });

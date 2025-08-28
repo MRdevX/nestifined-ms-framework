@@ -16,7 +16,7 @@ export class BookS2SService {
     client.emit('book_created', createBookDto);
   }
 
-  async receiveBook(data: any): Promise<Book> {
+  async receiveBook(data: CreateBookDto): Promise<Book> {
     // Process received book data
     const book: Book = data;
     // Save or process the book as needed
