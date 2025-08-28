@@ -1,11 +1,11 @@
-import { v4 as uuidv4 } from 'uuid';
-import { mock, MockProxy } from 'jest-mock-extended';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { createMockAuthor } from '@test/mocks/author.mock';
+import { type MockProxy, mock } from 'jest-mock-extended';
+import { v4 as uuidv4 } from 'uuid';
 import { BookController } from '../book.controller';
 import { BookService } from '../book.service';
-import { CreateBookDto, UpdateBookDto } from '../dto';
-import { Book } from '../entities/book.entity';
+import type { CreateBookDto, UpdateBookDto } from '../dto';
+import type { Book } from '../entities/book.entity';
 
 describe('BookController', () => {
   let controller: BookController;

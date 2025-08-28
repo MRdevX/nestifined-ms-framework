@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
-import { BookService } from './book.service';
-import { BookS2SService } from './book.s2s.service';
-import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
+import type { BookS2SService } from './book.s2s.service';
+import type { BookService } from './book.service';
+import type { CreateBookDto, SearchBookDto, UpdateBookDto } from './dto';
 
 @Controller('books')
 export class BookController {
@@ -12,7 +12,7 @@ export class BookController {
 
   @Get('search')
   async search(@Query() query: SearchBookDto) {
-    return this.bookService.search(query);
+    return this.bookService.searchBooks(query);
   }
 
   @Get()
@@ -20,24 +20,36 @@ export class BookController {
     return this.bookService.findAll();
   }
 
+  @Get('with-author')
+  findAllWithAuthor() {
+    return this.bookService.findAllWithAuthor();
+  }
+
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() createBookDto: CreateBookDto) {
-    return this.bookService.create(createBookDto);
+    return this.bookService.createBook(createBookDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.bookService.findOne(id);
+    return this.bookService.findById(id);
+  }
+
+  @Get(':id/with-author')
+  findOneWithAuthor(@Param('id') id: string) {
+    return this.bookService.findByIdWithAuthor(id);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.bookService.update(id, updateBookDto);
+    return this.bookService.updateBook(id, updateBookDto);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return this.bookService.remove(id);
+    return this.bookService.deleteBook(id);
   }
 
   @Get('cache/:id')
@@ -47,8 +59,8 @@ export class BookController {
 
   @Post('cache')
   async cacheBook(@Body() createBookDto: CreateBookDto) {
-    const book = this.bookService.create(createBookDto);
-    await this.bookService.cacheBook(await book);
+    const book = await this.bookService.createBook(createBookDto);
+    await this.bookService.cacheBook(book);
     return book;
   }
 

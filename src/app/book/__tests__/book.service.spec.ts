@@ -1,14 +1,14 @@
-import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
-import { mock, MockProxy } from 'jest-mock-extended';
-import Redis from 'ioredis-mock';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CacheService } from '@root/app/core/cache/cache.service';
 import { Author } from '@root/app/author/entities/author.entity';
 import { Book } from '@root/app/book/entities/book.entity';
+import { CacheService } from '@root/app/core/cache/cache.service';
 import { ERRORS } from '@root/app/core/errors/errors';
 import { createMockAuthor } from '@test/mocks/author.mock';
+import Redis from 'ioredis-mock';
+import { type MockProxy, mock } from 'jest-mock-extended';
+import type { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { BookService } from '../book.service';
 
 const createBookDtoFactory = () => ({

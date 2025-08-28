@@ -29,7 +29,7 @@
 - **📨 RabbitMQ**: Messaging support using RabbitMQ.
 - **📄 Swagger**: API documentation using Swagger.
 - **🐶 Husky**: Git hooks management using Husky.
-- **🧹 Linting and Formatting**: ESLint and Prettier for code linting and formatting.
+- **🧹 Linting and Formatting**: Biome for code linting and formatting.
 - **🧪 Testing**: Unit and e2e testing using Jest.
 - **📜 Logging**: Logging using Winston with daily rotate file support.
 - **🔧 Environment Configuration**: Environment variable management using dotenv.

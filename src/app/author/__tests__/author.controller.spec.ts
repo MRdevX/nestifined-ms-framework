@@ -1,10 +1,10 @@
+import { Test, type TestingModule } from '@nestjs/testing';
+import { type MockProxy, mock } from 'jest-mock-extended';
 import { v4 as uuidv4 } from 'uuid';
-import { mock, MockProxy } from 'jest-mock-extended';
-import { Test, TestingModule } from '@nestjs/testing';
 import { AuthorController } from '../author.controller';
 import { AuthorService } from '../author.service';
-import { CreateAuthorDto, UpdateAuthorDto } from '../dto';
-import { Author } from '../entities/author.entity';
+import type { CreateAuthorDto, UpdateAuthorDto } from '../dto';
+import type { Author } from '../entities/author.entity';
 
 describe('AuthorController', () => {
   let controller: AuthorController;

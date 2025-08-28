@@ -1,11 +1,11 @@
-import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
-import { mock, MockProxy } from 'jest-mock-extended';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Author } from '@root/app/author/entities/author.entity';
-import { AuthorService } from '../author.service';
+import { type MockProxy, mock } from 'jest-mock-extended';
+import type { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { ERRORS } from '../../core/errors/errors';
+import { AuthorService } from '../author.service';
 
 describe('AuthorService', () => {
   let service: AuthorService;

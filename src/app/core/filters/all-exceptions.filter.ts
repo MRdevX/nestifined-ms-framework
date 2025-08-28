@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { type ArgumentsHost, Catch, type ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
+import type { ConfigService } from '@nestjs/config';
+import type { Request, Response } from 'express';
 import { ERRORS } from '../errors/errors';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(readonly _configService: ConfigService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

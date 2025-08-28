@@ -1,90 +1,77 @@
-import { Repository } from 'typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { QueryNarrowingOperators } from '@root/app/core/base/base-search.model';
-import { CacheService } from '@root/app/core/cache/cache.service';
-import { BaseSearchService } from '@root/app/core/base/base-search.service';
-import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
-import { Book } from './entities/book.entity';
-import { Author } from '../author/entities/author.entity';
-import { ERRORS } from '../core/errors/errors';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import type { CacheService } from '@root/app/core/cache/cache.service';
+import type { AuthorRepository } from '../author/repositories/author.repository';
+import { BaseService } from '../core/base/base.service';
+import type { CreateBookDto, SearchBookDto, UpdateBookDto } from './dto';
+import type { Book } from './entities/book.entity';
+import type { BookRepository } from './repositories/book.repository';
 
 @Injectable()
-export class BookService extends BaseSearchService<Book> {
+export class BookService extends BaseService<Book> {
   constructor(
-    @InjectRepository(Book)
-    private readonly bookRepository: Repository<Book>,
-    @InjectRepository(Author)
-    private readonly authorRepository: Repository<Author>,
+    private readonly bookRepository: BookRepository,
+    private readonly authorRepository: AuthorRepository,
     private readonly cacheService: CacheService,
   ) {
     super(bookRepository);
   }
 
-  async create(createBookDto: CreateBookDto): Promise<Book> {
-    const author = await this.authorRepository.findOne({ where: { id: createBookDto.authorId, deletedAt: null } });
-    if (!author) {
-      throw new NotFoundException(ERRORS.AUTHOR.NOT_FOUND);
+  async createBook(createBookDto: CreateBookDto): Promise<Book> {
+    const existingBook = await this.bookRepository.findByIsbn(createBookDto.isbn);
+    if (existingBook) {
+      throw new ConflictException('Book with this ISBN already exists');
     }
 
-    const book = this.bookRepository.create({
+    const author = await this.authorRepository.findById(createBookDto.authorId);
+    if (!author) {
+      throw new NotFoundException('Author not found');
+    }
+
+    const book = await this.bookRepository.create({
       ...createBookDto,
       author,
     });
-    await this.bookRepository.save(book);
+
     await this.cacheBook(book);
     return book;
   }
 
-  async findAll(): Promise<Book[]> {
-    return this.bookRepository.find({ where: { deletedAt: null }, relations: ['author'] });
+  async findAllWithAuthor(): Promise<Book[]> {
+    return this.bookRepository.findAllWithAuthor();
   }
 
-  async findOne(id: string): Promise<Book> {
-    const book = await this.bookRepository.findOne({ where: { id, deletedAt: null }, relations: ['author'] });
+  async findByIdWithAuthor(id: string): Promise<Book> {
+    const book = await this.bookRepository.findByIdWithAuthor(id);
     if (!book) {
-      throw new NotFoundException(ERRORS.BOOK.NOT_FOUND);
+      throw new NotFoundException('Book not found');
     }
     return book;
   }
 
-  async update(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
-    const author = await this.authorRepository.findOne({ where: { id: updateBookDto.authorId, deletedAt: null } });
-    if (!author) {
-      throw new NotFoundException(ERRORS.NOT_FOUND('Author'));
+  async findByIsbn(isbn: string): Promise<Book | null> {
+    return this.bookRepository.findByIsbn(isbn);
+  }
+
+  async searchBooks(searchParams: SearchBookDto): Promise<Book[]> {
+    return this.bookRepository.searchBooks(searchParams);
+  }
+
+  async updateBook(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
+    if (updateBookDto.authorId) {
+      const author = await this.authorRepository.findById(updateBookDto.authorId);
+      if (!author) {
+        throw new NotFoundException('Author not found');
+      }
     }
 
-    const book = await this.bookRepository.preload({
-      id,
-      ...updateBookDto,
-      author,
-    });
-    if (!book) {
-      throw new NotFoundException(ERRORS.BOOK.NOT_FOUND);
-    }
-    await this.bookRepository.save(book);
+    const book = await this.update(id, updateBookDto);
+    await this.cacheBook(book);
     return book;
   }
 
-  async remove(id: string): Promise<void> {
-    const book = await this.findOne(id);
-    book.deletedAt = new Date();
-    await this.bookRepository.save(book);
+  async deleteBook(id: string): Promise<void> {
+    await this.delete(id);
     await this.cacheService.getClient().del(`book:${id}`);
-  }
-
-  async search(query: SearchBookDto): Promise<{ items: Book[]; total: number }> {
-    return super.search({
-      ...query,
-      relations: ['author'],
-      filterFields: [
-        { name: 'title', value: query.title, operation: QueryNarrowingOperators.LIKE },
-        { name: 'author', value: query.author, operation: QueryNarrowingOperators.EQ }, // Changed to EQ
-        { name: 'isbn', value: query.isbn, operation: QueryNarrowingOperators.EQ },
-        { name: 'publishedDate', value: query.publishedDate, operation: QueryNarrowingOperators.GTE },
-        { name: 'summary', value: query.summary, operation: QueryNarrowingOperators.LIKE },
-      ],
-    });
   }
 
   public async cacheBook(book: Book): Promise<void> {

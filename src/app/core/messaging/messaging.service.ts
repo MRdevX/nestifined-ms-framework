@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { ConfigService } from '@nestjs/config';
+import type { ConfigService } from '@nestjs/config';
+import { type ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class MessagingService {

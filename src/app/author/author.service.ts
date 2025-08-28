@@ -1,48 +1,36 @@
-import { Repository } from 'typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Author } from './entities/author.entity';
-import { CreateAuthorDto, UpdateAuthorDto } from './dto';
-import { ERRORS } from '../core/errors/errors';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { BaseService } from '../core/base/base.service';
+import type { CreateAuthorDto } from './dto';
+import type { Author } from './entities/author.entity';
+import type { AuthorRepository } from './repositories/author.repository';
 
 @Injectable()
-export class AuthorService {
-  constructor(
-    @InjectRepository(Author)
-    private readonly authorRepository: Repository<Author>,
-  ) {}
-
-  async create(createAuthorDto: CreateAuthorDto): Promise<Author> {
-    const author = this.authorRepository.create(createAuthorDto);
-    return this.authorRepository.save(author);
+export class AuthorService extends BaseService<Author> {
+  constructor(private readonly authorRepository: AuthorRepository) {
+    super(authorRepository);
   }
 
-  async findAll(): Promise<Author[]> {
-    return this.authorRepository.find({ where: { deletedAt: null }, relations: ['books'] });
+  async createAuthor(createAuthorDto: CreateAuthorDto): Promise<Author> {
+    const existingAuthor = await this.authorRepository.findByName(createAuthorDto.name);
+    if (existingAuthor) {
+      throw new ConflictException('Author with this name already exists');
+    }
+    return this.authorRepository.create(createAuthorDto);
   }
 
-  async findOne(id: string): Promise<Author> {
-    const author = await this.authorRepository.findOne({ where: { id, deletedAt: null }, relations: ['books'] });
+  async findAllWithBooks(): Promise<Author[]> {
+    return this.authorRepository.findAllWithBooks();
+  }
+
+  async findByIdWithBooks(id: string): Promise<Author> {
+    const author = await this.authorRepository.findByIdWithBooks(id);
     if (!author) {
-      throw new NotFoundException(ERRORS.AUTHOR.NOT_FOUND);
+      throw new Error('Author not found');
     }
     return author;
   }
 
-  async update(id: string, updateAuthorDto: UpdateAuthorDto): Promise<Author> {
-    const author = await this.authorRepository.preload({
-      id,
-      ...updateAuthorDto,
-    });
-    if (!author) {
-      throw new NotFoundException(ERRORS.AUTHOR.NOT_FOUND);
-    }
-    return this.authorRepository.save(author);
-  }
-
-  async remove(id: string): Promise<void> {
-    const author = await this.findOne(id);
-    author.deletedAt = new Date();
-    await this.authorRepository.save(author);
+  async findByName(name: string): Promise<Author | null> {
+    return this.authorRepository.findByName(name);
   }
 }

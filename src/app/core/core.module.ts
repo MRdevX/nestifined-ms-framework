@@ -1,12 +1,12 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import sentryConfig from '@root/app/config/sentry.config';
 import appConfig from '@root/app/config/app.config';
 import dbConfig from '@root/app/config/db.config';
 import s2sConfig from '@root/app/config/s2s.config';
-import { TypeOrmConfigService } from './database/typeorm-config.service';
+import sentryConfig from '@root/app/config/sentry.config';
 import { CacheModule } from './cache/cache.module';
+import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { MessagingModule } from './messaging/messaging.module';
 
 @Global()

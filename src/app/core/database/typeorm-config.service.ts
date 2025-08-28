@@ -1,9 +1,9 @@
-import * as fs from 'fs';
-import { DataSourceOptions } from 'typeorm';
-import { set } from 'lodash';
+import * as fs from 'node:fs';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import type { ConfigService } from '@nestjs/config';
+import type { TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import { set } from 'lodash';
+import type { DataSourceOptions } from 'typeorm';
 import { entities } from './entities';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('DB_NAME'),
       synchronize: true,
       migrationsRun: false,
-      migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+      migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
       entities,
       // logging: this.configService.get<string>('NODE_ENV') !== 'production',
       extra: {

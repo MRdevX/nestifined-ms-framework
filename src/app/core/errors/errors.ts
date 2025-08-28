@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 export const CONSTANTS = {
   ERRORS_PREFIX: 'APP',
 };
@@ -33,11 +32,11 @@ const ERRORS = {
   },
   NOT_FOUND: (entity: string, fieldName?: string, fieldValue?: string) => ({
     code: `${CONSTANTS.ERRORS_PREFIX}_${formatErrorCode(entity)}_NOT_FOUND`,
-    message: `The ${entity}${fieldName && fieldValue ? ' with ' + fieldName + ' ' + fieldValue : ''} was not found.`,
+    message: `The ${entity}${fieldName && fieldValue ? ` with ${fieldName} ${fieldValue}` : ''} was not found.`,
   }),
   ALREADY_EXISTS: (entity: string, fieldName?: string, fieldValue?: string) => ({
     code: `${CONSTANTS.ERRORS_PREFIX}_${formatErrorCode(entity)}_ALREADY_EXISTS`,
-    message: `A ${entity}${fieldName && fieldValue ? ' with ' + fieldName + ' ' + fieldValue : ''} already exists`,
+    message: `A ${entity}${fieldName && fieldValue ? ` with ${fieldName} ${fieldValue}` : ''} already exists`,
   }),
 };
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBookDto } from './dto';
-import { Book } from './entities/book.entity';
-import { CacheService } from '../core/cache/cache.service';
-import { MessagingService } from '../core/messaging/messaging.service';
+import type { CacheService } from '../core/cache/cache.service';
+import type { MessagingService } from '../core/messaging/messaging.service';
+import type { CreateBookDto } from './dto';
+import type { Book } from './entities/book.entity';
 
 @Injectable()
 export class BookS2SService {

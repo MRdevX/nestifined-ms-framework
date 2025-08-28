@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
-import { AuthorService } from './author.service';
-import { CreateAuthorDto, UpdateAuthorDto } from './dto';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import type { AuthorService } from './author.service';
+import type { CreateAuthorDto, UpdateAuthorDto } from './dto';
 
 @Controller('authors')
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() createAuthorDto: CreateAuthorDto) {
-    return this.authorService.create(createAuthorDto);
+    return this.authorService.createAuthor(createAuthorDto);
   }
 
   @Get()
@@ -16,9 +17,19 @@ export class AuthorController {
     return this.authorService.findAll();
   }
 
+  @Get('with-books')
+  findAllWithBooks() {
+    return this.authorService.findAllWithBooks();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.authorService.findOne(id);
+    return this.authorService.findById(id);
+  }
+
+  @Get(':id/with-books')
+  findOneWithBooks(@Param('id') id: string) {
+    return this.authorService.findByIdWithBooks(id);
   }
 
   @Put(':id')
@@ -27,7 +38,8 @@ export class AuthorController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return this.authorService.remove(id);
+    return this.authorService.delete(id);
   }
 }

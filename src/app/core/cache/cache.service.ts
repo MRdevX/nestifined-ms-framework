@@ -1,6 +1,6 @@
+import { Injectable, type OnModuleInit } from '@nestjs/common';
+import type { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CacheService implements OnModuleInit {
