@@ -32,10 +32,13 @@
     "prepare": "husky",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable",
-    "typeorm": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js --dataSource ./src/app/core/database/typeorm-config.service.ts",
-    "migration:generate": "npm run typeorm migration:generate ./src/migrations/$npm_config_name --timestamp",
-    "migration:run": "npm run typeorm -- migration:run",
-    "migration:revert": "npm run typeorm -- migration:revert"
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:migrate": "drizzle-kit migrate",
+    "drizzle:studio": "drizzle-kit studio",
+    "drizzle:push": "drizzle-kit push",
+    "migration:generate": "npm run drizzle:generate",
+    "migration:run": "npm run drizzle:migrate",
+    "migration:revert": "echo 'Drizzle migrations are not reversible by default'"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",
@@ -53,6 +56,8 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^17.2.1",
+    "drizzle-kit": "^0.31.4",
+    "drizzle-orm": "^0.44.5",
     "helmet": "^8.0.0",
     "ioredis": "^5.4.2",
     "lodash": "^4.17.21",

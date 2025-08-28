@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
-import type { User } from "../users/entities/user.entity";
+import type { DrizzleUser } from "../core/base/drizzle/drizzle.entities";
 import { UsersService } from "../users/users.service";
 import type { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import type { LoginDto } from "./dto/login.dto";
@@ -61,7 +61,7 @@ export class AuthService {
     return this.loginWithUser(user);
   }
 
-  async loginWithUser(user: User): Promise<AuthResponse> {
+  async loginWithUser(user: DrizzleUser): Promise<AuthResponse> {
     const tokens = this.tokensService.generateTokenPair(user.id, user.email);
 
     await this.tokenService.createRefreshToken(user.id, tokens.refreshToken);
@@ -85,7 +85,7 @@ export class AuthService {
       const payload = this.tokensService.verifyRefreshToken(refreshToken);
 
       const tokenEntity = await this.tokenService.findRefreshToken(payload.sub, refreshToken);
-      if (!tokenEntity || tokenEntity.isExpired()) {
+      if (!tokenEntity || new Date() > tokenEntity.expiresAt) {
         throw new UnauthorizedException("Invalid refresh token");
       }
 
@@ -118,7 +118,7 @@ export class AuthService {
     const { token, password } = resetPasswordDto;
 
     const resetTokenEntity = await this.tokenService.findPasswordResetToken(token);
-    if (!resetTokenEntity || resetTokenEntity.isExpired()) {
+    if (!resetTokenEntity || new Date() > resetTokenEntity.expiresAt) {
       throw new UnauthorizedException("Invalid or expired reset token");
     }
 

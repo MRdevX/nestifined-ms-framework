@@ -4,6 +4,7 @@ import { NestFactory, Reflector } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import helmet from "helmet";
 import { AppModule } from "./app/app.module";
+import { MigrationService } from "./app/core/database/migration.service";
 import { AllExceptionsFilter } from "./app/core/filters/all-exceptions.filter";
 import logger from "./logger";
 
@@ -12,6 +13,9 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const environment = config.get("app.env");
   const apiPrefix = config.get("app.apiPrefix");
+
+  const migrationService = app.get(MigrationService);
+  await migrationService.runMigrations();
 
   app.enableShutdownHooks();
   app.connectMicroservice(config.get("s2s.options"));

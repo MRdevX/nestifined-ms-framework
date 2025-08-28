@@ -1,18 +1,18 @@
 import { randomBytes } from "node:crypto";
 import { Injectable } from "@nestjs/common";
 import type { ConfigService } from "@nestjs/config";
-import { type Token, TokenType } from "../entities/token.entity";
-import type { TokenRepository } from "../repositories/token.repository";
+import type { DrizzleToken } from "../../core/base/drizzle/drizzle.entities";
+import type { TokenDrizzleRepository } from "../repositories/token.drizzle.repository";
 
 @Injectable()
 export class TokenService {
   constructor(
-    private readonly tokenRepository: TokenRepository,
+    private readonly tokenRepository: TokenDrizzleRepository,
     private readonly configService: ConfigService,
   ) {}
 
-  async createRefreshToken(userId: string, token: string): Promise<Token> {
-    await this.tokenRepository.deleteByUserIdAndType(userId, TokenType.REFRESH);
+  async createRefreshToken(userId: string, token: string): Promise<DrizzleToken> {
+    await this.tokenRepository.deleteByUserIdAndType(userId, "REFRESH");
 
     const authConfig = this.configService.get("auth");
     const refreshTokenExpiry = new Date(Date.now() + this.parseDuration(authConfig.jwt.refresh.expiresIn));
@@ -20,13 +20,13 @@ export class TokenService {
     return this.tokenRepository.create({
       userId,
       token,
-      type: TokenType.REFRESH,
+      type: "REFRESH",
       expiresAt: refreshTokenExpiry,
     });
   }
 
-  async createPasswordResetToken(userId: string): Promise<Token> {
-    await this.tokenRepository.deleteByUserIdAndType(userId, TokenType.PASSWORD_RESET);
+  async createPasswordResetToken(userId: string): Promise<DrizzleToken> {
+    await this.tokenRepository.deleteByUserIdAndType(userId, "PASSWORD_RESET");
 
     const resetToken = randomBytes(32).toString("hex");
     const authConfig = this.configService.get("auth");
@@ -35,25 +35,25 @@ export class TokenService {
     return this.tokenRepository.create({
       userId,
       token: resetToken,
-      type: TokenType.PASSWORD_RESET,
+      type: "PASSWORD_RESET",
       expiresAt,
     });
   }
 
-  async findRefreshToken(userId: string, token: string): Promise<Token | null> {
-    return this.tokenRepository.findByUserIdTokenAndType(userId, token, TokenType.REFRESH);
+  async findRefreshToken(userId: string, token: string): Promise<DrizzleToken | null> {
+    return this.tokenRepository.findByUserIdTokenAndType(userId, token, "REFRESH");
   }
 
-  async findPasswordResetToken(token: string): Promise<Token | null> {
-    return this.tokenRepository.findByTokenAndType(token, TokenType.PASSWORD_RESET);
+  async findPasswordResetToken(token: string): Promise<DrizzleToken | null> {
+    return this.tokenRepository.findByTokenAndType(token, "PASSWORD_RESET");
   }
 
   async deleteRefreshToken(userId: string): Promise<void> {
-    await this.tokenRepository.deleteByUserIdAndType(userId, TokenType.REFRESH);
+    await this.tokenRepository.deleteByUserIdAndType(userId, "REFRESH");
   }
 
   async deletePasswordResetToken(userId: string): Promise<void> {
-    await this.tokenRepository.deleteByUserIdAndType(userId, TokenType.PASSWORD_RESET);
+    await this.tokenRepository.deleteByUserIdAndType(userId, "PASSWORD_RESET");
   }
 
   async cleanupExpiredTokens(): Promise<void> {

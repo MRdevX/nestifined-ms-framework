@@ -1,16 +1,16 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { BaseService } from "../core/base/base.service";
+import type { DrizzleUser } from "../core/base/drizzle/drizzle.entities";
 import type { CreateUserDto } from "./dto/create-user.dto";
-import type { User } from "./entities/user.entity";
-import { UserRepository } from "./repositories/user.repository";
+import { UserDrizzleRepository } from "./repositories/user.drizzle.repository";
 
 @Injectable()
-export class UsersService extends BaseService<User> {
-  constructor(private readonly userRepository: UserRepository) {
+export class UsersService extends BaseService<DrizzleUser> {
+  constructor(private readonly userRepository: UserDrizzleRepository) {
     super(userRepository);
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<DrizzleUser> {
     const existingUser = await this.userRepository.findByEmail(createUserDto.email);
     if (existingUser) {
       throw new ConflictException("User with this email already exists");
@@ -18,7 +18,7 @@ export class UsersService extends BaseService<User> {
     return this.userRepository.create(createUserDto);
   }
 
-  async createWithPassword(email: string, hashedPassword: string, name?: string): Promise<User> {
+  async createWithPassword(email: string, hashedPassword: string, name?: string): Promise<DrizzleUser> {
     const createUserDto: CreateUserDto = {
       email,
       password: hashedPassword,
@@ -27,16 +27,16 @@ export class UsersService extends BaseService<User> {
     return this.createUser(createUserDto);
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<DrizzleUser | null> {
     return this.userRepository.findByEmail(email);
   }
 
-  async findByEmailWithPassword(email: string): Promise<User | null> {
-    return this.userRepository.findByEmailWithPassword(email);
+  async findByEmailWithPassword(email: string): Promise<DrizzleUser | null> {
+    return this.userRepository.findByEmail(email);
   }
 
-  async updatePassword(userId: string, hashedPassword: string): Promise<User | null> {
-    await this.userRepository.updatePassword(userId, hashedPassword);
+  async updatePassword(userId: string, hashedPassword: string): Promise<DrizzleUser | null> {
+    await this.userRepository.update(userId, { password: hashedPassword });
     return this.findById(userId);
   }
 }
