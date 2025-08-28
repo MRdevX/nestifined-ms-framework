@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/MRdevX/nestifined-ms-framework/compare/v0.0.5...v0.0.6) (2025-08-28)
+
+
+### Features
+
+* add all exception handler ([293ea8f](https://github.com/MRdevX/nestifined-ms-framework/commit/293ea8f8cb064743b180a96dbd0349234d81f070))
+* add caching for book ([b249036](https://github.com/MRdevX/nestifined-ms-framework/commit/b24903658bfd81002248f4e074454bbf87ab77ac))
+* add fixtures ([c7220bb](https://github.com/MRdevX/nestifined-ms-framework/commit/c7220bbbf2a725d80a2ffa05f7cda3513f8856af))
+* add generic search ([e3dc820](https://github.com/MRdevX/nestifined-ms-framework/commit/e3dc8205fc02a6224673b5cc1a1ec6fa5e014fe3))
+* add send and receive book over rabbitmq ([e220829](https://github.com/MRdevX/nestifined-ms-framework/commit/e2208296c0a050a91af14ec6dae1d1d76987e771))
+* add support for safe delete and update tests regarding this feature ([1137b73](https://github.com/MRdevX/nestifined-ms-framework/commit/1137b731d419d27befea0797757510db44e5eb73))
+* add tests ([f944fbb](https://github.com/MRdevX/nestifined-ms-framework/commit/f944fbbb2ed917f9779f567711d4d8e36fee2743))
+* **base:** add orm-agnostic base + auth module + nice upgrades (biome, pnpm) ([a361399](https://github.com/MRdevX/nestifined-ms-framework/commit/a361399026d049f1cb8f811e36ab05ed10ef4f4c))
+* **drizzle:** add Drizzle ORM support with base entity and repository implementations ([090c354](https://github.com/MRdevX/nestifined-ms-framework/commit/090c3548b6c67b7d840af2e42a0ba51f8e31ea3c))
+* implement author module ([5a4a62e](https://github.com/MRdevX/nestifined-ms-framework/commit/5a4a62ee91437154190e6a90c2e0b3fd6aa84921))
+* implement caching for book ([e7908b6](https://github.com/MRdevX/nestifined-ms-framework/commit/e7908b680a881cdab8adf8dd9c39f86a9825c590))
+* implement dynamic errors ([7762db3](https://github.com/MRdevX/nestifined-ms-framework/commit/7762db391d11f46502ec979a150cd2c191aa722c))
+* implement genetic search ([27f9571](https://github.com/MRdevX/nestifined-ms-framework/commit/27f95711cbc9ad0796f565bb658b72e25d58dafa))
+* implement rabbitmq and redis moduels in the project ([8951dc5](https://github.com/MRdevX/nestifined-ms-framework/commit/8951dc55a299d232614fe9c3dcf257995264dc2f))
+* optimise base search ([04ad477](https://github.com/MRdevX/nestifined-ms-framework/commit/04ad4777404bff271d546eb72f95eba6a57e8d56))
+* refine base search service ([8b399a7](https://github.com/MRdevX/nestifined-ms-framework/commit/8b399a7c28e8815d1245aa357c4729b904d0ba02))
+* refine base search service ([242e663](https://github.com/MRdevX/nestifined-ms-framework/commit/242e6639e670c314c76f49caf67e7a3ef0cd4d52))
+* refine book dtos and their imports ([47855c1](https://github.com/MRdevX/nestifined-ms-framework/commit/47855c12e73ace42b14252c1378d973e7bf2bc42))
+* refine errors ([0e6dc3c](https://github.com/MRdevX/nestifined-ms-framework/commit/0e6dc3cd00427d77b3755ecc5f18270ad60e5114))
+
+
+### Bug Fixes
+
+* add author to entities ([b1656a6](https://github.com/MRdevX/nestifined-ms-framework/commit/b1656a6e393a23058190c2a544df174cfda8252c))
+* **auth:** update user identifier in auth methods for consistency ([bde6c5a](https://github.com/MRdevX/nestifined-ms-framework/commit/bde6c5a72ee73c3cd46b1d83996c027523693e88))
+* migrate husky to v9 and update configuration ([bbd62f5](https://github.com/MRdevX/nestifined-ms-framework/commit/bbd62f58b29ed9d4d31f16eb482a8b082fdd90d6))
+* tests ([4636b3d](https://github.com/MRdevX/nestifined-ms-framework/commit/4636b3dffcd72db25eb16af975576c9588bbc802))
+* tests, mock ioredis ([0576ca0](https://github.com/MRdevX/nestifined-ms-framework/commit/0576ca00e9587f1523abd1f3448b36aa766b77c0))
+* tests, mock ioredis ([7653200](https://github.com/MRdevX/nestifined-ms-framework/commit/76532007c6d297fcc3d3100acbcc7a3d3f9f6b63))
+
 ### [0.0.5](https://github.com/MRdevX/nestifined-ms-framework/compare/v0.0.4...v0.0.5) (2024-10-30)
 
 
