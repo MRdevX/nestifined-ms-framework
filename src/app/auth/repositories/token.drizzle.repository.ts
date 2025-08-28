@@ -1,16 +1,16 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { and, eq, lt } from "drizzle-orm";
 import { DrizzleBaseRepository } from "../../core/base/drizzle/drizzle.base.repository";
 import type { DrizzleToken } from "../../core/base/drizzle/drizzle.entities";
-import type { Database } from "../../core/database/drizzle.config";
+import { DrizzleDatabase } from "../../core/database/drizzle.config";
 import { tokens } from "../../core/database/drizzle.schema";
 
 export type TokenType = "ACCESS" | "REFRESH" | "RESET_PASSWORD" | "VERIFY_EMAIL";
 
 @Injectable()
 export class TokenDrizzleRepository extends DrizzleBaseRepository<DrizzleToken> {
-  constructor(@Inject("DATABASE") db: Database) {
-    super(db, tokens);
+  constructor(drizzleDb: DrizzleDatabase) {
+    super(drizzleDb.getDatabase(), tokens);
   }
 
   async findByUserIdAndType(userId: string, type: string): Promise<DrizzleToken | null> {

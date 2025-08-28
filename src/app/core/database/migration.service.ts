@@ -1,7 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { Pool } from "pg";
+import { DatabaseConfigFactory } from "./database.config";
 import { DrizzleDatabase } from "./drizzle.config";
 
 @Injectable()
@@ -12,23 +11,7 @@ export class MigrationService {
 
   async runMigrations(): Promise<void> {
     try {
-      const pool = new Pool({
-        host: this.configService.get("db.host"),
-        port: this.configService.get("db.port"),
-        user: this.configService.get("db.username"),
-        password: this.configService.get("db.password"),
-        database: this.configService.get("db.name"),
-        max: this.configService.get("db.maxConnections") || 100,
-        ssl: this.configService.get("db.sslEnabled")
-          ? {
-              rejectUnauthorized: this.configService.get("db.rejectUnauthorized"),
-              ca: this.configService.get("db.ca"),
-              key: this.configService.get("db.key"),
-              cert: this.configService.get("db.cert"),
-            }
-          : false,
-      });
-
+      const pool = DatabaseConfigFactory.createPool(this.configService);
       const db = DrizzleDatabase.getInstance(this.configService).getDatabase();
 
       this.logger.log("Syncing database schema...");

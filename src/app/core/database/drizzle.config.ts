@@ -1,6 +1,6 @@
 import { ConfigService } from "@nestjs/config";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import { DatabaseConfigFactory } from "./database.config";
 import * as schema from "./drizzle.schema";
 
 export class DrizzleDatabase {
@@ -8,23 +8,7 @@ export class DrizzleDatabase {
   private db: ReturnType<typeof drizzle>;
 
   private constructor(configService: ConfigService) {
-    const pool = new Pool({
-      host: configService.get("db.host"),
-      port: configService.get("db.port"),
-      user: configService.get("db.username"),
-      password: configService.get("db.password"),
-      database: configService.get("db.name"),
-      max: configService.get("db.maxConnections") || 100,
-      ssl: configService.get("db.sslEnabled")
-        ? {
-            rejectUnauthorized: configService.get("db.rejectUnauthorized"),
-            ca: configService.get("db.ca"),
-            key: configService.get("db.key"),
-            cert: configService.get("db.cert"),
-          }
-        : false,
-    });
-
+    const pool = DatabaseConfigFactory.createPool(configService);
     this.db = drizzle(pool, { schema });
   }
 
