@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
-import { TypeOrmBaseRepository } from '../../core/base/typeorm/typeorm.base.repository';
-import { User } from '../../users/entities/user.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import type { Repository } from "typeorm";
+import { TypeOrmBaseRepository } from "../../core/base/typeorm/typeorm.base.repository";
+import { User } from "../../users/entities/user.entity";
 
 @Injectable()
 export class UserRepository extends TypeOrmBaseRepository<User> {
@@ -22,7 +22,7 @@ export class UserRepository extends TypeOrmBaseRepository<User> {
   async findByEmailWithPassword(email: string): Promise<User | null> {
     return this.userRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'name', 'password'],
+      select: ["id", "email", "name", "password"],
     });
   }
 
