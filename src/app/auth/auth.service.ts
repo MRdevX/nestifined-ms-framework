@@ -1,11 +1,12 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import type { User } from '../users/entities/user.entity';
 import type { UsersService } from '../users/users.service';
 import type { ForgotPasswordDto } from './dto/forgot-password.dto';
 import type { LoginDto } from './dto/login.dto';
 import type { RefreshTokenDto } from './dto/refresh-token.dto';
 import type { RegisterDto } from './dto/register.dto';
 import type { ResetPasswordDto } from './dto/reset-password.dto';
-import type { AuthResponse, CurrentUser, TokenPair, UserWithoutPassword } from './interfaces/auth.interfaces';
+import type { AuthResponse, TokenPair, UserWithoutPassword } from './interfaces/auth.interfaces';
 import type { PasswordService } from './services/password.service';
 import type { TokenService } from './services/token.service';
 import type { TokensService } from './tokens/tokens.service';
@@ -60,7 +61,7 @@ export class AuthService {
     return this.loginWithUser(user);
   }
 
-  async loginWithUser(user: CurrentUser): Promise<AuthResponse> {
+  async loginWithUser(user: User): Promise<AuthResponse> {
     const tokens = this.tokensService.generateTokenPair(user.id, user.email);
 
     await this.tokenService.createRefreshToken(user.id, tokens.refreshToken);

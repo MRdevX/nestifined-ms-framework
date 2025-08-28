@@ -24,7 +24,7 @@ export class UsersController {
 
   @Get('me')
   async getCurrentUser(@CurrentUserDecorator() user: CurrentUser) {
-    return this.usersService.findById(user.userId);
+    return this.usersService.findById(user.id);
   }
 
   @Get(':id')

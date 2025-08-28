@@ -19,6 +19,7 @@ export interface AuthResponse {
 }
 
 export interface CurrentUser {
-  userId: string;
+  id: string;
   email: string;
+  name?: string;
 }

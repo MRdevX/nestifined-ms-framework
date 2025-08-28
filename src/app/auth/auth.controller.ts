@@ -33,7 +33,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@CurrentUserDecorator() user: CurrentUser) {
-    await this.authService.logout(user.userId);
+    await this.authService.logout(user.id);
   }
 
   @Post('refresh')
