@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
 import { DrizzleBaseRepository } from "../../core/base/drizzle/drizzle.base.repository";
 import type { DrizzleAuthor, DrizzleAuthorWithBooks } from "../../core/base/drizzle/drizzle.entities";
@@ -7,7 +7,7 @@ import { authors, books } from "../../core/database/drizzle.schema";
 
 @Injectable()
 export class AuthorDrizzleRepository extends DrizzleBaseRepository<DrizzleAuthor> {
-  constructor(db: Database) {
+  constructor(@Inject("DATABASE") db: Database) {
     super(db, authors);
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, lt } from "drizzle-orm";
 import { DrizzleBaseRepository } from "../../core/base/drizzle/drizzle.base.repository";
 import type { DrizzleToken } from "../../core/base/drizzle/drizzle.entities";
@@ -9,7 +9,7 @@ export type TokenType = "ACCESS" | "REFRESH" | "RESET_PASSWORD" | "VERIFY_EMAIL"
 
 @Injectable()
 export class TokenDrizzleRepository extends DrizzleBaseRepository<DrizzleToken> {
-  constructor(db: Database) {
+  constructor(@Inject("DATABASE") db: Database) {
     super(db, tokens);
   }
 

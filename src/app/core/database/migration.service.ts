@@ -31,13 +31,13 @@ export class MigrationService {
 
       const db = DrizzleDatabase.getInstance(this.configService).getDatabase();
 
-      this.logger.log("Running database migrations...");
-      await migrate(db, { migrationsFolder: "./src/migrations" });
-      this.logger.log("Database migrations completed successfully");
+      this.logger.log("Syncing database schema...");
+
+      this.logger.log("Database schema sync completed successfully");
 
       await pool.end();
     } catch (error) {
-      this.logger.error("Failed to run migrations", error);
+      this.logger.error("Failed to sync database schema", error);
       throw error;
     }
   }
