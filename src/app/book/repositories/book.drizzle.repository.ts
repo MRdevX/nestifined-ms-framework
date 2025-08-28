@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, like } from "drizzle-orm";
 import { DrizzleBaseRepository } from "../../core/base/drizzle/drizzle.base.repository";
 import type { DrizzleBook, DrizzleBookWithAuthor } from "../../core/base/drizzle/drizzle.entities";
-import { DrizzleDatabase } from "../../core/database/drizzle.config";
-import { authors, books } from "../../core/database/drizzle.schema";
+import type { Database } from "../../core/database/drizzle/drizzle.config";
+import { authors, books } from "../../core/database/drizzle/drizzle.schema";
 
 @Injectable()
 export class BookDrizzleRepository extends DrizzleBaseRepository<DrizzleBook> {
-  constructor(drizzleDb: DrizzleDatabase) {
-    super(drizzleDb.getDatabase(), books);
+  constructor(@Inject("DATABASE") db: Database) {
+    super(db, books);
   }
 
   async findByIsbn(isbn: string): Promise<DrizzleBook | null> {
@@ -54,5 +54,36 @@ export class BookDrizzleRepository extends DrizzleBaseRepository<DrizzleBook> {
       ...book,
       author: author,
     } as DrizzleBookWithAuthor;
+  }
+
+  async findAllWithAuthor(): Promise<DrizzleBook[]> {
+    const allBooks = await this.findAll();
+    return allBooks;
+  }
+
+  async searchBooks(searchParams: {
+    title?: string;
+    author?: string;
+    isbn?: string;
+    publishedDate?: Date;
+    summary?: string;
+  }): Promise<DrizzleBook[]> {
+    const allBooks = await this.findAll();
+
+    return allBooks.filter((book) => {
+      if (searchParams.title && !book.title.toLowerCase().includes(searchParams.title.toLowerCase())) {
+        return false;
+      }
+      if (searchParams.isbn && book.isbn !== searchParams.isbn) {
+        return false;
+      }
+      if (searchParams.publishedDate && book.publishedDate && book.publishedDate < searchParams.publishedDate) {
+        return false;
+      }
+      if (searchParams.summary && !book.summary.toLowerCase().includes(searchParams.summary.toLowerCase())) {
+        return false;
+      }
+      return true;
+    });
   }
 }

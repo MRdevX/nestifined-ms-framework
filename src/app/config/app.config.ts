@@ -15,4 +15,5 @@ export default registerAs("app", () => ({
   })(),
   apiPrefix: process.env.API_PREFIX || "api",
   version: process.env.RELEASE || undefined,
+  orm: process.env.ORM || "drizzle",
 }));

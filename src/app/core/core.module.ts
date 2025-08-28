@@ -7,7 +7,7 @@ import redisConfig from "@root/app/config/redis.config";
 import s2sConfig from "@root/app/config/s2s.config";
 import sentryConfig from "@root/app/config/sentry.config";
 import { CacheModule } from "./cache/cache.module";
-import { DrizzleModule } from "./database/drizzle.module";
+import { DatabaseModule } from "./database/database.module";
 import { MessagingModule } from "./messaging/messaging.module";
 
 @Global()
@@ -18,10 +18,10 @@ import { MessagingModule } from "./messaging/messaging.module";
       load: [appConfig, authConfig, dbConfig, redisConfig, s2sConfig, sentryConfig],
       envFilePath: [".env"],
     }),
-    DrizzleModule,
+    DatabaseModule.forRoot(),
     CacheModule,
     MessagingModule,
   ],
-  exports: [CacheModule, MessagingModule, DrizzleModule],
+  exports: [CacheModule, MessagingModule, DatabaseModule],
 })
 export class CoreModule {}

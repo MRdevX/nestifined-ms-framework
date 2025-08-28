@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
 import { DrizzleBaseRepository } from "../../core/base/drizzle/drizzle.base.repository";
 import type { DrizzleUser } from "../../core/base/drizzle/drizzle.entities";
-import { DrizzleDatabase } from "../../core/database/drizzle.config";
-import { users } from "../../core/database/drizzle.schema";
+import { DrizzleDatabase } from "../../core/database/drizzle/drizzle.config";
+import { users } from "../../core/database/drizzle/drizzle.schema";
 
 @Injectable()
 export class UserDrizzleRepository extends DrizzleBaseRepository<DrizzleUser> {

@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { and, eq, lt } from "drizzle-orm";
 import { DrizzleBaseRepository } from "../../core/base/drizzle/drizzle.base.repository";
 import type { DrizzleToken } from "../../core/base/drizzle/drizzle.entities";
-import { DrizzleDatabase } from "../../core/database/drizzle.config";
-import { tokens } from "../../core/database/drizzle.schema";
+import { DrizzleDatabase } from "../../core/database/drizzle/drizzle.config";
+import { tokens } from "../../core/database/drizzle/drizzle.schema";
 
 export type TokenType = "ACCESS" | "REFRESH" | "RESET_PASSWORD" | "VERIFY_EMAIL";
 

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
-import { TypeOrmBaseRepository } from '../../core/base/typeorm/typeorm.base.repository';
-import { Token, type TokenType } from '../entities/token.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import type { Repository } from "typeorm";
+import { TypeOrmBaseRepository } from "../../core/base/typeorm/typeorm.base.repository";
+import { Token, type TokenType } from "../entities/token.entity";
 
 @Injectable()
 export class TokenRepository extends TypeOrmBaseRepository<Token> {
@@ -37,6 +37,6 @@ export class TokenRepository extends TypeOrmBaseRepository<Token> {
   }
 
   async cleanupExpiredTokens(): Promise<void> {
-    await this.tokenRepository.createQueryBuilder().delete().where('expiresAt < :now', { now: new Date() }).execute();
+    await this.tokenRepository.createQueryBuilder().delete().where("expiresAt < :now", { now: new Date() }).execute();
   }
 }

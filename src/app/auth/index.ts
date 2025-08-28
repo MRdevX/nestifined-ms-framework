@@ -13,7 +13,7 @@ export * from "./guards/jwt-auth.guard";
 export * from "./guards/local-auth.guard";
 export * from "./guards/permissions.guard";
 export type { AuthResponse, CurrentUser, TokenPair, UserWithoutPassword } from "./interfaces/auth.interfaces";
-export * from "./repositories/token.repository";
+export * from "./repositories/token.typeorm.repository";
 export * from "./repositories/user.repository";
 export * from "./services/password.service";
 export * from "./services/token.service";

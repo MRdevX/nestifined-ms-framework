@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
 import { DrizzleBaseRepository } from "../../core/base/drizzle/drizzle.base.repository";
 import type { DrizzleAuthor, DrizzleAuthorWithBooks } from "../../core/base/drizzle/drizzle.entities";
-import { DrizzleDatabase } from "../../core/database/drizzle.config";
-import { authors, books } from "../../core/database/drizzle.schema";
+import type { Database } from "../../core/database/drizzle/drizzle.config";
+import { authors, books } from "../../core/database/drizzle/drizzle.schema";
 
 @Injectable()
 export class AuthorDrizzleRepository extends DrizzleBaseRepository<DrizzleAuthor> {
-  constructor(drizzleDb: DrizzleDatabase) {
-    super(drizzleDb.getDatabase(), authors);
+  constructor(@Inject("DATABASE") db: Database) {
+    super(db, authors);
   }
 
   async findByName(name: string): Promise<DrizzleAuthor | null> {

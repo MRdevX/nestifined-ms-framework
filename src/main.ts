@@ -4,7 +4,7 @@ import { NestFactory, Reflector } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import helmet from "helmet";
 import { AppModule } from "./app/app.module";
-import { MigrationService } from "./app/core/database/migration.service";
+import { MigrationService } from "./app/core/database/drizzle/migration.service";
 import { AllExceptionsFilter } from "./app/core/filters/all-exceptions.filter";
 import logger from "./logger";
 

@@ -13,23 +13,15 @@ import {
 @Module({
   providers: [
     {
-      provide: DrizzleDatabase,
-      useFactory: (configService: ConfigService) => DrizzleDatabase.getInstance(configService),
+      provide: "DATABASE",
+      useFactory: (configService: ConfigService) => {
+        const drizzleDb = DrizzleDatabase.getInstance(configService);
+        return drizzleDb.getDatabase();
+      },
       inject: [ConfigService],
     },
     MigrationService,
-    AuthorDrizzleRepository,
-    BookDrizzleRepository,
-    UserDrizzleRepository,
-    TokenDrizzleRepository,
   ],
-  exports: [
-    DrizzleDatabase,
-    MigrationService,
-    AuthorDrizzleRepository,
-    BookDrizzleRepository,
-    UserDrizzleRepository,
-    TokenDrizzleRepository,
-  ],
+  exports: ["DATABASE", MigrationService],
 })
 export class DrizzleModule {}

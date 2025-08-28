@@ -1,6 +1,6 @@
 import { ConfigService } from "@nestjs/config";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { DatabaseConfigFactory } from "./database.config";
+import { DatabaseConfigFactory } from "./drizzle.exports";
 import * as schema from "./drizzle.schema";
 
 export class DrizzleDatabase {

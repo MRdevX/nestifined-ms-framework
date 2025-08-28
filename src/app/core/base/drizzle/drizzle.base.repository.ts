@@ -1,5 +1,5 @@
 import { and, asc, count, desc, eq, SQL } from "drizzle-orm";
-import type { Database } from "../../database/drizzle.config";
+import type { Database } from "../../database/drizzle/drizzle.config";
 import type { BaseModel } from "../base.entity";
 import type {
   IBaseRepository,
