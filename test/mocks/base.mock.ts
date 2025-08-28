@@ -1,4 +1,4 @@
-import { type MockProxy, mock } from 'jest-mock-extended';
+import { type MockProxy, mock } from "jest-mock-extended";
 
 export const createMockEntity = <T>(_entity: new () => T, properties: Partial<T>): T => {
   const entityMock: MockProxy<T> = mock<T>();

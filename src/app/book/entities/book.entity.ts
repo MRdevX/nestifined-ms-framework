@@ -1,8 +1,8 @@
-import { Author } from '@root/app/author/entities/author.entity';
-import { TypeOrmBaseModel } from '@root/app/core/base/typeorm/typeorm.base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Author } from "@root/app/author/entities/author.entity";
+import { TypeOrmBaseModel } from "@root/app/core/base/typeorm/typeorm.base.entity";
+import { Column, Entity, ManyToOne } from "typeorm";
 
-@Entity('books')
+@Entity("books")
 export class Book extends TypeOrmBaseModel {
   @Column()
   title: string;
@@ -19,6 +19,6 @@ export class Book extends TypeOrmBaseModel {
   @Column()
   summary: string;
 
-  @Column({ nullable: true, type: 'timestamp' })
+  @Column({ nullable: true, type: "timestamp" })
   publishedDate?: Date;
 }

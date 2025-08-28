@@ -1,13 +1,13 @@
-import { Test, type TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Author } from '@root/app/author/entities/author.entity';
-import { type MockProxy, mock } from 'jest-mock-extended';
-import type { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
-import { ERRORS } from '../../core/errors/errors';
-import { AuthorService } from '../author.service';
+import { Test, type TestingModule } from "@nestjs/testing";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { Author } from "@root/app/author/entities/author.entity";
+import { type MockProxy, mock } from "jest-mock-extended";
+import type { Repository } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
+import { ERRORS } from "../../core/errors/errors";
+import { AuthorService } from "../author.service";
 
-describe('AuthorService', () => {
+describe("AuthorService", () => {
   let service: AuthorService;
   let repository: MockProxy<Repository<Author>>;
 
@@ -20,13 +20,13 @@ describe('AuthorService', () => {
     repository = module.get(getRepositoryToken(Author));
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a new author', async () => {
-      const createAuthorDto = { name: 'Author Name' };
+  describe("create", () => {
+    it("should create a new author", async () => {
+      const createAuthorDto = { name: "Author Name" };
       const author: Partial<Author> = { id: uuidv4(), ...createAuthorDto };
 
       repository.create.mockReturnValue(author as Author);
@@ -39,31 +39,31 @@ describe('AuthorService', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should return an array of authors', async () => {
-      const authors: Partial<Author>[] = [{ id: uuidv4(), name: 'Author Name' }];
+  describe("findAll", () => {
+    it("should return an array of authors", async () => {
+      const authors: Partial<Author>[] = [{ id: uuidv4(), name: "Author Name" }];
       repository.find.mockResolvedValue(authors as Author[]);
 
       const result = await service.findAll();
       expect(result).toEqual(authors);
-      expect(repository.find).toHaveBeenCalledWith({ where: { deletedAt: null }, relations: ['books'] });
+      expect(repository.find).toHaveBeenCalledWith({ where: { deletedAt: null }, relations: ["books"] });
     });
   });
 
-  describe('findOne', () => {
-    it('should return an author', async () => {
-      const author: Partial<Author> = { id: uuidv4(), name: 'Author Name' };
+  describe("findOne", () => {
+    it("should return an author", async () => {
+      const author: Partial<Author> = { id: uuidv4(), name: "Author Name" };
       repository.findOne.mockResolvedValue(author as Author);
 
       const result = await service.findOne(author.id as string);
       expect(result).toEqual(author);
       expect(repository.findOne).toHaveBeenCalledWith({
         where: { id: author.id, deletedAt: null },
-        relations: ['books'],
+        relations: ["books"],
       });
     });
 
-    it('should throw an error if author not found', async () => {
+    it("should throw an error if author not found", async () => {
       const authorId = uuidv4();
       repository.findOne.mockResolvedValue(null);
 
@@ -71,9 +71,9 @@ describe('AuthorService', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update an author', async () => {
-      const updateAuthorDto = { name: 'Updated Author Name' };
+  describe("update", () => {
+    it("should update an author", async () => {
+      const updateAuthorDto = { name: "Updated Author Name" };
       const author: Partial<Author> = { id: uuidv4(), ...updateAuthorDto };
 
       repository.preload.mockResolvedValue(author as Author);
@@ -85,26 +85,26 @@ describe('AuthorService', () => {
       expect(repository.save).toHaveBeenCalledWith(author);
     });
 
-    it('should throw an error if author not found', async () => {
+    it("should throw an error if author not found", async () => {
       const authorId = uuidv4();
       repository.preload.mockResolvedValue(null);
 
-      await expect(service.update(authorId, { name: 'Updated Author Name' })).rejects.toThrow(
+      await expect(service.update(authorId, { name: "Updated Author Name" })).rejects.toThrow(
         ERRORS.AUTHOR.NOT_FOUND.message,
       );
     });
   });
 
-  describe('remove', () => {
-    it('should mark an author as deleted', async () => {
-      const author: Partial<Author> = { id: uuidv4(), name: 'Author Name' };
+  describe("remove", () => {
+    it("should mark an author as deleted", async () => {
+      const author: Partial<Author> = { id: uuidv4(), name: "Author Name" };
       repository.findOne.mockResolvedValue(author as Author);
       repository.save.mockResolvedValue({ ...author, deletedAt: new Date() } as Author);
 
       await service.remove(author.id as string);
       expect(repository.findOne).toHaveBeenCalledWith({
         where: { id: author.id, deletedAt: null },
-        relations: ['books'],
+        relations: ["books"],
       });
       expect(repository.save).toHaveBeenCalledWith(expect.objectContaining({ deletedAt: expect.any(Date) }));
     });

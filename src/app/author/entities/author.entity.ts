@@ -1,8 +1,8 @@
-import { Book } from '@root/app/book/entities/book.entity';
-import { TypeOrmBaseModel } from '@root/app/core/base/typeorm/typeorm.base.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Book } from "@root/app/book/entities/book.entity";
+import { TypeOrmBaseModel } from "@root/app/core/base/typeorm/typeorm.base.entity";
+import { Column, Entity, OneToMany } from "typeorm";
 
-@Entity('authors')
+@Entity("authors")
 export class Author extends TypeOrmBaseModel {
   @Column()
   name: string;

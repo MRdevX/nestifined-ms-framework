@@ -1,20 +1,20 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { TypeOrmBaseModel } from '../../core/base/typeorm/typeorm.base.entity';
-import { User } from '../../users/entities/user.entity';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import { TypeOrmBaseModel } from "../../core/base/typeorm/typeorm.base.entity";
+import { User } from "../../users/entities/user.entity";
 
 export enum TokenType {
-  REFRESH = 'refresh',
-  PASSWORD_RESET = 'password_reset',
+  REFRESH = "refresh",
+  PASSWORD_RESET = "password_reset",
 }
 
 @Entity()
-@Index(['userId', 'type'])
+@Index(["userId", "type"])
 export class Token extends TypeOrmBaseModel {
   @Column({ length: 255 })
   token: string;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: TokenType,
   })
   type: TokenType;
@@ -25,8 +25,8 @@ export class Token extends TypeOrmBaseModel {
   @Column()
   userId: string;
 
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @ManyToOne(() => User, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "userId" })
   user: User;
 
   isExpired(): boolean {

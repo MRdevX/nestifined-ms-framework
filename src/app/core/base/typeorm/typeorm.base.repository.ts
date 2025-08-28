@@ -1,23 +1,20 @@
-import type { DeepPartial, FindManyOptions, FindOptionsOrder, FindOptionsWhere, Repository } from 'typeorm';
-import type { BaseModel } from '../base.entity';
-import { BaseRepository } from '../base.repository';
+import type { DeepPartial, FindManyOptions, FindOptionsOrder, FindOptionsWhere, Repository } from "typeorm";
+import type { BaseModel } from "../base.entity";
 import type {
+  IBaseRepository,
   IFindOptions,
   IOrderClause,
   IPaginatedResult,
   IPaginationOptions,
   IWhereClause,
-} from '../interfaces/base.interface';
+} from "../interfaces/base.interface";
 
-export abstract class TypeOrmBaseRepository<T extends BaseModel> extends BaseRepository<T> {
-  constructor(protected readonly repository: Repository<T>) {
-    super();
-  }
+export abstract class TypeOrmBaseRepository<T extends BaseModel> implements IBaseRepository<T> {
+  constructor(protected readonly repository: Repository<T>) {}
 
   async create(data: Partial<T>): Promise<T> {
     const entity = this.repository.create(data as DeepPartial<T>);
-    const savedEntity = await this.repository.save(entity);
-    return Array.isArray(savedEntity) ? savedEntity[0] : savedEntity;
+    return this.repository.save(entity);
   }
 
   async findById(id: string): Promise<T | null> {
@@ -61,7 +58,7 @@ export abstract class TypeOrmBaseRepository<T extends BaseModel> extends BaseRep
   }
 
   async findWithPagination(where: IWhereClause = {}, options: IPaginationOptions = {}): Promise<IPaginatedResult<T>> {
-    const { skip = 0, take = 10, order = { createdAt: 'DESC' } as IOrderClause } = options;
+    const { skip = 0, take = 10, order = { createdAt: "DESC" } as IOrderClause } = options;
 
     const [data, total] = await this.repository.findAndCount({
       where: where as FindOptionsWhere<T>,

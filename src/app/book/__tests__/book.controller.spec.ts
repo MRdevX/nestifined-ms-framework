@@ -1,13 +1,13 @@
-import { Test, type TestingModule } from '@nestjs/testing';
-import { createMockAuthor } from '@test/mocks/author.mock';
-import { type MockProxy, mock } from 'jest-mock-extended';
-import { v4 as uuidv4 } from 'uuid';
-import { BookController } from '../book.controller';
-import { BookService } from '../book.service';
-import type { CreateBookDto, UpdateBookDto } from '../dto';
-import type { Book } from '../entities/book.entity';
+import { Test, type TestingModule } from "@nestjs/testing";
+import { createMockAuthor } from "@test/mocks/author.mock";
+import { type MockProxy, mock } from "jest-mock-extended";
+import { v4 as uuidv4 } from "uuid";
+import { BookController } from "../book.controller";
+import { BookService } from "../book.service";
+import type { CreateBookDto, UpdateBookDto } from "../dto";
+import type { Book } from "../entities/book.entity";
 
-describe('BookController', () => {
+describe("BookController", () => {
   let controller: BookController;
   let bookService: MockProxy<BookService>;
 
@@ -22,17 +22,17 @@ describe('BookController', () => {
     controller = module.get<BookController>(BookController);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a new book', async () => {
+  describe("create", () => {
+    it("should create a new book", async () => {
       const createBookDto: CreateBookDto = {
-        title: 'Book Title',
+        title: "Book Title",
         authorId: uuidv4(),
-        isbn: '1234567890',
-        summary: 'Book Summary',
+        isbn: "1234567890",
+        summary: "Book Summary",
         publishedDate: new Date(),
       };
       const author = createMockAuthor();
@@ -46,10 +46,10 @@ describe('BookController', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should return an array of books', async () => {
+  describe("findAll", () => {
+    it("should return an array of books", async () => {
       const author = createMockAuthor();
-      const books: Partial<Book>[] = [{ id: uuidv4(), title: 'Book Title', author }];
+      const books: Partial<Book>[] = [{ id: uuidv4(), title: "Book Title", author }];
       bookService.findAll.mockResolvedValue(books as Book[]);
 
       const result = await controller.findAll();
@@ -58,10 +58,10 @@ describe('BookController', () => {
     });
   });
 
-  describe('findOne', () => {
-    it('should return a book', async () => {
+  describe("findOne", () => {
+    it("should return a book", async () => {
       const author = createMockAuthor();
-      const book: Partial<Book> = { id: uuidv4(), title: 'Book Title', author };
+      const book: Partial<Book> = { id: uuidv4(), title: "Book Title", author };
       bookService.findOne.mockResolvedValue(book as Book);
 
       const result = await controller.findOne(book.id as string);
@@ -70,13 +70,13 @@ describe('BookController', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update a book', async () => {
+  describe("update", () => {
+    it("should update a book", async () => {
       const updateBookDto: UpdateBookDto = {
-        title: 'Updated Book Title',
+        title: "Updated Book Title",
         authorId: uuidv4(),
-        isbn: '1234567890',
-        summary: 'Updated Book Summary',
+        isbn: "1234567890",
+        summary: "Updated Book Summary",
         publishedDate: new Date(),
       };
       const author = createMockAuthor();
@@ -91,10 +91,10 @@ describe('BookController', () => {
     });
   });
 
-  describe('remove', () => {
-    it('should remove a book', async () => {
+  describe("remove", () => {
+    it("should remove a book", async () => {
       const author = createMockAuthor();
-      const book: Partial<Book> = { id: uuidv4(), title: 'Book Title', author };
+      const book: Partial<Book> = { id: uuidv4(), title: "Book Title", author };
 
       bookService.remove.mockResolvedValue(undefined);
 

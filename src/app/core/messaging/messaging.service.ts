@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
-import { type ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { type ClientProxy, ClientProxyFactory } from "@nestjs/microservices";
 
 @Injectable()
 export class MessagingService {
   private client: ClientProxy;
 
   constructor(private configService: ConfigService) {
+    const s2sConfig = this.configService.get("s2s");
     this.client = ClientProxyFactory.create({
-      transport: Transport.RMQ,
+      transport: s2sConfig.transport,
       options: {
-        urls: [this.configService.get<string>('S2S_RABBITMQ_URL')],
-        queue: this.configService.get<string>('S2S_RABBITMQ_QUEUE'),
+        ...s2sConfig.options,
         queueOptions: {
           durable: false,
         },

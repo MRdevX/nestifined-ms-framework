@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
-import type { Author } from '@root/app/author/entities/author.entity';
-import type { Book } from '@root/app/book/entities/book.entity';
-import { v4 as uuidv4 } from 'uuid';
+import { faker } from "@faker-js/faker";
+import type { Author } from "@root/app/author/entities/author.entity";
+import type { Book } from "@root/app/book/entities/book.entity";
+import { v4 as uuidv4 } from "uuid";
 
 export const createMockBook = (author: Author): Partial<Book> => ({
   id: uuidv4(),

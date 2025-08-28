@@ -1,5 +1,5 @@
-import { registerAs } from '@nestjs/config';
+import { registerAs } from "@nestjs/config";
 
-export default registerAs('sentry', () => ({
+export default registerAs("sentry", () => ({
   dsn: process.env.SENTRY_DSN || undefined,
 }));

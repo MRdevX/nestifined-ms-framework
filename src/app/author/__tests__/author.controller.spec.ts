@@ -1,12 +1,12 @@
-import { Test, type TestingModule } from '@nestjs/testing';
-import { type MockProxy, mock } from 'jest-mock-extended';
-import { v4 as uuidv4 } from 'uuid';
-import { AuthorController } from '../author.controller';
-import { AuthorService } from '../author.service';
-import type { CreateAuthorDto, UpdateAuthorDto } from '../dto';
-import type { Author } from '../entities/author.entity';
+import { Test, type TestingModule } from "@nestjs/testing";
+import { type MockProxy, mock } from "jest-mock-extended";
+import { v4 as uuidv4 } from "uuid";
+import { AuthorController } from "../author.controller";
+import { AuthorService } from "../author.service";
+import type { CreateAuthorDto, UpdateAuthorDto } from "../dto";
+import type { Author } from "../entities/author.entity";
 
-describe('AuthorController', () => {
+describe("AuthorController", () => {
   let controller: AuthorController;
   let authorService: MockProxy<AuthorService>;
 
@@ -21,13 +21,13 @@ describe('AuthorController', () => {
     controller = module.get<AuthorController>(AuthorController);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a new author', async () => {
-      const createAuthorDto: CreateAuthorDto = { name: 'Author Name' };
+  describe("create", () => {
+    it("should create a new author", async () => {
+      const createAuthorDto: CreateAuthorDto = { name: "Author Name" };
       const author: Partial<Author> = { id: uuidv4(), ...createAuthorDto };
 
       authorService.create.mockResolvedValue(author as Author);
@@ -38,9 +38,9 @@ describe('AuthorController', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should return an array of authors', async () => {
-      const authors: Partial<Author>[] = [{ id: uuidv4(), name: 'Author Name' }];
+  describe("findAll", () => {
+    it("should return an array of authors", async () => {
+      const authors: Partial<Author>[] = [{ id: uuidv4(), name: "Author Name" }];
       authorService.findAll.mockResolvedValue(authors as Author[]);
 
       const result = await controller.findAll();
@@ -49,9 +49,9 @@ describe('AuthorController', () => {
     });
   });
 
-  describe('findOne', () => {
-    it('should return an author', async () => {
-      const author: Partial<Author> = { id: uuidv4(), name: 'Author Name' };
+  describe("findOne", () => {
+    it("should return an author", async () => {
+      const author: Partial<Author> = { id: uuidv4(), name: "Author Name" };
       authorService.findOne.mockResolvedValue(author as Author);
 
       const result = await controller.findOne(author.id as string);
@@ -60,9 +60,9 @@ describe('AuthorController', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update an author', async () => {
-      const updateAuthorDto: UpdateAuthorDto = { name: 'Updated Author Name' };
+  describe("update", () => {
+    it("should update an author", async () => {
+      const updateAuthorDto: UpdateAuthorDto = { name: "Updated Author Name" };
       const author: Partial<Author> = { id: uuidv4(), ...updateAuthorDto };
 
       authorService.update.mockResolvedValue(author as Author);
@@ -73,9 +73,9 @@ describe('AuthorController', () => {
     });
   });
 
-  describe('remove', () => {
-    it('should remove an author', async () => {
-      const author: Partial<Author> = { id: uuidv4(), name: 'Author Name' };
+  describe("remove", () => {
+    it("should remove an author", async () => {
+      const author: Partial<Author> = { id: uuidv4(), name: "Author Name" };
 
       authorService.remove.mockResolvedValue(undefined);
 

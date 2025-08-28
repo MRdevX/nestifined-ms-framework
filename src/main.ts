@@ -1,24 +1,24 @@
-import { ClassSerializerInterceptor, ValidationPipe, VersioningType } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { NestFactory, Reflector } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import helmet from 'helmet';
-import { AppModule } from './app/app.module';
-import { AllExceptionsFilter } from './app/core/filters/all-exceptions.filter';
-import logger from './logger';
+import { ClassSerializerInterceptor, ValidationPipe, VersioningType } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { NestFactory, Reflector } from "@nestjs/core";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import helmet from "helmet";
+import { AppModule } from "./app/app.module";
+import { AllExceptionsFilter } from "./app/core/filters/all-exceptions.filter";
+import logger from "./logger";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
-  const environment = config.get('app.env');
-  const apiPrefix = config.get('app.apiPrefix');
+  const environment = config.get("app.env");
+  const apiPrefix = config.get("app.apiPrefix");
 
   app.enableShutdownHooks();
-  app.connectMicroservice(config.get('s2s.options'));
+  app.connectMicroservice(config.get("s2s.options"));
   app.use(helmet());
   app.enableCors({ origin: true, credentials: true });
   app.setGlobalPrefix(apiPrefix, {
-    exclude: ['/'],
+    exclude: ["/"],
   });
   app.enableVersioning({
     type: VersioningType.URI,
@@ -37,7 +37,7 @@ async function bootstrap() {
 
   app.useGlobalFilters(new AllExceptionsFilter(config));
 
-  if (environment !== 'production') {
+  if (environment !== "production") {
     const options = new DocumentBuilder()
       .setTitle(process.env.npm_package_name)
       .setVersion(process.env.npm_package_version)
@@ -49,7 +49,7 @@ async function bootstrap() {
   }
 
   await app.startAllMicroservices();
-  await app.listen(config.get('app.port'), config.get('app.host'));
+  await app.listen(config.get("app.port"), config.get("app.host"));
   const appUrl = await app.getUrl();
   const docsUrl = `${appUrl}/${apiPrefix}/docs`;
   logger.info(`Application is running on: ${appUrl}`);

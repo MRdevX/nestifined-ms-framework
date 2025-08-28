@@ -1,14 +1,9 @@
+import type { BaseModel } from "../base.entity";
+
 export interface IBaseEntity {
   id: string;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt?: Date;
-}
-
-export interface IBaseEntityData {
-  id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
   deletedAt?: Date;
 }
 
@@ -17,7 +12,7 @@ export interface IWhereClause {
 }
 
 export interface IOrderClause {
-  [key: string]: 'ASC' | 'DESC';
+  [key: string]: "ASC" | "DESC";
 }
 
 export interface IPaginationOptions {
@@ -43,7 +38,7 @@ export interface IFindOptions {
   take?: number;
 }
 
-export interface IBaseRepository<T extends IBaseEntity> {
+export interface IBaseRepository<T extends BaseModel> {
   create(data: Partial<T>): Promise<T>;
   findById(id: string): Promise<T | null>;
   findByIdWithRelations(id: string, relations?: string[]): Promise<T | null>;

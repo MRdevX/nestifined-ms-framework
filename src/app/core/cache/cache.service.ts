@@ -1,6 +1,6 @@
-import { Injectable, type OnModuleInit } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
-import Redis from 'ioredis';
+import { Injectable, type OnModuleInit } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import Redis from "ioredis";
 
 @Injectable()
 export class CacheService implements OnModuleInit {
@@ -9,11 +9,13 @@ export class CacheService implements OnModuleInit {
   constructor(private configService: ConfigService) {}
 
   onModuleInit() {
-    const host = this.configService.get<string>('redis.host');
-    const port = this.configService.get<number>('redis.port');
-    const username = this.configService.get<string>('redis.username');
-    const password = this.configService.get<string>('redis.password');
-    this.client = new Redis({ host, port, username, password });
+    const redisConfig = this.configService.get("redis");
+    this.client = new Redis({
+      host: redisConfig.host,
+      port: redisConfig.port,
+      username: redisConfig.username,
+      password: redisConfig.password,
+    });
   }
 
   getClient(): Redis {

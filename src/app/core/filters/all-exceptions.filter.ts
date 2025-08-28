@@ -1,7 +1,7 @@
-import { type ArgumentsHost, Catch, type ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
-import type { Request, Response } from 'express';
-import { ERRORS } from '../errors/errors';
+import { type ArgumentsHost, Catch, type ExceptionFilter, HttpException, HttpStatus } from "@nestjs/common";
+import type { ConfigService } from "@nestjs/config";
+import type { Request, Response } from "express";
+import { ERRORS } from "../errors/errors";
 
 interface ExceptionResponse {
   message?: string;
@@ -32,7 +32,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   private getErrorMessage(exception: unknown): string {
     if (exception instanceof HttpException) {
       const response = exception.getResponse();
-      return typeof response === 'string' ? response : (response as ExceptionResponse).message || 'Unknown error';
+      return typeof response === "string" ? response : (response as ExceptionResponse).message || "Unknown error";
     }
     return ERRORS.GENERIC.INTERNAL_SERVER_ERROR.message;
   }
@@ -40,7 +40,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   private getErrorCode(exception: unknown): string {
     if (exception instanceof HttpException) {
       const response = exception.getResponse();
-      return typeof response === 'string' ? 'UNKNOWN_ERROR' : (response as ExceptionResponse).code || 'UNKNOWN_ERROR';
+      return typeof response === "string" ? "UNKNOWN_ERROR" : (response as ExceptionResponse).code || "UNKNOWN_ERROR";
     }
     return ERRORS.GENERIC.INTERNAL_SERVER_ERROR.code;
   }

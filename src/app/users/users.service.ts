@@ -1,8 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { BaseService } from '../core/base/base.service';
-import type { CreateUserDto } from './dto/create-user.dto';
-import type { User } from './entities/user.entity';
-import type { UserRepository } from './repositories/user.repository';
+import { ConflictException, Injectable } from "@nestjs/common";
+import { BaseService } from "../core/base/base.service";
+import type { CreateUserDto } from "./dto/create-user.dto";
+import type { User } from "./entities/user.entity";
+import { UserRepository } from "./repositories/user.repository";
 
 @Injectable()
 export class UsersService extends BaseService<User> {
@@ -13,7 +13,7 @@ export class UsersService extends BaseService<User> {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.userRepository.findByEmail(createUserDto.email);
     if (existingUser) {
-      throw new ConflictException('User with this email already exists');
+      throw new ConflictException("User with this email already exists");
     }
     return this.userRepository.create(createUserDto);
   }

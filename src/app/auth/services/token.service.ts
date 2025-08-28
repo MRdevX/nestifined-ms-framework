@@ -1,8 +1,8 @@
-import { randomBytes } from 'node:crypto';
-import { Injectable } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
-import { type Token, TokenType } from '../entities/token.entity';
-import type { TokenRepository } from '../repositories/token.repository';
+import { randomBytes } from "node:crypto";
+import { Injectable } from "@nestjs/common";
+import type { ConfigService } from "@nestjs/config";
+import { type Token, TokenType } from "../entities/token.entity";
+import type { TokenRepository } from "../repositories/token.repository";
 
 @Injectable()
 export class TokenService {
@@ -14,7 +14,7 @@ export class TokenService {
   async createRefreshToken(userId: string, token: string): Promise<Token> {
     await this.tokenRepository.deleteByUserIdAndType(userId, TokenType.REFRESH);
 
-    const authConfig = this.configService.get('auth');
+    const authConfig = this.configService.get("auth");
     const refreshTokenExpiry = new Date(Date.now() + this.parseDuration(authConfig.jwt.refresh.expiresIn));
 
     return this.tokenRepository.create({
@@ -28,8 +28,8 @@ export class TokenService {
   async createPasswordResetToken(userId: string): Promise<Token> {
     await this.tokenRepository.deleteByUserIdAndType(userId, TokenType.PASSWORD_RESET);
 
-    const resetToken = randomBytes(32).toString('hex');
-    const authConfig = this.configService.get('auth');
+    const resetToken = randomBytes(32).toString("hex");
+    const authConfig = this.configService.get("auth");
     const expiresAt = new Date(Date.now() + authConfig.reset.expiresIn);
 
     return this.tokenRepository.create({
@@ -65,13 +65,13 @@ export class TokenService {
     const value = parseInt(duration.slice(0, -1), 10);
 
     switch (unit) {
-      case 's':
+      case "s":
         return value * 1000;
-      case 'm':
+      case "m":
         return value * 60 * 1000;
-      case 'h':
+      case "h":
         return value * 60 * 60 * 1000;
-      case 'd':
+      case "d":
         return value * 24 * 60 * 60 * 1000;
       default:
         return parseInt(duration, 10);

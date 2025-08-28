@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
-import type { JwtService } from '@nestjs/jwt';
-import type { TokenPair, TokenPayload } from '../interfaces/auth.interfaces';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
+import type { TokenPair, TokenPayload } from "../interfaces/auth.interfaces";
 
 @Injectable()
 export class TokensService {
@@ -24,10 +24,10 @@ export class TokensService {
     const payload: TokenPayload = {
       sub: userId,
       email,
-      type: 'access',
+      type: "access",
     };
 
-    const authConfig = this.configService.get('auth');
+    const authConfig = this.configService.get("auth");
     return this.jwtService.sign(payload, {
       secret: authConfig.jwt.access.secret,
       expiresIn: authConfig.jwt.access.expiresIn,
@@ -38,10 +38,10 @@ export class TokensService {
     const payload: TokenPayload = {
       sub: userId,
       email,
-      type: 'refresh',
+      type: "refresh",
     };
 
-    const authConfig = this.configService.get('auth');
+    const authConfig = this.configService.get("auth");
     return this.jwtService.sign(payload, {
       secret: authConfig.jwt.refresh.secret,
       expiresIn: authConfig.jwt.refresh.expiresIn,
@@ -49,14 +49,14 @@ export class TokensService {
   }
 
   verifyAccessToken(token: string): TokenPayload {
-    const authConfig = this.configService.get('auth');
+    const authConfig = this.configService.get("auth");
     return this.jwtService.verify<TokenPayload>(token, {
       secret: authConfig.jwt.access.secret,
     });
   }
 
   verifyRefreshToken(token: string): TokenPayload {
-    const authConfig = this.configService.get('auth');
+    const authConfig = this.configService.get("auth");
     return this.jwtService.verify<TokenPayload>(token, {
       secret: authConfig.jwt.refresh.secret,
     });

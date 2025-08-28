@@ -1,13 +1,13 @@
-import { Controller } from '@nestjs/common';
-import { Ctx, MessagePattern, Payload, type RmqContext } from '@nestjs/microservices';
-import type { BookS2SService } from './book.s2s.service';
-import type { CreateBookDto } from './dto';
+import { Controller } from "@nestjs/common";
+import { Ctx, MessagePattern, Payload, type RmqContext } from "@nestjs/microservices";
+import { BookS2SService } from "./book.s2s.service";
+import type { CreateBookDto } from "./dto";
 
 @Controller()
 export class BookS2SController {
   constructor(private readonly bookS2SService: BookS2SService) {}
 
-  @MessagePattern('book_created')
+  @MessagePattern("book_created")
   async handleBookCreated(@Payload() data: CreateBookDto, @Ctx() context: RmqContext) {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();

@@ -1,11 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import type { BaseModel } from './base.entity';
-import type { BaseRepository } from './base.repository';
-import type { IFindOptions, IWhereClause } from './interfaces/base.interface';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import type { BaseModel } from "./base.entity";
+import type { IBaseRepository, IFindOptions, IWhereClause } from "./interfaces/base.interface";
 
 @Injectable()
 export abstract class BaseService<T extends BaseModel> {
-  constructor(protected readonly repository: BaseRepository<T>) {}
+  constructor(protected readonly repository: IBaseRepository<T>) {}
 
   async create(data: Partial<T>): Promise<T> {
     return this.repository.create(data);
@@ -36,32 +35,21 @@ export abstract class BaseService<T extends BaseModel> {
   }
 
   async update(id: string, data: Partial<T>): Promise<T> {
-    const entity = await this.repository.findById(id);
-    if (!entity) {
-      throw new NotFoundException(`Entity with ID ${id} not found`);
-    }
-
     const updatedEntity = await this.repository.update(id, data);
     if (!updatedEntity) {
-      throw new NotFoundException(`Failed to update entity with ID ${id}`);
+      throw new NotFoundException(`Entity with ID ${id} not found`);
     }
     return updatedEntity;
   }
 
   async delete(id: string): Promise<void> {
-    const entity = await this.repository.findById(id);
-    if (!entity) {
-      throw new NotFoundException(`Entity with ID ${id} not found`);
-    }
-
     const deleted = await this.repository.delete(id);
     if (!deleted) {
-      throw new NotFoundException(`Failed to delete entity with ID ${id}`);
+      throw new NotFoundException(`Entity with ID ${id} not found`);
     }
   }
 
   async exists(id: string): Promise<boolean> {
-    const entity = await this.repository.findById(id);
-    return !!entity;
+    return this.repository.exists({ id });
   }
 }

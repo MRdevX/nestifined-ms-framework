@@ -1,6 +1,6 @@
-import { type CanActivate, type ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
-import type { Reflector } from '@nestjs/core';
-import { OWNERSHIP_KEY } from '../decorators/require-permission.decorator';
+import { type CanActivate, type ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
+import type { Reflector } from "@nestjs/core";
+import { OWNERSHIP_KEY } from "../decorators/require-permission.decorator";
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -18,11 +18,11 @@ export class PermissionsGuard implements CanActivate {
     const entityId = request.params.id;
 
     if (!user?.userId || !entityId) {
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException("Access denied");
     }
 
     if (entityId !== user.userId) {
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException("Access denied");
     }
 
     return true;

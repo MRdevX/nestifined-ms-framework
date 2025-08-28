@@ -1,34 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
-import { TypeOrmBaseRepository } from '../../core/base/typeorm/typeorm.base.repository';
-import { Author } from '../entities/author.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import type { Repository } from "typeorm";
+import { TypeOrmBaseRepository } from "../../core/base/typeorm/typeorm.base.repository";
+import { Author } from "../entities/author.entity";
 
 @Injectable()
 export class AuthorRepository extends TypeOrmBaseRepository<Author> {
   constructor(
     @InjectRepository(Author)
-    private readonly authorRepo: Repository<Author>,
+    repository: Repository<Author>,
   ) {
-    super(authorRepo);
+    super(repository);
   }
 
   async findByName(name: string): Promise<Author | null> {
-    return this.authorRepo.findOne({
+    return this.repository.findOne({
       where: { name },
     });
   }
 
   async findAllWithBooks(): Promise<Author[]> {
-    return this.authorRepo.find({
-      relations: ['books'],
+    return this.repository.find({
+      relations: ["books"],
     });
   }
 
   async findByIdWithBooks(id: string): Promise<Author | null> {
-    return this.authorRepo.findOne({
+    return this.repository.findOne({
       where: { id },
-      relations: ['books'],
+      relations: ["books"],
     });
   }
 }

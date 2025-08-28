@@ -1,16 +1,16 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import type { CacheService } from '@root/app/core/cache/cache.service';
-import type { AuthorRepository } from '../author/repositories/author.repository';
-import { BaseService } from '../core/base/base.service';
-import type { CreateBookDto, SearchBookDto, UpdateBookDto } from './dto';
-import type { Book } from './entities/book.entity';
-import type { BookRepository } from './repositories/book.repository';
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { CacheService } from "@root/app/core/cache/cache.service";
+import { AuthorService } from "../author/author.service";
+import { BaseService } from "../core/base/base.service";
+import type { CreateBookDto, SearchBookDto, UpdateBookDto } from "./dto";
+import type { Book } from "./entities/book.entity";
+import { BookRepository } from "./repositories/book.repository";
 
 @Injectable()
 export class BookService extends BaseService<Book> {
   constructor(
     private readonly bookRepository: BookRepository,
-    private readonly authorRepository: AuthorRepository,
+    private readonly authorService: AuthorService,
     private readonly cacheService: CacheService,
   ) {
     super(bookRepository);
@@ -19,13 +19,10 @@ export class BookService extends BaseService<Book> {
   async createBook(createBookDto: CreateBookDto): Promise<Book> {
     const existingBook = await this.bookRepository.findByIsbn(createBookDto.isbn);
     if (existingBook) {
-      throw new ConflictException('Book with this ISBN already exists');
+      throw new ConflictException("Book with this ISBN already exists");
     }
 
-    const author = await this.authorRepository.findById(createBookDto.authorId);
-    if (!author) {
-      throw new NotFoundException('Author not found');
-    }
+    const author = await this.authorService.findById(createBookDto.authorId);
 
     const book = await this.bookRepository.create({
       ...createBookDto,
@@ -43,7 +40,7 @@ export class BookService extends BaseService<Book> {
   async findByIdWithAuthor(id: string): Promise<Book> {
     const book = await this.bookRepository.findByIdWithAuthor(id);
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException("Book not found");
     }
     return book;
   }
@@ -58,10 +55,7 @@ export class BookService extends BaseService<Book> {
 
   async updateBook(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
     if (updateBookDto.authorId) {
-      const author = await this.authorRepository.findById(updateBookDto.authorId);
-      if (!author) {
-        throw new NotFoundException('Author not found');
-      }
+      await this.authorService.findById(updateBookDto.authorId);
     }
 
     const book = await this.update(id, updateBookDto);

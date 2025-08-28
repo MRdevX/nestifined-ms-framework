@@ -1,8 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { BaseService } from '../core/base/base.service';
-import type { CreateAuthorDto } from './dto';
-import type { Author } from './entities/author.entity';
-import type { AuthorRepository } from './repositories/author.repository';
+import { ConflictException, Injectable } from "@nestjs/common";
+import { BaseService } from "../core/base/base.service";
+import type { CreateAuthorDto } from "./dto";
+import type { Author } from "./entities/author.entity";
+import { AuthorRepository } from "./repositories/author.repository";
 
 @Injectable()
 export class AuthorService extends BaseService<Author> {
@@ -13,7 +13,7 @@ export class AuthorService extends BaseService<Author> {
   async createAuthor(createAuthorDto: CreateAuthorDto): Promise<Author> {
     const existingAuthor = await this.authorRepository.findByName(createAuthorDto.name);
     if (existingAuthor) {
-      throw new ConflictException('Author with this name already exists');
+      throw new ConflictException("Author with this name already exists");
     }
     return this.authorRepository.create(createAuthorDto);
   }
@@ -25,7 +25,7 @@ export class AuthorService extends BaseService<Author> {
   async findByIdWithBooks(id: string): Promise<Author> {
     const author = await this.authorRepository.findByIdWithBooks(id);
     if (!author) {
-      throw new Error('Author not found');
+      throw new Error("Author not found");
     }
     return author;
   }

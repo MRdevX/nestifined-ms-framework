@@ -1,8 +1,8 @@
-import { Transform } from 'class-transformer';
-import { IsEmail, IsOptional, IsString, Length, MaxLength } from 'class-validator';
+import { Transform } from "class-transformer";
+import { IsEmail, IsOptional, IsString, Length, MaxLength } from "class-validator";
 
 export class CreateUserDto {
-  @Transform(({ value }) => (typeof value === 'string' ? value.trim().toLowerCase() : value))
+  @Transform(({ value }) => (typeof value === "string" ? value.trim().toLowerCase() : value))
   @IsString()
   @IsEmail()
   @MaxLength(100)

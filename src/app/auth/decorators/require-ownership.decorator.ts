@@ -1,9 +1,9 @@
-import { SetMetadata } from '@nestjs/common';
+import { SetMetadata } from "@nestjs/common";
 
-export const OWNERSHIP_KEY = 'ownership';
+export const OWNERSHIP_KEY = "ownership";
 
 export interface OwnershipCheck {
-  entityType: 'wish' | 'wishlist';
+  entityType: "wish" | "wishlist";
   paramName?: string;
 }
 

@@ -1,9 +1,9 @@
-import type { User } from '../../users/entities/user.entity';
+import type { User } from "../../users/entities/user.entity";
 
 export interface TokenPayload {
   sub: string;
   email: string;
-  type: 'access' | 'refresh';
+  type: "access" | "refresh";
 }
 
 export interface TokenPair {
@@ -11,7 +11,7 @@ export interface TokenPair {
   refreshToken: string;
 }
 
-export type UserWithoutPassword = Omit<User, 'password'>;
+export type UserWithoutPassword = Omit<User, "password">;
 
 export interface AuthResponse {
   user: UserWithoutPassword;

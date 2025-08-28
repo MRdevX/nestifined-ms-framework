@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import type { CacheService } from '../core/cache/cache.service';
-import type { MessagingService } from '../core/messaging/messaging.service';
-import type { CreateBookDto } from './dto';
-import { Book } from './entities/book.entity';
+import { Injectable } from "@nestjs/common";
+import { CacheService } from "../core/cache/cache.service";
+import { MessagingService } from "../core/messaging/messaging.service";
+import type { CreateBookDto } from "./dto";
+import { Book } from "./entities/book.entity";
 
 @Injectable()
 export class BookS2SService {
@@ -13,15 +13,13 @@ export class BookS2SService {
 
   async sendBook(createBookDto: CreateBookDto): Promise<void> {
     const client = this.messagingService.getClient();
-    client.emit('book_created', createBookDto);
+    client.emit("book_created", createBookDto);
   }
 
   async receiveBook(data: CreateBookDto): Promise<Book> {
-    // Process received book data
-    // Create a book entity from the DTO
     const book = new Book();
     Object.assign(book, data);
-    // Save or process the book as needed
+
     return book;
   }
 

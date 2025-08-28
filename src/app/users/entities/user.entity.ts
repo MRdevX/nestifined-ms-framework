@@ -1,5 +1,5 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, Index } from 'typeorm';
-import { TypeOrmBaseModel } from '../../core/base/typeorm/typeorm.base.entity';
+import { BeforeInsert, BeforeUpdate, Column, Entity, Index } from "typeorm";
+import { TypeOrmBaseModel } from "../../core/base/typeorm/typeorm.base.entity";
 
 @Entity()
 export class User extends TypeOrmBaseModel {

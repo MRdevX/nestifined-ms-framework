@@ -1,4 +1,4 @@
-import type { IBaseEntity } from './interfaces/base.interface';
+import type { IBaseEntity } from "./interfaces/base.interface";
 
 export abstract class BaseModel implements IBaseEntity {
   id: string;

@@ -1,16 +1,16 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
-import type { BookS2SService } from './book.s2s.service';
-import type { BookService } from './book.service';
-import type { CreateBookDto, SearchBookDto, UpdateBookDto } from './dto';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from "@nestjs/common";
+import { BookS2SService } from "./book.s2s.service";
+import { BookService } from "./book.service";
+import type { CreateBookDto, SearchBookDto, UpdateBookDto } from "./dto";
 
-@Controller('books')
+@Controller("books")
 export class BookController {
   constructor(
     private readonly bookService: BookService,
     private readonly bookS2SService: BookS2SService,
   ) {}
 
-  @Get('search')
+  @Get("search")
   async search(@Query() query: SearchBookDto) {
     return this.bookService.searchBooks(query);
   }
@@ -20,7 +20,7 @@ export class BookController {
     return this.bookService.findAll();
   }
 
-  @Get('with-author')
+  @Get("with-author")
   findAllWithAuthor() {
     return this.bookService.findAllWithAuthor();
   }
@@ -31,40 +31,40 @@ export class BookController {
     return this.bookService.createBook(createBookDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.bookService.findById(id);
   }
 
-  @Get(':id/with-author')
-  findOneWithAuthor(@Param('id') id: string) {
+  @Get(":id/with-author")
+  findOneWithAuthor(@Param("id") id: string) {
     return this.bookService.findByIdWithAuthor(id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
+  @Put(":id")
+  update(@Param("id") id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.bookService.updateBook(id, updateBookDto);
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
+  remove(@Param("id") id: string) {
     return this.bookService.deleteBook(id);
   }
 
-  @Get('cache/:id')
-  getCachedBook(@Param('id') id: string) {
+  @Get("cache/:id")
+  getCachedBook(@Param("id") id: string) {
     return this.bookService.getCachedBook(id);
   }
 
-  @Post('cache')
+  @Post("cache")
   async cacheBook(@Body() createBookDto: CreateBookDto) {
     const book = await this.bookService.createBook(createBookDto);
     await this.bookService.cacheBook(book);
     return book;
   }
 
-  @Post('send')
+  @Post("send")
   async sendBook(@Body() createBookDto: CreateBookDto) {
     await this.bookS2SService.sendBook(createBookDto);
   }
