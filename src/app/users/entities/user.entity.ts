@@ -1,23 +1,14 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, Index } from "typeorm";
-import { TypeOrmBaseModel } from "../../core/base/typeorm/typeorm.base.entity";
+import { Column, Entity } from "typeorm";
+import { BaseEntity } from "../../core/database/base/base.entity";
 
-@Entity()
-export class User extends TypeOrmBaseModel {
-  @Index({ unique: true })
-  @Column({ length: 100, nullable: true })
+@Entity("users")
+export class User extends BaseEntity {
+  @Column()
+  name: string;
+
+  @Column()
   email: string;
 
-  @Column({ length: 120, nullable: true })
-  name?: string;
-
-  @Column({ length: 255, nullable: true, select: false })
-  password?: string;
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  normalizeEmail() {
-    if (this.email) {
-      this.email = this.email.trim().toLowerCase();
-    }
-  }
+  @Column()
+  password: string;
 }

@@ -1,17 +1,18 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
-import { TypeOrmBaseModel } from "../../core/base/typeorm/typeorm.base.entity";
-import { User } from "../../users/entities/user.entity";
+import { Column, Entity } from "typeorm";
+import { BaseEntity } from "../../core/database/base/base.entity";
 
 export enum TokenType {
   REFRESH = "refresh",
   PASSWORD_RESET = "password_reset",
 }
 
-@Entity()
-@Index(["userId", "type"])
-export class Token extends TypeOrmBaseModel {
-  @Column({ length: 255 })
+@Entity("tokens")
+export class Token extends BaseEntity {
+  @Column()
   token: string;
+
+  @Column()
+  userId: string;
 
   @Column({
     type: "enum",
@@ -21,13 +22,6 @@ export class Token extends TypeOrmBaseModel {
 
   @Column({ nullable: true })
   expiresAt?: Date;
-
-  @Column()
-  userId: string;
-
-  @ManyToOne(() => User, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "userId" })
-  user: User;
 
   isExpired(): boolean {
     if (!this.expiresAt) return false;

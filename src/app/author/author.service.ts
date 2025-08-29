@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from "@nestjs/common";
-import { BaseService } from "../core/base/base.service";
+import { BaseService } from "../core/database/base/base.service";
 import type { CreateAuthorDto } from "./dto";
 import type { Author } from "./entities/author.entity";
 import { AuthorRepository } from "./repositories/author.repository";

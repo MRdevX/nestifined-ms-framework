@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from "@nestjs/common";
-import { BaseService } from "../core/base/base.service";
+import { BaseService } from "../core/database/base/base.service";
 import type { CreateUserDto } from "./dto/create-user.dto";
-import type { User } from "./entities/user.entity";
+import { User } from "./entities/user.entity";
 import { UserRepository } from "./repositories/user.repository";
 
 @Injectable()
