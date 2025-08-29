@@ -3,22 +3,22 @@
 # ------------------------------------------------------
 
 type Author {
+  createdAt: DateTime!
   id: ID!
   name: String!
-  createdAt: DateTime!
   updatedAt: DateTime!
 }
 
 type Book {
-  id: ID!
-  title: String!
-  isbn: String!
-  summary: String!
-  publishedDate: DateTime
+  author: Author
   authorId: ID
   createdAt: DateTime!
+  id: ID!
+  isbn: String!
+  publishedDate: DateTime
+  summary: String!
+  title: String!
   updatedAt: DateTime!
-  author: Author
 }
 
 input CreateAuthorInput {
@@ -60,6 +60,8 @@ type Query {
 input SearchBookInput {
   author: String
   isbn: String
+  limit: Int
+  offset: Int
   publishedDate: DateTime
   summary: String
   title: String

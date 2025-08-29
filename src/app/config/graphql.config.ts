@@ -2,8 +2,7 @@ import { ApolloDriverConfig } from "@nestjs/apollo";
 import { join } from "path";
 
 export const graphqlConfig: ApolloDriverConfig = {
-  typeDefs: null,
-  typePaths: [join(process.cwd(), "src/schema.gql")],
+  autoSchemaFile: join(process.cwd(), "src/schema.gql"),
   sortSchema: true,
   playground: true,
   introspection: true,
@@ -22,7 +21,7 @@ export const graphqlConfig: ApolloDriverConfig = {
     return error;
   },
   plugins: [],
-  // Add these options to help with debugging and prevent hanging
+
   debug: true,
   autoTransformHttpErrors: true,
 };
