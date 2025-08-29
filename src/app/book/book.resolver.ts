@@ -62,6 +62,12 @@ export class BookResolver {
     if (book.author) {
       return book.author;
     }
-    return this.authorService.findById(book.author?.id || "");
+
+    const authorId = book.author?.id;
+    if (!authorId) {
+      return null;
+    }
+
+    return this.authorService.findById(authorId);
   }
 }
