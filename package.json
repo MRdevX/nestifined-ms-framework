@@ -71,6 +71,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.2",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@faker-js/faker": "^10.0.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/schematics": "^11.0.7",
@@ -98,6 +100,9 @@
     "*.{ts,js}": [
       "biome format --write",
       "biome lint --write"
+    ],
+    "*.json": [
+      "biome format --write"
     ]
   },
   "jest": {
