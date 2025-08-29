@@ -1,39 +1,33 @@
-import { ArgumentsHost, Catch } from "@nestjs/common";
+import { ArgumentsHost, Catch, Logger } from "@nestjs/common";
 import { GqlArgumentsHost, GqlExceptionFilter } from "@nestjs/graphql";
 import { GraphQLError } from "graphql";
 
 @Catch()
 export class GraphQLExceptionFilter implements GqlExceptionFilter {
+  private readonly logger = new Logger(GraphQLExceptionFilter.name);
+
   catch(exception: any, host: ArgumentsHost) {
     const gqlHost = GqlArgumentsHost.create(host);
-    const context = gqlHost.getContext();
 
-    console.error("GraphQL Error:", exception);
+    if (process.env.NODE_ENV !== "production") {
+      this.logger.error("GraphQL Error:", exception);
+    }
 
     if (exception instanceof GraphQLError) {
       return exception;
     }
 
-    if (exception.status) {
-      return new GraphQLError(exception.message, {
-        extensions: {
-          code: exception.status,
-          originalError: {
-            message: exception.message,
-            statusCode: exception.status,
-            error: exception.error || "Internal Server Error",
-          },
-        },
-      });
-    }
+    const message = exception?.message || "An unexpected error occurred";
+    const status = typeof exception?.status === "number" ? exception.status : 500;
+    const errorName = exception?.error || (status >= 500 ? "Internal Server Error" : "Bad Request");
 
-    return new GraphQLError("Internal Server Error", {
+    return new GraphQLError(status >= 500 ? "Internal Server Error" : message, {
       extensions: {
-        code: "INTERNAL_SERVER_ERROR",
+        code: status >= 500 ? "INTERNAL_SERVER_ERROR" : "BAD_USER_INPUT",
         originalError: {
-          message: exception.message || "An unexpected error occurred",
-          statusCode: 500,
-          error: "Internal Server Error",
+          message,
+          statusCode: status,
+          error: errorName,
         },
       },
     });
