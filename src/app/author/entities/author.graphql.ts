@@ -1,5 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Book } from "../../book/entities/book.graphql";
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Author {
@@ -8,9 +7,6 @@ export class Author {
 
   @Field()
   name: string;
-
-  @Field(() => [Book], { nullable: true })
-  books?: Book[];
 
   @Field()
   createdAt: Date;

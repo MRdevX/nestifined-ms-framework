@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import type { Repository } from "typeorm";
-import { TypeOrmBaseRepository } from "../../core/database/base/base.repository";
-import { Book } from "../entities/book.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import type { Repository } from 'typeorm';
+import { TypeOrmBaseRepository } from '../../core/database/base/base.repository';
+import { Book } from '../entities/book.entity';
 
 @Injectable()
 export class BookRepository extends TypeOrmBaseRepository<Book> {
@@ -31,7 +31,7 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
 
   async findAllWithAuthor(): Promise<Book[]> {
     return this.search({
-      relations: ["author"],
+      relations: ['author'],
       withPagination: false,
     }) as Promise<Book[]>;
   }
@@ -39,7 +39,7 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
   async findByIdWithAuthor(id: string): Promise<Book | null> {
     const results = (await this.search({
       filters: { id },
-      relations: ["author"],
+      relations: ['author'],
       withPagination: false,
     })) as Book[];
 
@@ -72,7 +72,7 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
 
     return this.search({
       filters,
-      relations: ["author"],
+      relations: ['author'],
       withPagination: !!pagination,
       pagination,
     }) as Promise<Book[]>;
@@ -80,12 +80,12 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
 
   async findByAuthorId(authorId: string): Promise<Book[]> {
     return this.search({
-      filters: { author: { id: authorId } },
+      filters: { authorId },
       withPagination: false,
     }) as Promise<Book[]>;
   }
 
   protected getSearchableFields(): string[] {
-    return ["title", "isbn", "summary"];
+    return ['title', 'isbn', 'summary'];
   }
 }

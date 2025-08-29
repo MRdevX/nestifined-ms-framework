@@ -3,22 +3,22 @@
 # ------------------------------------------------------
 
 type Author {
-  books: [Book!]
-  createdAt: DateTime!
   id: ID!
   name: String!
+  createdAt: DateTime!
   updatedAt: DateTime!
 }
 
 type Book {
-  author: Author
-  createdAt: DateTime!
   id: ID!
-  isbn: String!
-  publishedDate: DateTime
-  summary: String!
   title: String!
+  isbn: String!
+  summary: String!
+  publishedDate: DateTime
+  authorId: ID
+  createdAt: DateTime!
   updatedAt: DateTime!
+  author: Author
 }
 
 input CreateAuthorInput {
