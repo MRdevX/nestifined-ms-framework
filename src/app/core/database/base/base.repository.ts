@@ -77,9 +77,9 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
     queryBuilder: SelectQueryBuilder<T>,
     pagination: PaginationOptions,
   ): Promise<PaginationResult<T>> {
-    const page = Math.max(1, pagination.page || 1);
+    const page = Math.max(1, Math.min(10000, pagination.page || 1));
     const limit = Math.max(1, Math.min(100, pagination.limit || 10));
-    const skip = (page - 1) * limit;
+    const skip = Math.min(1000000, (page - 1) * limit);
 
     queryBuilder.skip(skip).take(limit);
 
