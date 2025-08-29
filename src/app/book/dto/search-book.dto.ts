@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsDate, IsOptional, IsString } from "class-validator";
+import { IsDate, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
 
 export class SearchBookDto {
   @IsOptional()
@@ -22,4 +22,15 @@ export class SearchBookDto {
   @IsOptional()
   @IsString()
   summary?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  limit?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  offset?: number;
 }

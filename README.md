@@ -28,6 +28,7 @@
 - **⚡ Redis**: Caching support using Redis.
 - **📨 RabbitMQ**: Messaging support using RabbitMQ.
 - **📄 Swagger**: API documentation using Swagger.
+- **🔮 GraphQL**: GraphQL API with code-first approach and automatic schema generation.
 - **🐶 Husky**: Git hooks management using Husky.
 - **🧹 Linting and Formatting**: Biome for code linting and formatting.
 - **🧪 Testing**: Unit and e2e testing using Jest.
@@ -106,6 +107,60 @@ kubectl apply -k k8s/staging/
 # Production Environment
 kubectl apply -k k8s/production/
 ```
+
+## GraphQL 🔮
+
+The application includes a comprehensive GraphQL API implementation with the following features:
+
+### Features
+
+- **Code-first approach** with automatic schema generation
+- **Type-safe resolvers** with proper validation
+- **Field resolvers** for efficient data loading
+- **Search and filtering** capabilities
+- **GraphQL Playground** for development and testing
+
+### Getting Started
+
+1. Start the application: `pnpm start:dev`
+2. Navigate to GraphQL Playground: `http://localhost:3000/graphql`
+3. Explore the interactive schema and test queries
+
+### Example Queries
+
+```graphql
+# Get all books with authors
+query {
+  booksWithAuthor {
+    id
+    title
+    isbn
+    author {
+      name
+    }
+  }
+}
+
+# Create a new book
+mutation {
+  createBook(
+    input: {
+      title: "GraphQL with NestJS"
+      authorId: "author-uuid"
+      isbn: "978-1234567890"
+      summary: "Learn GraphQL implementation"
+    }
+  ) {
+    id
+    title
+    author {
+      name
+    }
+  }
+}
+```
+
+For more examples and detailed documentation, see [GRAPHQL.md](./GRAPHQL.md) and [examples/graphql-queries.md](./examples/graphql-queries.md).
 
 ## Husky 🐶
 

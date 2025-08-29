@@ -26,6 +26,7 @@ export class BookService extends BaseService<Book> {
 
     const book = await this.bookRepository.create({
       ...createBookDto,
+      authorId: createBookDto.authorId,
       author,
     });
 
@@ -77,5 +78,9 @@ export class BookService extends BaseService<Book> {
     const client = this.cacheService.getClient();
     const data = await client.get(`book:${id}`);
     return data ? JSON.parse(data) : null;
+  }
+
+  async findByAuthorId(authorId: string): Promise<Book[]> {
+    return this.bookRepository.findByAuthorId(authorId);
   }
 }

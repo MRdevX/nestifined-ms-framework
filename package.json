@@ -35,12 +35,15 @@
     "typeorm": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js --dataSource ./src/app/core/database/typeorm-config.service.ts",
     "migration:generate": "npm run typeorm migration:generate ./src/migrations/$npm_config_name --timestamp",
     "migration:run": "npm run typeorm -- migration:run",
-    "migration:revert": "npm run typeorm -- migration:revert"
+    "migration:revert": "npm run typeorm -- migration:revert",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
+    "@nestjs/apollo": "^13.1.0",
     "@nestjs/common": "^11.1.6",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.6",
+    "@nestjs/graphql": "^13.1.0",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/microservices": "^11.1.6",
     "@nestjs/passport": "^11.0.5",
@@ -53,6 +56,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^17.2.1",
+    "graphql": "^16.11.0",
     "helmet": "^8.0.0",
     "ioredis": "^5.4.2",
     "lodash": "^4.17.21",
@@ -67,6 +71,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.2",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@faker-js/faker": "^10.0.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/schematics": "^11.0.7",
@@ -93,6 +99,9 @@
   "lint-staged": {
     "*.{ts,js}": [
       "biome check --write"
+    ],
+    "*.json": [
+      "biome format --write"
     ]
   },
   "jest": {

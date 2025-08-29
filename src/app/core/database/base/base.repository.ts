@@ -137,6 +137,12 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
           return;
         }
 
+        // Handle relation filters (nested objects)
+        if (typeof value === "object" && !Array.isArray(value) && value !== null) {
+          this.applyRelationFilter(queryBuilder, key, value, tableAlias);
+          return;
+        }
+
         if (typeof value === "string" && (value.startsWith(">=") || value.startsWith("<="))) {
           const dateFilter = QueryUtils.parseDateFilter(value);
           if (dateFilter) {
@@ -163,6 +169,28 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
         }
 
         queryBuilder.andWhere(`${tableAlias}.${key} = :${parameterName}`, { [parameterName]: value });
+      }
+    });
+  }
+
+  protected applyRelationFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    relationName: string,
+    relationFilters: Record<string, any>,
+    tableAlias: string,
+  ): void {
+    Object.entries(relationFilters).forEach(([field, value], index) => {
+      if (value !== undefined && value !== null && value !== "") {
+        const parameterName = `${relationName}_${field}_${index}`;
+        const relationAlias = relationName;
+
+        if (typeof value === "string" && value.includes("%")) {
+          queryBuilder.andWhere(`${relationAlias}.${field} ILIKE :${parameterName}`, { [parameterName]: value });
+        } else if (typeof value === "string") {
+          queryBuilder.andWhere(`${relationAlias}.${field} ILIKE :${parameterName}`, { [parameterName]: `%${value}%` });
+        } else {
+          queryBuilder.andWhere(`${relationAlias}.${field} = :${parameterName}`, { [parameterName]: value });
+        }
       }
     });
   }

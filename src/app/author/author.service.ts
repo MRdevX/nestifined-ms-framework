@@ -33,4 +33,12 @@ export class AuthorService extends BaseService<Author> {
   async findByName(name: string): Promise<Author | null> {
     return this.authorRepository.findByName(name);
   }
+
+  async updateAuthor(id: string, updateAuthorDto: any): Promise<Author> {
+    return this.update(id, updateAuthorDto);
+  }
+
+  async deleteAuthor(id: string): Promise<void> {
+    await this.delete(id);
+  }
 }
