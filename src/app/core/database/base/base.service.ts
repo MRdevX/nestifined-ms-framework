@@ -1,11 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import {
-  BaseRepository,
-  FilterOptions,
-  PaginationOptions,
-  PaginationResult,
-  SearchOptions,
-} from "../interfaces/database.interface";
+import { BaseRepository, FilterOptions, PaginationResult, SearchOptions } from "../interfaces/database.interface";
 
 @Injectable()
 export abstract class BaseService<T> {

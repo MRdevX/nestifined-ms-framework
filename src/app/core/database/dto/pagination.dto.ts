@@ -1,5 +1,6 @@
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, Max, Min } from "class-validator";
+import { FilterOptions } from "../interfaces/database.interface";
 
 export enum SortOrder {
   ASC = "ASC",
@@ -29,7 +30,7 @@ export class PaginationDto {
   sortOrder?: SortOrder = SortOrder.DESC;
 }
 
-export class FilterDto {
+export class FilterDto implements FilterOptions {
   @IsOptional()
   @IsString()
   search?: string;
@@ -55,6 +56,8 @@ export class FilterDto {
   @IsOptional()
   @Type(() => Date)
   updatedBefore?: Date;
+
+  [key: string]: unknown;
 }
 
 export class SearchDto extends PaginationDto {

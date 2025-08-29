@@ -1,11 +1,11 @@
-import { DataSource } from "typeorm";
-import { DatabaseProvider } from "../interfaces/database.interface";
+import { DataSource, DataSourceOptions } from "typeorm";
+import { DatabaseConfig, DatabaseProvider } from "../interfaces/database.interface";
 
 export class TypeOrmProvider implements DatabaseProvider {
   private dataSource: DataSource;
 
-  constructor(private config: any) {
-    this.dataSource = new DataSource(config);
+  constructor(config: DatabaseConfig) {
+    this.dataSource = new DataSource(config as DataSourceOptions);
   }
 
   async connect(): Promise<void> {

@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { DatabaseProvider } from "../interfaces/database.interface";
+import { DatabaseConfig, DatabaseProvider } from "../interfaces/database.interface";
 import { TypeOrmProvider } from "./typeorm.provider";
 
 export type DatabaseType = "typeorm" | "prisma" | "drizzle";
 
 @Injectable()
 export class DatabaseProviderFactory {
-  createProvider(type: DatabaseType, config: any): DatabaseProvider {
+  createProvider(type: DatabaseType, config: DatabaseConfig): DatabaseProvider {
     switch (type) {
       case "typeorm":
         return new TypeOrmProvider(config);

@@ -1,4 +1,7 @@
-export interface DatabaseConfig {
+import { DataSourceOptions } from "typeorm";
+
+export interface DatabaseConfig
+  extends Omit<DataSourceOptions, "host" | "port" | "username" | "password" | "database"> {
   host: string;
   port: number;
   username: string;
@@ -34,7 +37,7 @@ export interface PaginationResult<T> {
 }
 
 export interface FilterOptions {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface SearchOptions {
