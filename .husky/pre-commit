@@ -1,1 +1,6 @@
-pnpm lint-staged
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+pnpm format
+pnpm lint:fix
+pnpm check:fix

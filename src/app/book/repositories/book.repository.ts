@@ -52,6 +52,8 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
     isbn?: string;
     publishedDate?: Date;
     summary?: string;
+    limit?: number;
+    offset?: number;
   }): Promise<Book[]> {
     const filters: Record<string, string | Date> = {};
 
@@ -60,10 +62,19 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
     if (searchParams.publishedDate) filters.publishedDate = searchParams.publishedDate;
     if (searchParams.summary) filters.summary = searchParams.summary;
 
+    const pagination =
+      searchParams.limit || searchParams.offset
+        ? {
+            limit: searchParams.limit || 10,
+            offset: searchParams.offset || 0,
+          }
+        : undefined;
+
     return this.search({
       filters,
       relations: ["author"],
-      withPagination: false,
+      withPagination: !!pagination,
+      pagination,
     }) as Promise<Book[]>;
   }
 
