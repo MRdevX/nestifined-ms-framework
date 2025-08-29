@@ -95,9 +95,7 @@
   },
   "lint-staged": {
     "*.{ts,js}": [
-      "biome format --write",
-      "biome lint --write",
-      "biome check --write"
+      "biome format --write"
     ]
   },
   "jest": {
