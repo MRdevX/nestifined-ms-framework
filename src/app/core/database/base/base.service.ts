@@ -23,10 +23,6 @@ export abstract class BaseService<T> {
     return entity;
   }
 
-  async findAll(): Promise<T[]> {
-    return this.repository.findAll();
-  }
-
   async update(id: string, data: Partial<T>): Promise<T> {
     const entity = await this.repository.update(id, data);
     if (!entity) {
@@ -85,5 +81,13 @@ export abstract class BaseService<T> {
       withPagination: false,
     };
     return this.repository.search(options) as Promise<T[]>;
+  }
+
+  async findAll(relations?: string[], select?: string[]): Promise<T[]> {
+    return this.search({
+      relations,
+      select,
+      withPagination: false,
+    }) as Promise<T[]>;
   }
 }

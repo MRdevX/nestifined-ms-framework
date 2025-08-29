@@ -22,10 +22,6 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
     return this.repository.findOne({ where: { id } as any });
   }
 
-  async findAll(): Promise<T[]> {
-    return this.repository.find();
-  }
-
   async update(id: string, data: Partial<T>): Promise<T | null> {
     await this.repository.update(id, data as any);
     return this.findById(id);
