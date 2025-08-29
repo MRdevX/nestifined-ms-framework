@@ -67,6 +67,13 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
     }) as Promise<Book[]>;
   }
 
+  async findByAuthorId(authorId: string): Promise<Book[]> {
+    return this.search({
+      filters: { author: { id: authorId } },
+      withPagination: false,
+    }) as Promise<Book[]>;
+  }
+
   protected getSearchableFields(): string[] {
     return ["title", "isbn", "summary"];
   }

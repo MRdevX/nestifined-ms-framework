@@ -78,4 +78,8 @@ export class BookService extends BaseService<Book> {
     const data = await client.get(`book:${id}`);
     return data ? JSON.parse(data) : null;
   }
+
+  async findByAuthorId(authorId: string): Promise<Book[]> {
+    return this.bookRepository.findByAuthorId(authorId);
+  }
 }
