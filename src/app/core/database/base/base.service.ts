@@ -38,6 +38,21 @@ export abstract class BaseService<T> {
     }
   }
 
+  async hardDelete(id: string): Promise<void> {
+    const deleted = await this.repository.hardDelete(id);
+    if (!deleted) {
+      throw new NotFoundException(`Entity with ID ${id} not found`);
+    }
+  }
+
+  async restore(id: string): Promise<T> {
+    const entity = await this.repository.restore(id);
+    if (!entity) {
+      throw new NotFoundException(`Entity with ID ${id} not found or could not be restored`);
+    }
+    return entity;
+  }
+
   async search(options?: SearchOptions): Promise<T[] | PaginationResult<T>> {
     return this.repository.search(options);
   }
@@ -88,6 +103,15 @@ export abstract class BaseService<T> {
       relations,
       select,
       withPagination: false,
+    }) as Promise<T[]>;
+  }
+
+  async findAllIncludingDeleted(relations?: string[], select?: string[]): Promise<T[]> {
+    return this.search({
+      relations,
+      select,
+      withPagination: false,
+      includeDeleted: true,
     }) as Promise<T[]>;
   }
 }

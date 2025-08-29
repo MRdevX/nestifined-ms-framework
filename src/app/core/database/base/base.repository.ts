@@ -28,14 +28,34 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
   }
 
   async delete(id: string): Promise<boolean> {
+    const result = await this.repository.softDelete(id);
+    return result.affected > 0;
+  }
+
+  async hardDelete(id: string): Promise<boolean> {
     const result = await this.repository.delete(id);
     return result.affected > 0;
   }
 
-  async search(options?: SearchOptions): Promise<T[] | PaginationResult<T>> {
-    const { pagination, filters = {}, relations = [], select = [], withPagination = false } = options || {};
+  async restore(id: string): Promise<T | null> {
+    const result = await this.repository.restore(id);
+    if (result.affected > 0) {
+      return this.findById(id);
+    }
+    return null;
+  }
 
-    const queryBuilder = this.buildQueryBuilder(filters, relations, select);
+  async search(options?: SearchOptions): Promise<T[] | PaginationResult<T>> {
+    const {
+      pagination,
+      filters = {},
+      relations = [],
+      select = [],
+      withPagination = false,
+      includeDeleted = false,
+    } = options || {};
+
+    const queryBuilder = this.buildQueryBuilder(filters, relations, select, includeDeleted);
 
     if (withPagination && pagination?.sortBy) {
       queryBuilder.orderBy(`${this.getTableAlias()}.${pagination.sortBy}`, pagination.sortOrder || "DESC");
@@ -83,6 +103,7 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
     filters: FilterOptions,
     relations: string[] = [],
     select: string[] = [],
+    includeDeleted: boolean = false,
   ): SelectQueryBuilder<T> {
     const tableAlias = this.getTableAlias();
     let queryBuilder = this.repository.createQueryBuilder(tableAlias);
@@ -94,6 +115,10 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
     if (select.length > 0) {
       const selectFields = select.map((field) => `${tableAlias}.${field}`);
       queryBuilder = queryBuilder.select(selectFields);
+    }
+
+    if (!includeDeleted) {
+      queryBuilder.andWhere(`${tableAlias}.deletedAt IS NULL`);
     }
 
     this.applyFilters(queryBuilder, filters, tableAlias);

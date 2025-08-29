@@ -43,6 +43,7 @@ export interface SearchOptions {
   relations?: string[];
   select?: string[];
   withPagination?: boolean;
+  includeDeleted?: boolean;
 }
 
 export interface BaseRepository<T> {
@@ -50,6 +51,8 @@ export interface BaseRepository<T> {
   findById(id: string): Promise<T | null>;
   update(id: string, data: Partial<T>): Promise<T | null>;
   delete(id: string): Promise<boolean>;
+  hardDelete(id: string): Promise<boolean>;
+  restore(id: string): Promise<T | null>;
   search(options?: SearchOptions): Promise<T[] | PaginationResult<T>>;
   count(filters?: FilterOptions): Promise<number>;
 }

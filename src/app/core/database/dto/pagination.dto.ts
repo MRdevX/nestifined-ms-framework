@@ -78,4 +78,9 @@ export class SearchDto extends PaginationDto {
   @IsBoolean()
   @Transform(({ value }) => value === "true" || value === true)
   withPagination?: boolean = false;
+
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === "true" || value === true)
+  includeDeleted?: boolean = false;
 }
