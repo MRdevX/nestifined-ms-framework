@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { CacheService } from "@root/app/core/cache/cache.service";
 import { AuthorService } from "../author/author.service";
-import { BaseService } from "../core/base/base.service";
+import { BaseService } from "../core/database/base/base.service";
 import type { CreateBookDto, SearchBookDto, UpdateBookDto } from "./dto";
 import type { Book } from "./entities/book.entity";
 import { BookRepository } from "./repositories/book.repository";

@@ -1,0 +1,202 @@
+# CodeRabbit Configuration for NestJS Microservice Framework
+# https://docs.coderabbit.ai/reference/configuration
+
+# Global Settings
+language: en-US
+tone_instructions: 'Be professional, constructive, and focus on NestJS best practices, microservice patterns, and TypeScript standards. Provide actionable feedback with specific examples when possible.'
+early_access: false
+enable_free_tier: true
+
+# Reviews Configuration
+reviews:
+  # Review Profile - Use assertive for more detailed feedback
+  profile: assertive
+
+  # High-level summary and walkthrough settings
+  high_level_summary: true
+  high_level_summary_placeholder: '@coderabbitai summary'
+  high_level_summary_in_walkthrough: true
+  collapse_walkthrough: true
+  changed_files_summary: true
+  sequence_diagrams: true
+  estimate_code_review_effort: true
+
+  # Auto-review settings
+  auto_review:
+    enabled: true
+    drafts: false
+
+  # Review status and commit status
+  review_status: true
+  commit_status: true
+  fail_commit_status: false
+
+  # Issue and PR assessment
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+
+  # Labeling and reviewer suggestions
+  suggested_labels: true
+  auto_apply_labels: false
+  suggested_reviewers: true
+  auto_assign_reviewers: false
+
+  # Labeling instructions for NestJS project
+  labeling_instructions:
+    - label: 'nestjs'
+      instructions: 'Apply when changes involve NestJS framework features, decorators, or core functionality'
+    - label: 'microservice'
+      instructions: 'Apply when changes affect microservice communication, messaging, or service-to-service calls'
+    - label: 'database'
+      instructions: 'Apply when changes involve TypeORM entities, migrations, or database operations'
+    - label: 'auth'
+      instructions: 'Apply when changes involve authentication, authorization, or JWT handling'
+    - label: 'api'
+      instructions: 'Apply when changes affect API endpoints, DTOs, or Swagger documentation'
+    - label: 'testing'
+      instructions: 'Apply when changes involve unit tests, e2e tests, or test utilities'
+    - label: 'config'
+      instructions: 'Apply when changes involve configuration files, environment variables, or deployment configs'
+    - label: 'docker'
+      instructions: 'Apply when changes involve Docker configurations or containerization'
+    - label: 'k8s'
+      instructions: 'Apply when changes involve Kubernetes manifests or deployment configurations'
+    - label: 'security'
+      instructions: 'Apply when changes involve security features, validation, or potential vulnerabilities'
+    - label: 'performance'
+      instructions: 'Apply when changes optimize performance, caching, or resource usage'
+    - label: 'logging'
+      instructions: 'Apply when changes involve logging, monitoring, or observability'
+
+  # Path filters to include/exclude files
+  path_filters:
+    - 'src/**'
+    - 'test/**'
+    - '*.ts'
+    - '*.js'
+    - '*.json'
+    - '*.yaml'
+    - '*.yml'
+    - 'Dockerfile'
+    - 'docker-compose.yml'
+    - 'k8s/**'
+    - '!node_modules/**'
+    - '!dist/**'
+    - '!coverage/**'
+    - '!logs/**'
+    - '!*.log'
+
+  # Path-specific instructions for different file types
+  path_instructions:
+    - path: 'src/app/**/controllers/*.ts'
+      instructions: 'Focus on REST API best practices, proper HTTP status codes, input validation, error handling, and Swagger documentation. Ensure proper use of NestJS decorators and dependency injection.'
+
+    - path: 'src/app/**/services/*.ts'
+      instructions: 'Review business logic, error handling, proper use of TypeORM repositories, transaction management, and service layer patterns. Ensure proper separation of concerns.'
+
+    - path: 'src/app/**/entities/*.ts'
+      instructions: 'Check TypeORM entity definitions, relationships, validation decorators, and database schema design. Ensure proper indexing and constraint definitions.'
+
+    - path: 'src/app/**/dto/*.ts'
+      instructions: 'Review DTO validation rules, class-validator decorators, transformation logic, and API contract consistency.'
+
+    - path: 'src/app/**/repositories/*.ts'
+      instructions: 'Check custom repository methods, query optimization, and proper use of TypeORM query builder patterns.'
+
+    - path: 'src/app/core/**/*.ts'
+      instructions: 'Review core framework components, configuration management, database setup, and shared utilities. Ensure proper abstraction and reusability.'
+
+    - path: 'src/app/auth/**/*.ts'
+      instructions: 'Focus on security best practices, JWT handling, password hashing, authentication flows, and authorization patterns.'
+
+    - path: 'test/**/*.spec.ts'
+      instructions: 'Review test coverage, mocking strategies, test isolation, and proper use of Jest and NestJS testing utilities.'
+
+    - path: 'test/**/*.e2e-spec.ts'
+      instructions: 'Check end-to-end test scenarios, database setup/teardown, and integration testing patterns.'
+
+    - path: 'src/app/config/*.ts'
+      instructions: 'Review configuration management, environment variable handling, and proper separation of configuration concerns.'
+
+    - path: 'Dockerfile'
+      instructions: 'Check Docker best practices, multi-stage builds, security considerations, and proper layer caching.'
+
+    - path: 'k8s/**/*.yaml'
+      instructions: 'Review Kubernetes manifests, resource limits, security contexts, and deployment strategies.'
+
+  # Abort settings
+  abort_on_close: true
+  disable_cache: false
+
+  # Tools configuration
+  tools:
+    # Enable Biome for linting and formatting
+    biome:
+      enabled: true
+
+    # Enable security scanning
+    gitleaks:
+      enabled: true
+
+# Knowledge Base Configuration
+knowledge_base:
+  # Learning scope
+  learnings:
+    scope: auto # Use repository learnings for public repos, org learnings for private
+
+  # Issues integration
+  issues:
+    scope: auto
+
+  # Pull requests integration
+  pull_requests:
+    scope: auto
+
+  # Jira integration (disabled by default for public repos)
+  jira:
+    usage: auto
+    project_keys: []
+
+  # Linear integration (disabled by default for public repos)
+  linear:
+    usage: auto
+    team_keys: []
+
+  # MCP integration (disabled by default for public repos)
+  mcp:
+    usage: auto
+    disabled_servers: []
+
+# Code Generation Configuration
+code_generation:
+  # Docstring generation
+  docstrings:
+    language: en-US
+    path_instructions:
+      - path: 'src/app/**/controllers/*.ts'
+        instructions: 'Generate JSDoc comments for controller methods including @param, @returns, and @example tags. Include HTTP status codes and error scenarios.'
+
+      - path: 'src/app/**/services/*.ts'
+        instructions: 'Generate comprehensive JSDoc comments for service methods including @param, @returns, @throws, and business logic descriptions.'
+
+      - path: 'src/app/**/entities/*.ts'
+        instructions: 'Generate JSDoc comments for entity properties and methods, including database constraints and relationships.'
+
+      - path: 'src/app/**/dto/*.ts'
+        instructions: 'Generate JSDoc comments for DTO properties including validation rules and usage examples.'
+
+  # Unit test generation
+  unit_tests:
+    path_instructions:
+      - path: 'src/app/**/controllers/*.ts'
+        instructions: 'Generate comprehensive unit tests for controller methods including happy path, error scenarios, input validation, and proper mocking of dependencies.'
+
+      - path: 'src/app/**/services/*.ts'
+        instructions: 'Generate unit tests for service methods including business logic testing, error handling, and proper mocking of repositories and external dependencies.'
+
+      - path: 'src/app/**/entities/*.ts'
+        instructions: 'Generate tests for entity methods, validation rules, and relationship handling.'
+
+      - path: 'src/app/**/dto/*.ts'
+        instructions: 'Generate tests for DTO validation rules, transformation logic, and edge cases.'
