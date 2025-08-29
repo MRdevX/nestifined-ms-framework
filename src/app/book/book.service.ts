@@ -1,10 +1,10 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { CacheService } from '@root/app/core/cache/cache.service';
-import { AuthorService } from '../author/author.service';
-import { BaseService } from '../core/database/base/base.service';
-import type { CreateBookDto, SearchBookDto, UpdateBookDto } from './dto';
-import type { Book } from './entities/book.entity';
-import { BookRepository } from './repositories/book.repository';
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { CacheService } from "@root/app/core/cache/cache.service";
+import { AuthorService } from "../author/author.service";
+import { BaseService } from "../core/database/base/base.service";
+import type { CreateBookDto, SearchBookDto, UpdateBookDto } from "./dto";
+import type { Book } from "./entities/book.entity";
+import { BookRepository } from "./repositories/book.repository";
 
 @Injectable()
 export class BookService extends BaseService<Book> {
@@ -19,7 +19,7 @@ export class BookService extends BaseService<Book> {
   async createBook(createBookDto: CreateBookDto): Promise<Book> {
     const existingBook = await this.bookRepository.findByIsbn(createBookDto.isbn);
     if (existingBook) {
-      throw new ConflictException('Book with this ISBN already exists');
+      throw new ConflictException("Book with this ISBN already exists");
     }
 
     const author = await this.authorService.findById(createBookDto.authorId);
@@ -41,7 +41,7 @@ export class BookService extends BaseService<Book> {
   async findByIdWithAuthor(id: string): Promise<Book> {
     const book = await this.bookRepository.findByIdWithAuthor(id);
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException("Book not found");
     }
     return book;
   }

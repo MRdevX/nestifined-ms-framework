@@ -1,9 +1,9 @@
-import { ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
+import { ApolloDriverConfig } from "@nestjs/apollo";
+import { join } from "path";
 
 export const graphqlConfig: ApolloDriverConfig = {
   typeDefs: null,
-  typePaths: [join(process.cwd(), 'src/schema.gql')],
+  typePaths: [join(process.cwd(), "src/schema.gql")],
   sortSchema: true,
   playground: true,
   introspection: true,

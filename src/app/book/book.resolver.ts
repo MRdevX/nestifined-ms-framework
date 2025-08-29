@@ -1,12 +1,12 @@
-import { Inject } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { AuthorService } from '../author/author.service';
-import { Author } from '../author/entities/author.graphql';
-import { BookService } from './book.service';
-import { CreateBookInput } from './dto/create-book.input';
-import { SearchBookInput } from './dto/search-book.input';
-import { UpdateBookInput } from './dto/update-book.input';
-import { Book } from './entities/book.graphql';
+import { Inject } from "@nestjs/common";
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { AuthorService } from "../author/author.service";
+import { Author } from "../author/entities/author.graphql";
+import { BookService } from "./book.service";
+import { CreateBookInput } from "./dto/create-book.input";
+import { SearchBookInput } from "./dto/search-book.input";
+import { UpdateBookInput } from "./dto/update-book.input";
+import { Book } from "./entities/book.graphql";
 
 @Resolver(() => Book)
 export class BookResolver {
@@ -27,32 +27,32 @@ export class BookResolver {
   }
 
   @Query(() => [Book])
-  async searchBooks(@Args('input') searchInput: SearchBookInput): Promise<Book[]> {
+  async searchBooks(@Args("input") searchInput: SearchBookInput): Promise<Book[]> {
     return this.bookService.searchBooks(searchInput);
   }
 
   @Query(() => Book, { nullable: true })
-  async book(@Args('id') id: string): Promise<Book | null> {
+  async book(@Args("id") id: string): Promise<Book | null> {
     return this.bookService.findById(id);
   }
 
   @Query(() => Book, { nullable: true })
-  async bookWithAuthor(@Args('id') id: string): Promise<Book | null> {
+  async bookWithAuthor(@Args("id") id: string): Promise<Book | null> {
     return this.bookService.findByIdWithAuthor(id);
   }
 
   @Mutation(() => Book)
-  async createBook(@Args('input') createBookInput: CreateBookInput): Promise<Book> {
+  async createBook(@Args("input") createBookInput: CreateBookInput): Promise<Book> {
     return this.bookService.createBook(createBookInput);
   }
 
   @Mutation(() => Book)
-  async updateBook(@Args('id') id: string, @Args('input') updateBookInput: UpdateBookInput): Promise<Book> {
+  async updateBook(@Args("id") id: string, @Args("input") updateBookInput: UpdateBookInput): Promise<Book> {
     return this.bookService.updateBook(id, updateBookInput);
   }
 
   @Mutation(() => Boolean)
-  async deleteBook(@Args('id') id: string): Promise<boolean> {
+  async deleteBook(@Args("id") id: string): Promise<boolean> {
     await this.bookService.deleteBook(id);
     return true;
   }
