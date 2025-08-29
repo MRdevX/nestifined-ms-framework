@@ -10,10 +10,11 @@ export enum TokenType {
 @Entity("tokens")
 @Index(["userId", "type"])
 export class Token extends BaseEntity {
-  @Column()
+  @Column({ length: 255, unique: true })
   token: string;
 
-  @Column()
+  @Column({ type: "uuid" })
+  @Index()
   userId: string;
 
   @ManyToOne(() => User, { onDelete: "CASCADE" })
