@@ -1,7 +1,7 @@
-import { Test, TestingModule } from "@nestjs/testing";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { INestApplication } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { Test, TestingModule } from "@nestjs/testing";
 import { join } from "path";
 import * as request from "supertest";
 import { AppModule } from "../src/app/app.module";

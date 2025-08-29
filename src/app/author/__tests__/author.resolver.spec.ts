@@ -1,9 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AuthorResolver } from "../author.resolver";
 import { AuthorService } from "../author.service";
-import { Author } from "../entities/author.graphql";
 import { CreateAuthorInput } from "../dto/create-author.input";
 import { UpdateAuthorInput } from "../dto/update-author.input";
+import { Author } from "../entities/author.graphql";
 
 describe("AuthorResolver", () => {
   let resolver: AuthorResolver;
