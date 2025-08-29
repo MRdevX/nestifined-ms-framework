@@ -117,7 +117,8 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
       queryBuilder = queryBuilder.select(selectFields);
     }
 
-    if (!includeDeleted) {
+    const hasDeletedAt = this.repository.metadata.columns.some((c) => c.propertyName === "deletedAt");
+    if (hasDeletedAt && !includeDeleted) {
       queryBuilder.andWhere(`${tableAlias}.deletedAt IS NULL`);
     }
 
