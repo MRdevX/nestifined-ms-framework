@@ -1,5 +1,6 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../core/database/base/base.entity";
+import { User } from "../../users/entities/user.entity";
 
 export enum TokenType {
   REFRESH = "refresh",
@@ -7,12 +8,17 @@ export enum TokenType {
 }
 
 @Entity("tokens")
+@Index(["userId", "type"])
 export class Token extends BaseEntity {
   @Column()
   token: string;
 
   @Column()
   userId: string;
+
+  @ManyToOne(() => User, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "userId" })
+  user: User;
 
   @Column({
     type: "enum",
