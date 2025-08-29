@@ -1,7 +1,7 @@
 import { DataSourceOptions } from "typeorm";
 
-export interface DatabaseConfig
-  extends Omit<DataSourceOptions, "host" | "port" | "username" | "password" | "database"> {
+export interface DatabaseConfig {
+  type: "postgres" | "mysql" | "mariadb" | "sqlite" | "oracle" | "mssql";
   host: string;
   port: number;
   username: string;
@@ -9,6 +9,8 @@ export interface DatabaseConfig
   database: string;
   synchronize: boolean;
   maxConnections?: number;
+  entities?: DataSourceOptions["entities"];
+  logging?: DataSourceOptions["logging"];
 }
 
 export interface DatabaseProvider {
