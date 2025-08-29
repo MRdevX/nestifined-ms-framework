@@ -11,10 +11,8 @@ export class DatabaseProviderFactory {
       case "typeorm":
         return new TypeOrmProvider(config);
       case "prisma":
-        // Future implementation
         throw new Error("Prisma provider not implemented yet");
       case "drizzle":
-        // Future implementation
         throw new Error("Drizzle provider not implemented yet");
       default:
         throw new Error(`Unsupported database type: ${type}`);

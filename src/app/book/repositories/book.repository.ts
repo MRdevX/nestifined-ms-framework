@@ -14,28 +14,36 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
   }
 
   async findByIsbn(isbn: string): Promise<Book | null> {
-    return this.repository.findOne({
-      where: { isbn },
-    });
+    const results = (await this.search({
+      filters: { isbn },
+      withPagination: false,
+    })) as Book[];
+
+    return results.length > 0 ? results[0] : null;
   }
 
   async findByTitle(title: string): Promise<Book[]> {
-    return this.repository.find({
-      where: { title },
-    });
+    return this.search({
+      filters: { title },
+      withPagination: false,
+    }) as Promise<Book[]>;
   }
 
   async findAllWithAuthor(): Promise<Book[]> {
-    return this.repository.find({
+    return this.search({
       relations: ["author"],
-    });
+      withPagination: false,
+    }) as Promise<Book[]>;
   }
 
   async findByIdWithAuthor(id: string): Promise<Book | null> {
-    return this.repository.findOne({
-      where: { id },
+    const results = (await this.search({
+      filters: { id },
       relations: ["author"],
-    });
+      withPagination: false,
+    })) as Book[];
+
+    return results.length > 0 ? results[0] : null;
   }
 
   async searchBooks(searchParams: {
@@ -45,28 +53,21 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
     publishedDate?: Date;
     summary?: string;
   }): Promise<Book[]> {
-    const queryBuilder = this.repository.createQueryBuilder("book").leftJoinAndSelect("book.author", "author");
+    const filters: any = {};
 
-    if (searchParams.title) {
-      queryBuilder.andWhere("book.title ILIKE :title", { title: `%${searchParams.title}%` });
-    }
+    if (searchParams.title) filters.title = searchParams.title;
+    if (searchParams.isbn) filters.isbn = searchParams.isbn;
+    if (searchParams.publishedDate) filters.publishedDate = searchParams.publishedDate;
+    if (searchParams.summary) filters.summary = searchParams.summary;
 
-    if (searchParams.author) {
-      queryBuilder.andWhere("author.name ILIKE :author", { author: `%${searchParams.author}%` });
-    }
+    return this.search({
+      filters,
+      relations: ["author"],
+      withPagination: false,
+    }) as Promise<Book[]>;
+  }
 
-    if (searchParams.isbn) {
-      queryBuilder.andWhere("book.isbn = :isbn", { isbn: searchParams.isbn });
-    }
-
-    if (searchParams.publishedDate) {
-      queryBuilder.andWhere("book.publishedDate >= :publishedDate", { publishedDate: searchParams.publishedDate });
-    }
-
-    if (searchParams.summary) {
-      queryBuilder.andWhere("book.summary ILIKE :summary", { summary: `%${searchParams.summary}%` });
-    }
-
-    return queryBuilder.getMany();
+  protected getSearchableFields(): string[] {
+    return ["title", "isbn", "summary"];
   }
 }
