@@ -55,9 +55,10 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
     limit?: number;
     offset?: number;
   }): Promise<Book[]> {
-    const filters: Record<string, string | Date> = {};
+    const filters: Record<string, any> = {};
 
     if (searchParams.title) filters.title = searchParams.title;
+    if (searchParams.author) filters.author = { name: searchParams.author };
     if (searchParams.isbn) filters.isbn = searchParams.isbn;
     if (searchParams.publishedDate) filters.publishedDate = searchParams.publishedDate;
     if (searchParams.summary) filters.summary = searchParams.summary;
