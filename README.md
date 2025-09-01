@@ -1,208 +1,227 @@
+# Nestifined MS Framework
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
-<p align="center">A refined and optimized codebase for setting up NestJS microservices.</p>
+
+<p align="center">A production-ready template for building robust NestJS microservices with enterprise-grade features.</p>
+
 <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/MRdevX/nestifined-ms-framework" target="_blank"><img src="https://img.shields.io/circleci/build/github/MRdevX/nestifined-ms-framework/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/MRdevX/nestifined-ms-framework?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/MRdevX/nestifined-ms-framework/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-<a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-<a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+  <a href="https://www.npmjs.com/package/nestifined-ms-framework" target="_blank"><img src="https://img.shields.io/npm/v/nestifined-ms-framework.svg" alt="NPM Version" /></a>
+  <a href="https://www.npmjs.com/package/nestifined-ms-framework" target="_blank"><img src="https://img.shields.io/npm/l/nestifined-ms-framework.svg" alt="Package License" /></a>
+  <a href="https://github.com/MRdevX/nestifined-ms-framework" target="_blank"><img src="https://img.shields.io/github/stars/MRdevX/nestifined-ms-framework" alt="GitHub Stars" /></a>
+  <a href="https://github.com/MRdevX/nestifined-ms-framework" target="_blank"><img src="https://img.shields.io/github/forks/MRdevX/nestifined-ms-framework" alt="GitHub Forks" /></a>
 </p>
 
-## Description 📜
+## 🚀 Quick Start
 
-[nestifined-ms-framework](https://github.com/MRdevX/nestifined-ms-framework) is a refined and optimized codebase for setting up NestJS microservices.
-
-## Features ✨
-
-- **🐳 Docker**: Containerize the application using Docker.
-- **☸️ Kubernetes**: Deployment configurations for development, staging, and production environments.
-- **🗃️ TypeORM**: Integration with TypeORM for database interactions.
-- **⚡ Redis**: Caching support using Redis.
-- **📨 RabbitMQ**: Messaging support using RabbitMQ.
-- **📄 Swagger**: API documentation using Swagger.
-- **🔮 GraphQL**: GraphQL API with code-first approach and automatic schema generation.
-- **🐶 Husky**: Git hooks management using Husky.
-- **🧹 Linting and Formatting**: Biome for code linting and formatting.
-- **🧪 Testing**: Unit and e2e testing using Jest.
-- **📜 Logging**: Logging using Winston with daily rotate file support.
-- **🔧 Environment Configuration**: Environment variable management using dotenv.
-
-## Installation 🛠️
+This template provides a solid foundation for building NestJS microservices. Clone, customize, and deploy!
 
 ```bash
-$ yarn install
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm start:dev
+
+# Build for production
+pnpm build
 ```
 
-## Running the app 🚀
+## ✨ Features
+
+This template includes everything you need to build production-ready microservices:
+
+- **🏗️ Architecture**: Modular NestJS microservices with clean separation of concerns
+- **🗄️ Database**: TypeORM integration with PostgreSQL support
+- **🔮 GraphQL**: Code-first GraphQL API with automatic schema generation
+- **🔐 Authentication**: JWT-based authentication with Passport strategies
+- **📚 API Docs**: Swagger/OpenAPI documentation
+- **💾 Caching**: Redis integration for performance optimization
+- **📨 Messaging**: RabbitMQ support for service-to-service communication
+- **🐳 Containerization**: Docker and Kubernetes deployment ready
+- **🧪 Testing**: Jest-based testing with fixtures and mocks
+- **🔧 Development**: Biome for linting, Husky for Git hooks, conventional commits
+
+## 📁 Project Structure
+
+This template follows a clean, scalable architecture that you can easily extend:
+
+```
+src/
+├── app/
+│   ├── auth/          # Authentication & authorization
+│   ├── author/        # Author domain module (example)
+│   ├── book/          # Book domain module (example)
+│   ├── config/        # Configuration management
+│   ├── core/          # Core infrastructure
+│   │   ├── cache/     # Redis caching
+│   │   ├── database/  # TypeORM setup
+│   │   └── messaging/ # RabbitMQ messaging
+│   └── users/         # User management
+├── logger.ts          # Winston logging setup
+└── main.ts           # Application entry point
+```
+
+## 🛠️ Available Scripts
+
+| Command          | Description                              |
+| ---------------- | ---------------------------------------- |
+| `pnpm start`     | Start production server                  |
+| `pnpm start:dev` | Start development server with hot reload |
+| `pnpm build`     | Build the application                    |
+| `pnpm test`      | Run unit tests                           |
+| `pnpm test:e2e`  | Run end-to-end tests                     |
+| `pnpm lint`      | Lint code with Biome                     |
+| `pnpm lint:fix`  | Fix linting issues                       |
+| `pnpm format`    | Format code with Biome                   |
+
+## 🌍 Environment Configuration
+
+Create a `.env` file in the root directory:
 
 ```bash
-# development
-$ yarn run start
-# watch mode
-$ yarn run start:dev
-# production mode
-$ yarn run start:prod
+# Application
+NODE_ENV=development
+APP_NAME=NestifinedMS
+HOST=127.0.0.1
+PORT=3030
+API_PREFIX=api
+
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=password
+DB_DATABASE=nestifined
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# RabbitMQ
+RABBITMQ_URL=amqp://localhost:5672
+RABBITMQ_QUEUE=default_queue
+
+# JWT
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=1d
 ```
 
-## Test 🧪
+## 🗄️ Database Setup
 
 ```bash
-# unit tests
-$ yarn run test
+# Generate migration
+pnpm migration:generate --name=InitialSchema
 
-# e2e tests
-$ yarn run test:e2e
+# Run migrations
+pnpm migration:run
 
-# test coverage
-$ yarn run test:cov
+# Revert migration
+pnpm migration:revert
 ```
 
-## Linting 🧹
+## 🔮 GraphQL API
 
-```bash
-# lint the code
-$ yarn run lint
+The template includes a comprehensive GraphQL implementation ready for your business logic:
 
-# lint and fix the code
-$ yarn run lint:fix
-```
-
-## Docker 🐳
-
-```bash
-# Building the Docker Image
-docker build -t nestifined-ms-framework .
-
-# Running the Docker Container
-docker run -p 3000:3000 --env-file .env nestifined-ms-framework
-```
-
-## Build and Push Docker Image to Docker Hub 🐋
-
-```bash
-# Build the Docker image
-docker build -t your-docker-username/nestifined-ms-framework:latest .
-
-# Push the Docker image to a container registry
-docker push your-docker-username/nestifined-ms-framework:latest
-```
-
-## Apply Kubernetes Configurations ☸️
-
-```bash
-# Development Environment
-kubectl apply -k k8s/development/
-
-# Staging Environment
-kubectl apply -k k8s/staging/
-
-# Production Environment
-kubectl apply -k k8s/production/
-```
-
-## GraphQL 🔮
-
-The application includes a comprehensive GraphQL API implementation with the following features:
-
-### Features
-
+- **Playground**: Available at `http://localhost:3030/graphql`
 - **Code-first approach** with automatic schema generation
-- **Type-safe resolvers** with proper validation
-- **Field resolvers** for efficient data loading
-- **Search and filtering** capabilities
-- **GraphQL Playground** for development and testing
-
-### Getting Started
-
-1. Start the application: `pnpm start:dev`
-2. Navigate to GraphQL Playground: `http://localhost:3000/graphql`
-3. Explore the interactive schema and test queries
+- **Type-safe resolvers** with validation
+- **Efficient data loading** with field resolvers
 
 ### Example Queries
 
 ```graphql
-# Get all books with authors
+# Get books with authors
 query {
   booksWithAuthor {
     id
     title
-    isbn
     author {
       name
     }
   }
 }
 
-# Create a new book
+# Create a book
 mutation {
-  createBook(
-    input: {
-      title: "GraphQL with NestJS"
-      authorId: "author-uuid"
-      isbn: "978-1234567890"
-      summary: "Learn GraphQL implementation"
-    }
-  ) {
+  createBook(input: { title: "NestJS Microservices", authorId: "author-uuid", isbn: "978-1234567890" }) {
     id
     title
-    author {
-      name
-    }
   }
 }
 ```
 
-For more examples and detailed documentation, see [GRAPHQL.md](./GRAPHQL.md) and [examples/graphql-queries.md](./examples/graphql-queries.md).
+## 🐳 Docker & Kubernetes
 
-## Husky 🐶
-
-Husky is used to manage Git hooks. The following hooks are configured:
-
-- **pre-commit**: Runs lint-staged to lint and format code before committing.
-- **commit-msg**: Ensures commit messages follow the conventional commit format.
-- **post-commit**: Runs after a commit is made.
-- **pre-push**: Runs before pushing code to the repository.
-- **post-merge**: Runs after merging branches.
-- **post-checkout**: Runs after checking out a branch.
-- **prepare-commit-msg**: Runs before the commit message editor is opened.
-- **post-rewrite**: Runs after a commit is rewritten.
-- **pre-rebase**: Runs before rebasing branches.
-
-## Environment Variables 🌍
-
-The application uses environment variables for configuration. Create a `.env` file in the root of the project and add the following variables:
+### Docker
 
 ```bash
-NODE_ENV=development
-APP_NAME=MyApp
-HOST=127.0.0.1
-PORT=3000
-CORS={"origin": ["http://example1.com", "/\\.example2\\.com$/"], "methods": ["GET", "POST"], "credentials": true}
-API_PREFIX=api
-RELEASE=1.0.0
-S2S_TRANSPORT=RABBITMQ
-S2S_REDIS_URL=redis://localhost:6379
-S2S_RABBITMQ_URL=amqp://localhost:5672
-S2S_RABBITMQ_QUEUE=my_queue
+# Build image
+docker build -t nestifined-ms-framework .
+
+# Run container
+docker run -p 3030:3030 --env-file .env nestifined-ms-framework
 ```
 
-## Support ❤️
+### Kubernetes
 
-This project is an MIT-licensed open source initiative. It thrives thanks to the contributions from the amazing community. I welcome and encourage you to contribute by creating pull requests and helping improve the project. Your support and involvement are greatly appreciated!
+```bash
+# Deploy to development
+kubectl apply -k k8s/development/
 
-## Stay in Touch 📬
+# Deploy to staging
+kubectl apply -k k8s/staging/
 
-- **Author**: Mahdi Rashidi
-- **LinkedIn**: [Visit My Profile](https://www.linkedin.com/in/mrdevx/)
+# Deploy to production
+kubectl apply -k k8s/production/
+```
 
-## License 📄
+## 🧪 Testing
 
-This project is [MIT licensed](./LICENSE).
+```bash
+# Unit tests
+pnpm test
+
+# E2E tests
+pnpm test:e2e
+
+# Test coverage
+pnpm test:cov
+```
+
+## 📚 Documentation
+
+- [GraphQL Examples](./examples/graphql-queries.md)
+- [GraphQL Implementation](./GRAPHQL.md)
+- [API Documentation](./docs/) (when available)
+
+## 🤝 Contributing
+
+We welcome contributions to improve this template!
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 🚀 Getting Started with Your Microservice
+
+1. **Clone this template**: `git clone https://github.com/MRdevX/nestifined-ms-framework.git your-service-name`
+2. **Customize the configuration**: Update environment variables and service-specific settings
+3. **Replace example modules**: Remove author/book modules and add your domain-specific modules
+4. **Add your business logic**: Implement your service's core functionality
+5. **Deploy**: Use the provided Docker and Kubernetes configurations
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Mahdi Rashidi** - [LinkedIn](https://www.linkedin.com/in/mrdevx/)
+
+---
+
+⭐ **Star this repository if you find it helpful!**
