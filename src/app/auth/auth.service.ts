@@ -109,8 +109,6 @@ export class AuthService {
 
     const resetTokenEntity = await this.tokenService.createPasswordResetToken(user.id);
 
-    console.log(`Password reset token for ${email}: ${resetTokenEntity.token}`);
-
     return { message: "If a user with this email exists, a password reset link has been sent" };
   }
 
