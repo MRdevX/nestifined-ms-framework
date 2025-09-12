@@ -38,6 +38,12 @@ export class AuthService {
 
     const { password: _, ...userWithoutSensitiveData } = savedUser;
 
+    // TODO: Send welcome email to new user
+    // TODO: Add email verification requirement
+    // TODO: Log user registration for analytics
+    // TODO: Consider adding CAPTCHA for registration
+    // TODO: Add password strength validation
+
     return {
       user: userWithoutSensitiveData as UserWithoutPassword,
       tokens,
@@ -50,13 +56,21 @@ export class AuthService {
     const user = await this.usersService.findByEmailWithPassword(email);
 
     if (!user || !user.password) {
+      // TODO: Add rate limiting for failed login attempts
+      // TODO: Log failed login attempts for security monitoring
       throw new UnauthorizedException("Invalid credentials");
     }
 
     const isPasswordValid = await this.passwordService.compare(password, user.password);
     if (!isPasswordValid) {
+      // TODO: Add rate limiting for failed login attempts
+      // TODO: Log failed login attempts for security monitoring
       throw new UnauthorizedException("Invalid credentials");
     }
+
+    // TODO: Log successful login for analytics
+    // TODO: Consider adding 2FA support
+    // TODO: Check if user account is locked/suspended
 
     return this.loginWithUser(user);
   }
@@ -76,6 +90,9 @@ export class AuthService {
 
   async logout(userId: string): Promise<void> {
     await this.tokenService.deleteRefreshToken(userId);
+
+    // TODO: Log user logout for analytics
+    // TODO: Consider implementing "logout from all devices" functionality
   }
 
   async refreshToken(refreshTokenDto: RefreshTokenDto): Promise<TokenPair> {
@@ -86,6 +103,7 @@ export class AuthService {
 
       const tokenEntity = await this.tokenService.findRefreshToken(payload.sub, refreshToken);
       if (!tokenEntity || tokenEntity.isExpired()) {
+        // TODO: Log suspicious refresh token usage
         throw new UnauthorizedException("Invalid refresh token");
       }
 
@@ -93,8 +111,12 @@ export class AuthService {
 
       await this.tokenService.createRefreshToken(payload.sub, tokens.refreshToken);
 
+      // TODO: Log token refresh for security monitoring
+      // TODO: Consider implementing refresh token rotation
+
       return tokens;
     } catch (_error) {
+      // TODO: Log refresh token verification failures
       throw new UnauthorizedException("Invalid refresh token");
     }
   }
@@ -107,7 +129,13 @@ export class AuthService {
       return { message: "If a user with this email exists, a password reset link has been sent" };
     }
 
-    const resetTokenEntity = await this.tokenService.createPasswordResetToken(user.id);
+    const resetToken = await this.tokenService.createPasswordResetToken(user.id);
+
+    // TODO: Implement email service to send password reset link
+    // TODO: Create email template for password reset
+    // TODO: Add rate limiting for forgot password requests
+    // TODO: Log password reset attempts for security monitoring
+    // TODO: Consider adding email verification before allowing password reset
 
     return { message: "If a user with this email exists, a password reset link has been sent" };
   }
@@ -117,6 +145,7 @@ export class AuthService {
 
     const resetTokenEntity = await this.tokenService.findPasswordResetToken(token);
     if (!resetTokenEntity || resetTokenEntity.isExpired()) {
+      // TODO: Log invalid password reset attempts
       throw new UnauthorizedException("Invalid or expired reset token");
     }
 
@@ -125,6 +154,10 @@ export class AuthService {
     await this.usersService.updatePassword(resetTokenEntity.userId, hashedPassword);
 
     await this.tokenService.deletePasswordResetToken(resetTokenEntity.userId);
+
+    // TODO: Invalidate all existing refresh tokens for security
+    // TODO: Send confirmation email about password change
+    // TODO: Log password reset completion
 
     return { message: "Password has been reset successfully" };
   }

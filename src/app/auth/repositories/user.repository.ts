@@ -27,6 +27,10 @@ export class UserRepository extends TypeOrmBaseRepository<User> {
   }
 
   async updatePassword(userId: string, hashedPassword: string): Promise<User | null> {
+    // TODO: Add password history tracking
+    // TODO: Add audit logging for password changes
+    // TODO: Consider adding password change timestamp
+
     await this.repository.update(userId, { password: hashedPassword });
     return this.findById(userId);
   }

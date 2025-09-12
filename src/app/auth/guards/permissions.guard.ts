@@ -18,12 +18,19 @@ export class PermissionsGuard implements CanActivate {
     const entityId = request.params.id;
 
     if (!user?.userId || !entityId) {
+      // TODO: Log unauthorized access attempts
       throw new ForbiddenException("Access denied");
     }
 
     if (entityId !== user.userId) {
+      // TODO: Log unauthorized access attempts
       throw new ForbiddenException("Access denied");
     }
+
+    // TODO: Add role-based access control (RBAC)
+    // TODO: Add permission-based access control
+    // TODO: Consider adding audit logging for all access attempts
+    // TODO: Add support for admin override permissions
 
     return true;
   }

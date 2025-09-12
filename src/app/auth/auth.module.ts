@@ -28,4 +28,10 @@ import { TokensModule } from "./tokens/tokens.module";
   ],
   exports: [AuthService, TokenService, PermissionsGuard],
 })
-export class AuthModule {}
+export class AuthModule {
+  // TODO: Add email service integration
+  // TODO: Add rate limiting module integration
+  // TODO: Add audit logging service integration
+  // TODO: Add 2FA service integration
+  // TODO: Add session management service integration
+}

@@ -13,7 +13,11 @@ import type { CurrentUser } from "./interfaces/auth.interfaces";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {
+    // TODO: Add rate limiting decorators to endpoints
+    // TODO: Add request logging middleware
+    // TODO: Add input sanitization
+  }
 
   @Post("register")
   @Public()

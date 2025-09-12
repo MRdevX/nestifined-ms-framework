@@ -43,6 +43,10 @@ export class TokenRepository extends TypeOrmBaseRepository<Token> {
   }
 
   async cleanupExpiredTokens(): Promise<void> {
+    // TODO: Add batch processing for large token cleanup operations
+    // TODO: Add metrics for number of tokens cleaned up
+    // TODO: Consider adding soft delete instead of hard delete for audit purposes
+
     await this.repository.createQueryBuilder().delete().where("expiresAt < :now", { now: new Date() }).execute();
   }
 }
