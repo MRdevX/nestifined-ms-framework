@@ -1,4 +1,4 @@
-import { DataSourceOptions } from "typeorm";
+import { DataSourceOptions, ObjectLiteral } from "typeorm";
 
 export interface DatabaseConfig {
   type: "postgres" | "mysql" | "mariadb" | "sqlite" | "oracle" | "mssql";
@@ -51,7 +51,7 @@ export interface SearchOptions {
   includeDeleted?: boolean;
 }
 
-export interface BaseRepository<T> {
+export interface BaseRepository<T extends ObjectLiteral> {
   create(data: Partial<T>): Promise<T>;
   findById(id: string): Promise<T | null>;
   update(id: string, data: Partial<T>): Promise<T | null>;

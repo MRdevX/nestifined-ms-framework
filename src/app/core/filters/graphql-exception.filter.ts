@@ -6,8 +6,8 @@ import { GraphQLError } from "graphql";
 export class GraphQLExceptionFilter implements GqlExceptionFilter {
   private readonly logger = new Logger(GraphQLExceptionFilter.name);
 
-  catch(exception: any, host: ArgumentsHost) {
-    const gqlHost = GqlArgumentsHost.create(host);
+  catch(exception: unknown, host: ArgumentsHost) {
+    const _gqlHost = GqlArgumentsHost.create(host);
 
     if (process.env.NODE_ENV !== "production") {
       this.logger.error("GraphQL Error:", exception);
@@ -17,9 +17,10 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
       return exception;
     }
 
-    const message = exception?.message || "An unexpected error occurred";
-    const status = typeof exception?.status === "number" ? exception.status : 500;
-    const errorName = exception?.error || (status >= 500 ? "Internal Server Error" : "Bad Request");
+    const errorObj = exception as { message?: string; status?: number; error?: string };
+    const message = errorObj?.message || "An unexpected error occurred";
+    const status = typeof errorObj?.status === "number" ? errorObj.status : 500;
+    const errorName = errorObj?.error || (status >= 500 ? "Internal Server Error" : "Bad Request");
 
     return new GraphQLError(status >= 500 ? "Internal Server Error" : message, {
       extensions: {

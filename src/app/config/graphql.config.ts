@@ -1,5 +1,5 @@
+import { join } from "node:path";
 import { ApolloDriverConfig } from "@nestjs/apollo";
-import { join } from "path";
 
 export const graphqlConfig: ApolloDriverConfig = {
   autoSchemaFile: join(process.cwd(), "src/schema.gql"),
@@ -8,7 +8,9 @@ export const graphqlConfig: ApolloDriverConfig = {
   introspection: true,
   context: ({ req }) => ({ req }),
   formatError: (error) => {
-    const originalError = error.extensions?.originalError as any;
+    const originalError = error.extensions?.originalError as
+      | { message?: string; statusCode?: number; error?: string }
+      | undefined;
 
     if (originalError) {
       return {

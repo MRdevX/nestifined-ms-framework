@@ -34,7 +34,7 @@ export class AuthorService extends BaseService<Author> {
     return this.authorRepository.findByName(name);
   }
 
-  async updateAuthor(id: string, updateAuthorDto: any): Promise<Author> {
+  async updateAuthor(id: string, updateAuthorDto: Partial<Author>): Promise<Author> {
     return this.update(id, updateAuthorDto);
   }
 

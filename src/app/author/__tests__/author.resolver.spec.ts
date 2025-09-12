@@ -7,7 +7,7 @@ import { Author } from "../entities/author.graphql";
 
 describe("AuthorResolver", () => {
   let resolver: AuthorResolver;
-  let authorService: AuthorService;
+  let _authorService: AuthorService;
 
   const mockAuthorService = {
     findAll: jest.fn(),
@@ -36,7 +36,7 @@ describe("AuthorResolver", () => {
     }).compile();
 
     resolver = module.get<AuthorResolver>(AuthorResolver);
-    authorService = module.get<AuthorService>(AuthorService);
+    _authorService = module.get<AuthorService>(AuthorService);
   });
 
   afterEach(() => {

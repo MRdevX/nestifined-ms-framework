@@ -10,8 +10,8 @@ import { Book } from "../entities/book.graphql";
 
 describe("BookResolver", () => {
   let resolver: BookResolver;
-  let bookService: BookService;
-  let authorService: AuthorService;
+  let _bookService: BookService;
+  let _authorService: AuthorService;
 
   const mockBookService = {
     findAll: jest.fn(),
@@ -61,8 +61,8 @@ describe("BookResolver", () => {
     }).compile();
 
     resolver = module.get<BookResolver>(BookResolver);
-    bookService = module.get<BookService>(BookService);
-    authorService = module.get<AuthorService>(AuthorService);
+    _bookService = module.get<BookService>(BookService);
+    _authorService = module.get<AuthorService>(AuthorService);
   });
 
   afterEach(() => {

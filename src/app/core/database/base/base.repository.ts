@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { DeepPartial, Repository, SelectQueryBuilder } from "typeorm";
+import { DeepPartial, FindOptionsWhere, ObjectLiteral, Repository, SelectQueryBuilder } from "typeorm";
 import {
   BaseRepository,
   FilterOptions,
@@ -7,10 +7,10 @@ import {
   PaginationResult,
   SearchOptions,
 } from "../interfaces/database.interface";
-import { QueryUtils } from "../utils/query.utils";
+import { parseDateFilter } from "../utils/query.utils";
 
 @Injectable()
-export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
+export abstract class TypeOrmBaseRepository<T extends ObjectLiteral> implements BaseRepository<T> {
   constructor(protected readonly repository: Repository<T>) {}
 
   async create(data: Partial<T>): Promise<T> {
@@ -19,11 +19,11 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
   }
 
   async findById(id: string): Promise<T | null> {
-    return this.repository.findOne({ where: { id } as any });
+    return this.repository.findOne({ where: { id } as unknown as FindOptionsWhere<T> });
   }
 
   async update(id: string, data: Partial<T>): Promise<T | null> {
-    await this.repository.update(id, data as any);
+    await this.repository.update(id, data);
     return this.findById(id);
   }
 
@@ -129,54 +129,118 @@ export abstract class TypeOrmBaseRepository<T> implements BaseRepository<T> {
 
   protected applyFilters(queryBuilder: SelectQueryBuilder<T>, filters: FilterOptions, tableAlias: string): void {
     Object.entries(filters).forEach(([key, value], index) => {
-      if (value !== undefined && value !== null && value !== "") {
-        const parameterName = `${key}_${index}`;
-
-        if (key === "search" && typeof value === "string") {
-          this.applySearchFilter(queryBuilder, value, tableAlias);
-          return;
-        }
-
-        // Handle relation filters (nested objects)
-        if (typeof value === "object" && !Array.isArray(value) && value !== null) {
-          this.applyRelationFilter(queryBuilder, key, value, tableAlias);
-          return;
-        }
-
-        if (typeof value === "string" && (value.startsWith(">=") || value.startsWith("<="))) {
-          const dateFilter = QueryUtils.parseDateFilter(value);
-          if (dateFilter) {
-            queryBuilder.andWhere(`${tableAlias}.${key} ${dateFilter.operator} :${parameterName}`, {
-              [parameterName]: dateFilter.date,
-            });
-          }
-          return;
-        }
-
-        if (Array.isArray(value)) {
-          queryBuilder.andWhere(`${tableAlias}.${key} IN (:...${parameterName})`, { [parameterName]: value });
-          return;
-        }
-
-        if (typeof value === "string" && value.includes("%")) {
-          queryBuilder.andWhere(`${tableAlias}.${key} ILIKE :${parameterName}`, { [parameterName]: value });
-          return;
-        }
-
-        if (typeof value === "string") {
-          queryBuilder.andWhere(`${tableAlias}.${key} ILIKE :${parameterName}`, { [parameterName]: `%${value}%` });
-          return;
-        }
-
-        queryBuilder.andWhere(`${tableAlias}.${key} = :${parameterName}`, { [parameterName]: value });
+      if (this.isValidFilterValue(value)) {
+        this.applySingleFilter(queryBuilder, key, value, index, tableAlias);
       }
     });
+  }
+
+  private isValidFilterValue(value: unknown): boolean {
+    return value !== undefined && value !== null && value !== "";
+  }
+
+  private applySingleFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    key: string,
+    value: unknown,
+    index: number,
+    tableAlias: string,
+  ): void {
+    const parameterName = `${key}_${index}`;
+
+    if (key === "search" && typeof value === "string") {
+      this.applySearchFilter(queryBuilder, value, tableAlias);
+      return;
+    }
+
+    if (this.isRelationFilter(value)) {
+      this.applyRelationFilter(queryBuilder, key, value as Record<string, unknown>, tableAlias);
+      return;
+    }
+
+    if (this.isDateFilter(value)) {
+      this.applyDateFilter(queryBuilder, key, value as string, parameterName, tableAlias);
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      this.applyArrayFilter(queryBuilder, key, value, parameterName, tableAlias);
+      return;
+    }
+
+    if (this.isLikeFilter(value)) {
+      this.applyLikeFilter(queryBuilder, key, value as string, parameterName, tableAlias);
+      return;
+    }
+
+    this.applyEqualityFilter(queryBuilder, key, value, parameterName, tableAlias);
+  }
+
+  private isRelationFilter(value: unknown): boolean {
+    return typeof value === "object" && !Array.isArray(value) && value !== null;
+  }
+
+  private isDateFilter(value: unknown): boolean {
+    return typeof value === "string" && (value.startsWith(">=") || value.startsWith("<="));
+  }
+
+  private isLikeFilter(value: unknown): boolean {
+    return typeof value === "string";
+  }
+
+  private applyDateFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    key: string,
+    value: string,
+    parameterName: string,
+    tableAlias: string,
+  ): void {
+    const dateFilter = parseDateFilter(value);
+    if (dateFilter) {
+      queryBuilder.andWhere(`${tableAlias}.${key} ${dateFilter.operator} :${parameterName}`, {
+        [parameterName]: dateFilter.date,
+      });
+    }
+  }
+
+  private applyArrayFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    key: string,
+    value: unknown[],
+    parameterName: string,
+    tableAlias: string,
+  ): void {
+    queryBuilder.andWhere(`${tableAlias}.${key} IN (:...${parameterName})`, { [parameterName]: value });
+  }
+
+  private applyLikeFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    key: string,
+    value: string,
+    parameterName: string,
+    tableAlias: string,
+  ): void {
+    if (value.includes("%")) {
+      queryBuilder.andWhere(`${tableAlias}.${key} ILIKE :${parameterName}`, { [parameterName]: value });
+    } else {
+      queryBuilder.andWhere(`${tableAlias}.${key} ILIKE :${parameterName}`, { [parameterName]: `%${value}%` });
+    }
+  }
+
+  private applyEqualityFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    key: string,
+    value: unknown,
+    parameterName: string,
+    tableAlias: string,
+  ): void {
+    queryBuilder.andWhere(`${tableAlias}.${key} = :${parameterName}`, { [parameterName]: value });
   }
 
   protected applyRelationFilter(
     queryBuilder: SelectQueryBuilder<T>,
     relationName: string,
-    relationFilters: Record<string, any>,
+    relationFilters: Record<string, unknown>,
     tableAlias: string,
   ): void {
     Object.entries(relationFilters).forEach(([field, value], index) => {

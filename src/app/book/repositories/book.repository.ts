@@ -55,7 +55,7 @@ export class BookRepository extends TypeOrmBaseRepository<Book> {
     limit?: number;
     offset?: number;
   }): Promise<Book[]> {
-    const filters: Record<string, any> = {};
+    const filters: Record<string, unknown> = {};
 
     if (searchParams.title) filters.title = searchParams.title;
     if (searchParams.author) filters.author = { name: searchParams.author };
