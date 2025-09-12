@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/MRdevX/nestifined-ms-framework/compare/v0.0.6...v0.0.7) (2025-09-12)
+
+
+### Features
+
+* **auth:** add TODOs for security enhancements and input validation in authentication module ([edbf30d](https://github.com/MRdevX/nestifined-ms-framework/commit/edbf30d63ca2857d34c2b11670823d6064da1fc0))
+* **config:** add initial CodeRabbit configuration for NestJS microservice framework, including review settings, path filters, and code generation instructions ([a1633a7](https://github.com/MRdevX/nestifined-ms-framework/commit/a1633a7e708c61dcc31ef0e42815afa8327f6c09))
+* **database:** implement soft and hard delete functionality, restore method, and includeDeleted option in search ([b80d546](https://github.com/MRdevX/nestifined-ms-framework/commit/b80d546d8a4042e693762a3c7b608aa924835dc0))
+* **graphql:** enhance schema and resolvers with new fields and integration tests ([4b63860](https://github.com/MRdevX/nestifined-ms-framework/commit/4b63860909372f1554dcb687969c98ec43387c13))
+* **graphql:** Implement GraphQL API with code-first approach ([699e444](https://github.com/MRdevX/nestifined-ms-framework/commit/699e4443dd5964145c779028f1c45abb218f1203))
+* **pagination:** add limit and offset parameters to search book DTOs and repository for improved pagination support ([620890f](https://github.com/MRdevX/nestifined-ms-framework/commit/620890f829bc71937eec689cbd39809013e0c3c3))
+
+
+### Bug Fixes
+
+* **husky:** change pre-push command to pnpm check:fix; refactor test imports for consistency ([3dcfec3](https://github.com/MRdevX/nestifined-ms-framework/commit/3dcfec3575e10ea5966a70549d9004d43bb4bd28))
+* **husky:** update husky hooks to v10 format and fix biome configuration ([7675747](https://github.com/MRdevX/nestifined-ms-framework/commit/767574723b9aa57c9a2a7130c86a7c27dfd2e635))
+
 ### [0.0.6](https://github.com/MRdevX/nestifined-ms-framework/compare/v0.0.5...v0.0.6) (2025-08-28)
 
 
