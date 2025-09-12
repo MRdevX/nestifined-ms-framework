@@ -97,11 +97,8 @@
     "typescript": "^5.7.2"
   },
   "lint-staged": {
-    "*.{ts,js}": [
+    "*.{ts,js,json}": [
       "biome check --write"
-    ],
-    "*.json": [
-      "biome format --write"
     ]
   },
   "jest": {
