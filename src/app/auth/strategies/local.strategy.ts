@@ -13,13 +13,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(email: string, password: string): Promise<UserWithoutPassword> {
     const user = await this.authService.validateUser(email, password);
     if (!user) {
-      // TODO: Add rate limiting for failed login attempts
-      // TODO: Log failed login attempts with IP address
       throw new UnauthorizedException();
     }
-
-    // TODO: Check if user account is locked/suspended
-    // TODO: Add device fingerprinting for security
 
     return user;
   }

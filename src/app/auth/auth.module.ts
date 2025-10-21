@@ -6,7 +6,6 @@ import { UsersModule } from "../users/users.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { Token } from "./entities/token.entity";
-import { PermissionsGuard } from "./guards/permissions.guard";
 import { TokenRepository } from "./repositories/token.repository";
 import { PasswordService } from "./services/password.service";
 import { TokenService } from "./services/token.service";
@@ -17,21 +16,7 @@ import { TokensModule } from "./tokens/tokens.module";
 @Module({
   imports: [TypeOrmModule.forFeature([Token]), PassportModule, ConfigModule, TokensModule, UsersModule],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    TokenService,
-    PasswordService,
-    TokenRepository,
-    JwtStrategy,
-    LocalStrategy,
-    PermissionsGuard,
-  ],
-  exports: [AuthService, TokenService, PermissionsGuard],
+  providers: [AuthService, TokenService, PasswordService, TokenRepository, JwtStrategy, LocalStrategy],
+  exports: [AuthService, TokenService],
 })
-export class AuthModule {
-  // TODO: Add email service integration
-  // TODO: Add rate limiting module integration
-  // TODO: Add audit logging service integration
-  // TODO: Add 2FA service integration
-  // TODO: Add session management service integration
-}
+export class AuthModule {}

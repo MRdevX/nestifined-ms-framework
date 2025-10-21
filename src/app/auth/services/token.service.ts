@@ -17,10 +17,6 @@ export class TokenService {
     const authConfig = this.configService.get("auth");
     const refreshTokenExpiry = new Date(Date.now() + this.parseDuration(authConfig.jwt.refresh.expiresIn));
 
-    // TODO: Add device/session tracking for refresh tokens
-    // TODO: Consider implementing refresh token rotation
-    // TODO: Add IP address tracking for security
-
     return this.tokenRepository.create({
       userId,
       token,
@@ -35,10 +31,6 @@ export class TokenService {
     const resetToken = randomBytes(32).toString("hex");
     const authConfig = this.configService.get("auth");
     const expiresAt = new Date(Date.now() + authConfig.reset.expiresIn);
-
-    // TODO: Add rate limiting for password reset token creation
-    // TODO: Log password reset token creation for security monitoring
-    // TODO: Consider adding IP address tracking
 
     return this.tokenRepository.create({
       userId,
@@ -65,10 +57,6 @@ export class TokenService {
   }
 
   async cleanupExpiredTokens(): Promise<void> {
-    // TODO: Add logging for cleanup operations
-    // TODO: Consider adding metrics for cleanup performance
-    // TODO: Add error handling for cleanup failures
-
     await this.tokenRepository.cleanupExpiredTokens();
   }
 

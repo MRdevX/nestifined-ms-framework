@@ -14,9 +14,6 @@ export class TokensService {
     const accessToken = this.generateAccessToken(userId, email);
     const refreshToken = this.generateRefreshToken(userId, email);
 
-    // TODO: Add token generation logging for security monitoring
-    // TODO: Consider adding device/session information to token payload
-
     return {
       accessToken,
       refreshToken,

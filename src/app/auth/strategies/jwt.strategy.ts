@@ -15,11 +15,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: TokenPayload) {
-    // TODO: Add user existence validation from database
-    // TODO: Check if user account is still active/locked
-    // TODO: Add user role/permissions to the returned object
-    // TODO: Consider adding token blacklist check
-
     return {
       id: payload.sub,
       email: payload.email,
