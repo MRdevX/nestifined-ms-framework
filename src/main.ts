@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, ValidationPipe, VersioningType } from "@nestjs/common";
+import { ClassSerializerInterceptor, INestApplication, ValidationPipe, VersioningType } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory, Reflector } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
@@ -7,53 +7,78 @@ import { AppModule } from "./app/app.module";
 import { AllExceptionsFilter } from "./app/core/filters/all-exceptions.filter";
 import logger from "./logger";
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const config = app.get(ConfigService);
+async function bootstrap(): Promise<void> {
+  let app: INestApplication;
 
-  const port = config.get("app.port");
-  const host = config.get("app.host");
-  const apiPrefix = config.get("app.apiPrefix");
-  const env = config.get("app.env");
-  const name = config.get("app.name");
-  const cors = config.get("app.cors");
+  try {
+    app = await NestFactory.create(AppModule);
+    const config = app.get(ConfigService);
+    const { port, host, apiPrefix, env, name, cors } = config.get("app");
 
-  app.enableShutdownHooks();
-  app.use(helmet());
-  app.enableCors({
-    origin: cors === "true" ? true : cors,
-    credentials: true,
-  });
-  app.setGlobalPrefix(apiPrefix, { exclude: ["/"] });
-  app.enableVersioning({ type: VersioningType.URI });
+    app.use(helmet());
+    app.enableCors({
+      origin: cors === "true" ? true : cors,
+      credentials: true,
+    });
 
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    }),
-  );
+    app.setGlobalPrefix(apiPrefix, { exclude: ["/", "/health"] });
+    app.enableVersioning({ type: VersioningType.URI });
 
-  app.useGlobalFilters(new AllExceptionsFilter(config));
+    app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        forbidNonWhitelisted: env === "production",
+        disableErrorMessages: env === "production",
+      }),
+    );
+    app.useGlobalFilters(new AllExceptionsFilter(config));
 
-  if (env !== "production") {
-    const options = new DocumentBuilder()
-      .setTitle(name)
-      .setVersion("1.0.0")
-      .setDescription(`${name} API Documentation`)
-      .addBearerAuth()
-      .build();
-    const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup(`${apiPrefix}/docs`, app, document);
+    if (env !== "production") {
+      const document = SwaggerModule.createDocument(
+        app,
+        new DocumentBuilder()
+          .setTitle(name)
+          .setVersion("1.0.0")
+          .setDescription(`${name} API Documentation`)
+          .addBearerAuth()
+          .build(),
+      );
+      SwaggerModule.setup(`${apiPrefix}/docs`, app, document);
+    }
+
+    await app.listen(port, host);
+    logger.info(`🚀 ${name} started on ${await app.getUrl()}`);
+    logger.info(`📋 Environment: ${env}`);
+
+    app.enableShutdownHooks();
+    let isShuttingDown = false;
+
+    const gracefulShutdown = async (signal: string): Promise<void> => {
+      if (isShuttingDown) return;
+      isShuttingDown = true;
+
+      logger.info(`🛑 ${signal} received, shutting down gracefully...`);
+      try {
+        await app.close();
+        logger.info("✅ Application closed successfully");
+        process.exit(0);
+      } catch (error) {
+        logger.error("❌ Error during shutdown:", error);
+        process.exit(1);
+      }
+    };
+
+    process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+    process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+  } catch (error) {
+    logger.error("❌ Failed to start application:", error);
+    process.exit(1);
   }
-
-  await app.listen(port, host);
-  const appUrl = await app.getUrl();
-  logger.info(`Application is running on: ${appUrl}`);
-  logger.info(`Environment: ${env}`);
-  logger.info(`API Documentation available at: ${appUrl}/${apiPrefix}/docs`);
 }
 
-process.nextTick(bootstrap);
+bootstrap().catch((error) => {
+  logger.error("❌ Bootstrap failed:", error);
+  process.exit(1);
+});
