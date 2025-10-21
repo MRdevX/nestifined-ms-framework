@@ -34,7 +34,6 @@ This template includes everything you need to build production-ready microservic
 
 - **🏗️ Architecture**: Modular NestJS microservices with clean separation of concerns
 - **🗄️ Database**: TypeORM integration with PostgreSQL support
-- **🔮 GraphQL**: Code-first GraphQL API with automatic schema generation
 - **🔐 Authentication**: JWT-based authentication with Passport strategies
 - **📚 API Docs**: Swagger/OpenAPI documentation
 - **💾 Caching**: Redis integration for performance optimization
@@ -120,37 +119,6 @@ pnpm migration:run
 pnpm migration:revert
 ```
 
-## 🔮 GraphQL API
-
-The template includes a comprehensive GraphQL implementation ready for your business logic:
-
-- **Playground**: Available at `http://localhost:3030/graphql`
-- **Code-first approach** with automatic schema generation
-- **Type-safe resolvers** with validation
-- **Efficient data loading** with field resolvers
-
-### Example Queries
-
-```graphql
-# Get books with authors
-query {
-  booksWithAuthor {
-    id
-    title
-    author {
-      name
-    }
-  }
-}
-
-# Create a book
-mutation {
-  createBook(input: { title: "NestJS Microservices", authorId: "author-uuid", isbn: "978-1234567890" }) {
-    id
-    title
-  }
-}
-```
 
 ## 🐳 Docker & Kubernetes
 
@@ -192,8 +160,6 @@ pnpm test:cov
 
 ## 📚 Documentation
 
-- [GraphQL Examples](./examples/graphql-queries.md)
-- [GraphQL Implementation](./GRAPHQL.md)
 - [API Documentation](./docs/) (when available)
 
 ## 🤝 Contributing
