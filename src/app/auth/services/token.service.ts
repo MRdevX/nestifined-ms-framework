@@ -1,8 +1,8 @@
 import { randomBytes } from "node:crypto";
 import { Injectable } from "@nestjs/common";
-import type { ConfigService } from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
 import { type Token, TokenType } from "../entities/token.entity";
-import type { TokenRepository } from "../repositories/token.repository";
+import { TokenRepository } from "../repositories/token.repository";
 
 @Injectable()
 export class TokenService {

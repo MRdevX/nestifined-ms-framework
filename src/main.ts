@@ -10,51 +10,47 @@ import logger from "./logger";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
-  const environment = config.get("app.env");
+
+  const port = config.get("app.port");
+  const host = config.get("app.host");
   const apiPrefix = config.get("app.apiPrefix");
+  const env = config.get("app.env");
+  const name = config.get("app.name");
+  const cors = config.get("app.cors");
 
   app.enableShutdownHooks();
-  app.connectMicroservice(config.get("s2s.options"));
   app.use(helmet());
-  app.enableCors({ origin: true, credentials: true });
-  app.setGlobalPrefix(apiPrefix, {
-    exclude: ["/"],
-  });
-  app.enableVersioning({
-    type: VersioningType.URI,
-  });
+  app.enableCors({ origin: cors, credentials: true });
+  app.setGlobalPrefix(apiPrefix, { exclude: ["/"] });
+  app.enableVersioning({ type: VersioningType.URI });
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
+      transformOptions: { enableImplicitConversion: true },
     }),
   );
 
   app.useGlobalFilters(new AllExceptionsFilter(config));
 
-  if (environment !== "production") {
+  if (env !== "production") {
     const options = new DocumentBuilder()
-      .setTitle(process.env.npm_package_name)
-      .setVersion(process.env.npm_package_version)
-      .setDescription(process.env.npm_package_description)
+      .setTitle(name)
+      .setVersion("1.0.0")
+      .setDescription(`${name} API Documentation`)
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup(`${apiPrefix}/docs`, app, document);
   }
 
-  await app.startAllMicroservices();
-  await app.listen(config.get("app.port"), config.get("app.host"));
+  await app.listen(port, host);
   const appUrl = await app.getUrl();
-  const docsUrl = `${appUrl}/${apiPrefix}/docs`;
   logger.info(`Application is running on: ${appUrl}`);
-  logger.info(`Environment: ${environment}`);
-  logger.info(`API Documentation available at: ${docsUrl}`);
+  logger.info(`Environment: ${env}`);
+  logger.info(`API Documentation available at: ${appUrl}/${apiPrefix}/docs`);
 }
 
 process.nextTick(bootstrap);

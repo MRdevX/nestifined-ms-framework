@@ -2,11 +2,11 @@ import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/co
 import { EmailService } from "../core/email/email.service";
 import type { User } from "../users/entities/user.entity";
 import { UsersService } from "../users/users.service";
-import type { ForgotPasswordDto } from "./dto/forgot-password.dto";
-import type { LoginDto } from "./dto/login.dto";
-import type { RefreshTokenDto } from "./dto/refresh-token.dto";
-import type { RegisterDto } from "./dto/register.dto";
-import type { ResetPasswordDto } from "./dto/reset-password.dto";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
+import { LoginDto } from "./dto/login.dto";
+import { RefreshTokenDto } from "./dto/refresh-token.dto";
+import { RegisterDto } from "./dto/register.dto";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
 import type { AuthResponse, TokenPair, UserWithoutPassword } from "./interfaces/auth.interfaces";
 import { PasswordService } from "./services/password.service";
 import { TokenService } from "./services/token.service";

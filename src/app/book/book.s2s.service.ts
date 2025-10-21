@@ -13,7 +13,11 @@ export class BookS2SService {
 
   async sendBook(createBookDto: CreateBookDto): Promise<void> {
     const client = this.messagingService.getClient();
-    client.emit("book_created", createBookDto);
+    if (client) {
+      client.emit("book_created", createBookDto);
+    } else {
+      console.warn("Messaging client not available - book not sent to queue");
+    }
   }
 
   async receiveBook(data: CreateBookDto): Promise<Book> {
@@ -25,12 +29,21 @@ export class BookS2SService {
 
   async cacheBook(book: Book): Promise<void> {
     const client = this.cacheService.getClient();
-    await client.set(`book:${book.id}`, JSON.stringify(book));
+    if (client) {
+      await client.set(`book:${book.id}`, JSON.stringify(book));
+    } else {
+      console.warn("Cache client not available - book not cached");
+    }
   }
 
   async getCachedBook(id: string): Promise<Book | null> {
     const client = this.cacheService.getClient();
-    const data = await client.get(`book:${id}`);
-    return data ? JSON.parse(data) : null;
+    if (client) {
+      const data = await client.get(`book:${id}`);
+      return data ? JSON.parse(data) : null;
+    } else {
+      console.warn("Cache client not available - returning null");
+      return null;
+    }
   }
 }

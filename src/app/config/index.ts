@@ -1,6 +1,3 @@
-export * from "./app.config";
-export * from "./auth.config";
-export * from "./db.config";
-export * from "./redis.config";
-export * from "./s2s.config";
-export * from "./sentry.config";
+export { default as appConfig } from "./app.config";
+export { default as authConfig } from "./auth.config";
+export { default as databaseConfig } from "./database.config";

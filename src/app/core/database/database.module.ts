@@ -15,20 +15,20 @@ export class DatabaseModule {
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
-          useFactory: (configService: ConfigService) => ({
-            type: "postgres",
-            host: config?.host || configService.get("db.host"),
-            port: config?.port || configService.get("db.port"),
-            username: config?.username || configService.get("db.username"),
-            password: config?.password || configService.get("db.password"),
-            database: config?.database || configService.get("db.name"),
-            synchronize: config?.synchronize ?? configService.get("db.synchronize"),
-            entities,
-            logging: configService.get("NODE_ENV") !== "production",
-            extra: {
-              max: config?.maxConnections || configService.get("db.maxConnections") || 100,
-            },
-          }),
+          useFactory: (configService: ConfigService) => {
+            const dbConfig = configService.get("database");
+            return {
+              type: "postgres",
+              host: config?.host || dbConfig.host,
+              port: config?.port || dbConfig.port,
+              username: config?.username || dbConfig.username,
+              password: config?.password || dbConfig.password,
+              database: config?.database || dbConfig.database,
+              synchronize: config?.synchronize ?? dbConfig.synchronize,
+              entities,
+              logging: configService.get("app.env") !== "production",
+            };
+          },
         }),
       ],
       providers: [DatabaseService],

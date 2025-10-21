@@ -14,10 +14,8 @@ export class EmailService {
   }
 
   private buildResetUrl(resetToken: string): string {
-    const baseUrl = this.configService.get("app.host");
-    const port = this.configService.get("app.port");
-    const apiPrefix = this.configService.get("app.apiPrefix");
+    const appConfig = this.configService.get("app");
 
-    return `http://${baseUrl}:${port}/${apiPrefix}/auth/reset-password?token=${resetToken}`;
+    return `http://${appConfig.host}:${appConfig.port}/${appConfig.apiPrefix}/auth/reset-password?token=${resetToken}`;
   }
 }

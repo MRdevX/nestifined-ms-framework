@@ -7,19 +7,22 @@ export class MessagingService {
   private client: ClientProxy;
 
   constructor(private configService: ConfigService) {
-    const s2sConfig = this.configService.get("s2s");
-    this.client = ClientProxyFactory.create({
-      transport: s2sConfig.transport,
-      options: {
-        ...s2sConfig.options,
-        queueOptions: {
-          durable: false,
+    const microservicesConfig = this.configService.get("config.microservices");
+
+    if (microservicesConfig?.options) {
+      this.client = ClientProxyFactory.create({
+        transport: microservicesConfig.transport,
+        options: {
+          ...microservicesConfig.options,
+          queueOptions: {
+            durable: false,
+          },
         },
-      },
-    });
+      });
+    }
   }
 
-  getClient(): ClientProxy {
+  getClient(): ClientProxy | undefined {
     return this.client;
   }
 }

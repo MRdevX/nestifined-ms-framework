@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
 import { PassportModule } from "@nestjs/passport";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UsersModule } from "../users/users.module";
@@ -14,7 +13,7 @@ import { LocalStrategy } from "./strategies/local.strategy";
 import { TokensModule } from "./tokens/tokens.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Token]), PassportModule, ConfigModule, TokensModule, UsersModule],
+  imports: [TypeOrmModule.forFeature([Token]), PassportModule, TokensModule, UsersModule],
   controllers: [AuthController],
   providers: [AuthService, TokenService, PasswordService, TokenRepository, JwtStrategy, LocalStrategy],
   exports: [AuthService, TokenService],
