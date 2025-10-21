@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/MRdevX/nestifined-ms-framework/compare/v0.0.7...v0.0.8) (2025-10-21)
+
+
+### Features
+
+* **auth:** implement JWT authentication guard ([e8c6f1d](https://github.com/MRdevX/nestifined-ms-framework/commit/e8c6f1d609e5c469a47467d4de53aafa393647d7))
+* **config:** add RabbitMQ and Redis configuration modules ([1b61a7b](https://github.com/MRdevX/nestifined-ms-framework/commit/1b61a7b4d8e9d4c7d8da8efbb8e0c53a03f1e914))
+
 ### [0.0.7](https://github.com/MRdevX/nestifined-ms-framework/compare/v0.0.6...v0.0.7) (2025-09-12)
 
 
