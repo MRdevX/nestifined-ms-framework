@@ -9,7 +9,7 @@ export class CacheService implements OnModuleInit {
   constructor(private configService: ConfigService) {}
 
   onModuleInit() {
-    const redisConfig = this.configService.get("config.redis");
+    const redisConfig = this.configService.get("redis");
 
     if (redisConfig) {
       this.client = new Redis({

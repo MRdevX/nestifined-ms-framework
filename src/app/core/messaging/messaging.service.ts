@@ -1,19 +1,22 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { type ClientProxy, ClientProxyFactory } from "@nestjs/microservices";
+import { type ClientProxy, ClientProxyFactory, Transport } from "@nestjs/microservices";
 
 @Injectable()
 export class MessagingService {
   private client: ClientProxy;
 
   constructor(private configService: ConfigService) {
-    const microservicesConfig = this.configService.get("config.microservices");
+    const rabbitmqConfig = this.configService.get("rabbitmq");
 
-    if (microservicesConfig?.options) {
+    if (rabbitmqConfig) {
       this.client = ClientProxyFactory.create({
-        transport: microservicesConfig.transport,
+        transport: Transport.RMQ,
         options: {
-          ...microservicesConfig.options,
+          urls: [
+            `amqp://${rabbitmqConfig.username}:${rabbitmqConfig.password}@${rabbitmqConfig.host}:${rabbitmqConfig.port}`,
+          ],
+          queue: rabbitmqConfig.queue,
           queueOptions: {
             durable: false,
           },
