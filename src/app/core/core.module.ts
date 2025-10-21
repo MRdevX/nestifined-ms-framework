@@ -8,6 +8,7 @@ import s2sConfig from "@root/app/config/s2s.config";
 import sentryConfig from "@root/app/config/sentry.config";
 import { CacheModule } from "./cache/cache.module";
 import { DatabaseModule } from "./database";
+import { EmailModule } from "./email/email.module";
 import { MessagingModule } from "./messaging/messaging.module";
 
 @Global()
@@ -20,8 +21,9 @@ import { MessagingModule } from "./messaging/messaging.module";
     }),
     DatabaseModule.forRoot(),
     CacheModule,
+    EmailModule,
     MessagingModule,
   ],
-  exports: [CacheModule, MessagingModule],
+  exports: [CacheModule, EmailModule, MessagingModule],
 })
 export class CoreModule {}

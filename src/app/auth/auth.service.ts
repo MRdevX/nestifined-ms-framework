@@ -1,4 +1,5 @@
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { EmailService } from "../core/email/email.service";
 import type { User } from "../users/entities/user.entity";
 import { UsersService } from "../users/users.service";
 import type { ForgotPasswordDto } from "./dto/forgot-password.dto";
@@ -18,6 +19,7 @@ export class AuthService {
     private readonly tokensService: TokensService,
     private readonly tokenService: TokenService,
     private readonly passwordService: PasswordService,
+    private readonly emailService: EmailService,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponse> {
@@ -107,7 +109,9 @@ export class AuthService {
       return { message: "If a user with this email exists, a password reset link has been sent" };
     }
 
-    const resetToken = await this.tokenService.createPasswordResetToken(user.id);
+    const resetTokenEntity = await this.tokenService.createPasswordResetToken(user.id);
+
+    await this.emailService.sendPasswordResetEmail(user.email, resetTokenEntity.token);
 
     return { message: "If a user with this email exists, a password reset link has been sent" };
   }

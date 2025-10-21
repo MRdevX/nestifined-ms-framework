@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { BaseService } from "../core/database/base/base.service";
 import type { CreateAuthorDto } from "./dto";
 import type { Author } from "./entities/author.entity";
@@ -25,7 +25,7 @@ export class AuthorService extends BaseService<Author> {
   async findByIdWithBooks(id: string): Promise<Author> {
     const author = await this.authorRepository.findByIdWithBooks(id);
     if (!author) {
-      throw new Error("Author not found");
+      throw new NotFoundException("Author not found");
     }
     return author;
   }
