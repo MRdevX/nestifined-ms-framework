@@ -12,32 +12,46 @@ export class TokenService {
   ) {}
 
   async createRefreshToken(userId: string, token: string): Promise<Token> {
-    await this.tokenRepository.deleteByUserIdAndType(userId, TokenType.REFRESH);
-
     const authConfig = this.configService.get("auth");
     const refreshTokenExpiry = new Date(Date.now() + this.parseDuration(authConfig.jwt.refresh.expiresIn));
 
-    return this.tokenRepository.create({
-      userId,
-      token,
-      type: TokenType.REFRESH,
-      expiresAt: refreshTokenExpiry,
-    });
+    const existingToken = await this.tokenRepository.findByUserIdAndType(userId, TokenType.REFRESH);
+
+    if (existingToken) {
+      return this.tokenRepository.update(existingToken.id, {
+        token,
+        expiresAt: refreshTokenExpiry,
+      });
+    } else {
+      return this.tokenRepository.create({
+        userId,
+        token,
+        type: TokenType.REFRESH,
+        expiresAt: refreshTokenExpiry,
+      });
+    }
   }
 
   async createPasswordResetToken(userId: string): Promise<Token> {
-    await this.tokenRepository.deleteByUserIdAndType(userId, TokenType.PASSWORD_RESET);
-
     const resetToken = randomBytes(32).toString("hex");
     const authConfig = this.configService.get("auth");
     const expiresAt = new Date(Date.now() + authConfig.reset.expiresIn);
 
-    return this.tokenRepository.create({
-      userId,
-      token: resetToken,
-      type: TokenType.PASSWORD_RESET,
-      expiresAt,
-    });
+    const existingToken = await this.tokenRepository.findByUserIdAndType(userId, TokenType.PASSWORD_RESET);
+
+    if (existingToken) {
+      return this.tokenRepository.update(existingToken.id, {
+        token: resetToken,
+        expiresAt,
+      });
+    } else {
+      return this.tokenRepository.create({
+        userId,
+        token: resetToken,
+        type: TokenType.PASSWORD_RESET,
+        expiresAt,
+      });
+    }
   }
 
   async findRefreshToken(userId: string, token: string): Promise<Token | null> {
