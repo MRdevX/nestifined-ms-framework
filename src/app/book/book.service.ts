@@ -66,7 +66,10 @@ export class BookService extends BaseService<Book> {
 
   async deleteBook(id: string): Promise<void> {
     await this.delete(id);
-    await this.cacheService.getClient().del(`book:${id}`);
+    const client = this.cacheService.getClient();
+    if (client) {
+      await client.del(`book:${id}`);
+    }
   }
 
   public async cacheBook(book: Book): Promise<void> {

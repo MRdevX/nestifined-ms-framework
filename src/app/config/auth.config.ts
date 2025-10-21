@@ -14,4 +14,7 @@ export default registerAs("auth", () => ({
   password: {
     saltRounds: parseInt(process.env.PASSWORD_SALT_ROUNDS, 10) || 10,
   },
+  reset: {
+    expiresIn: parseInt(process.env.PASSWORD_RESET_EXPIRES_IN, 10) || 3600000,
+  },
 }));

@@ -20,7 +20,10 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
   app.use(helmet());
-  app.enableCors({ origin: cors, credentials: true });
+  app.enableCors({
+    origin: cors === "true" ? true : cors,
+    credentials: true,
+  });
   app.setGlobalPrefix(apiPrefix, { exclude: ["/"] });
   app.enableVersioning({ type: VersioningType.URI });
 

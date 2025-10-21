@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from "@nestjs/common";
+import { Public } from "../auth/decorators/public.decorator";
 import { AuthorService } from "./author.service";
 import type { CreateAuthorDto, UpdateAuthorDto } from "./dto";
 
@@ -13,21 +14,25 @@ export class AuthorController {
   }
 
   @Get()
+  @Public()
   findAll() {
     return this.authorService.findAll();
   }
 
   @Get("with-books")
+  @Public()
   findAllWithBooks() {
     return this.authorService.findAllWithBooks();
   }
 
   @Get(":id")
+  @Public()
   findOne(@Param("id") id: string) {
     return this.authorService.findById(id);
   }
 
   @Get(":id/with-books")
+  @Public()
   findOneWithBooks(@Param("id") id: string) {
     return this.authorService.findByIdWithBooks(id);
   }

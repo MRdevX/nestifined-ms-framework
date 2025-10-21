@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from "@nestjs/common";
+import { Public } from "../auth/decorators/public.decorator";
 import { BookS2SService } from "./book.s2s.service";
 import { BookService } from "./book.service";
 import type { CreateBookDto, SearchBookDto, UpdateBookDto } from "./dto";
@@ -11,16 +12,19 @@ export class BookController {
   ) {}
 
   @Get("search")
+  @Public()
   async search(@Query() query: SearchBookDto) {
     return this.bookService.searchBooks(query);
   }
 
   @Get()
+  @Public()
   findAll() {
     return this.bookService.findAll();
   }
 
   @Get("with-author")
+  @Public()
   findAllWithAuthor() {
     return this.bookService.findAllWithAuthor();
   }
@@ -32,11 +36,13 @@ export class BookController {
   }
 
   @Get(":id")
+  @Public()
   findOne(@Param("id") id: string) {
     return this.bookService.findById(id);
   }
 
   @Get(":id/with-author")
+  @Public()
   findOneWithAuthor(@Param("id") id: string) {
     return this.bookService.findByIdWithAuthor(id);
   }
